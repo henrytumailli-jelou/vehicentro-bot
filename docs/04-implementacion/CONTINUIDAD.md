@@ -7,16 +7,16 @@ Personas por rol o iniciales (regla 5). El detalle de cada punto está en los ar
 Bot de WhatsApp para Vehicentro (company **13744**, perfil CLI `dev-vehicentro`), Fase 1: bienvenida y enrutamiento por marca, catálogo y agencias, registro del lead en el BDC del cliente y asignación al teleasesor en PMA. Va por **partner** (Claro).
 
 ## 2. Estado actual
-- **Fase:** **F1 (SOW)**. La puerta de F0 la aprobó el Tech Lead (D. B.) el 16/11. F1 está prácticamente cumplida: el Brief v1.3 ya está aprobado.
+- **Fase:** **F2 (spec funcional)**. F0 la aprobó el Tech Lead (D. B.) y F1 la PM (J. C.), ambas el 16/11. F1 pasó con 2 excepciones autorizadas por la PM: insumos del cliente sin fecha y lint del SOW sin regenerar.
 - **Brief/SOW v1.3 aprobado por el cliente:** correo de A. F. del 05/11/2026. **No se emite una versión nueva**: las aclaraciones van en `docs/00-cliente/decisiones.md` y se resuelven en la spec funcional (F2).
 - **Brain:** se construye en **DEV Vehicentro** (`01KYX1WCS2GBQXT355BK6ZHVMD`) y después se **promueve a producción EC-02-113-01 Vehicentro** (`01KYQZ99V5PPM2JSMQF4EMH55X`). DEV ya tiene skills con la forma de la Fase 1 (Bienvenida y Enrutamiento, Ventas, Repuestos, Talleres, Derivar a Asesor; también Crédito Directo, que está fuera de alcance).
 - **Repo:** `henrytumailli-jelou/vehicentro-bot` (privado). `main` para el bot; `vehicentro-sow-hu` para los docs y el estado.
 - **ClickUp:** madre `86e2aact9` (Ai Solution); subtareas F0–F10 creadas. F0 está en curso y el resto en «to do».
 
-## 3. Qué falta para pasar la puerta de F1
-1. **Aviso de arranque en #team-deployment** (quedó pendiente de F0; lo hace el implementador).
-2. **PM:** que vea la diferencia de esfuerzo (348 h estimadas contra 126 h del cronograma) y ajuste el cronograma.
-3. Aprobación de la puerta de F1 (PM). Después, F2 · Spec funcional.
+## 3. Qué sigue
+1. **F2 · Spec funcional** (ver sección 8).
+2. **Avisos pendientes en #team-deployment:** arranque, SOW aprobado y las excepciones de F1. Los hace el implementador.
+3. **Insumos del cliente sin fecha:** `id_conexion` de producción por marca, antes del go-live.
 
 ## 4. Decisiones clave (detalle en `docs/00-cliente/decisiones.md`)
 | # | Decisión |

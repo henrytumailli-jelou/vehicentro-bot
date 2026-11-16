@@ -94,16 +94,39 @@
     "9": "tech-lead+pm",
     "10": "pm"
   },
-  "fase_actual": 1,
+  "fase_actual": 2,
   "puertas": [
     {
       "fase": 0,
       "fecha": "2026-11-16",
       "aprobado_por": "tech-lead (D. B.)",
       "evidencia": "henrytumailli-jelou/vehicentro-bot@vehicentro-sow-hu: BRIEF.md, decisiones.md, revision-apis-bdc.md, CONTINUIDAD.md"
+    },
+    {
+      "fase": 1,
+      "fecha": "2026-11-16",
+      "aprobado_por": "pm (J. C.)",
+      "evidencia": "Brief v1.3 aprobado por el cliente (05/11); decisiones.md D-12..D-24; estimacion-preliminar.md"
     }
   ],
-  "excepciones": [],
+  "excepciones": [
+    {
+      "fase": 1,
+      "fecha": "2026-11-16",
+      "criterio": "Insumos pendientes del cliente con fecha comprometida y efecto del retraso",
+      "motivo": "Los id_conexion de producción se obtienen más adelante; mientras tanto se usa TESTCLARO",
+      "autorizo": "pm (J. C.)",
+      "aviso_slack": "pendiente (el implementador hace los avisos después)"
+    },
+    {
+      "fase": 1,
+      "fecha": "2026-11-16",
+      "criterio": "Lint del sow.json en 0",
+      "motivo": "No se emite una versión nueva del SOW; los campos POR DEFINIR están resueltos en decisiones.md D-12..D-24",
+      "autorizo": "pm (J. C.)",
+      "aviso_slack": "pendiente"
+    }
+  ],
   "hallazgos": [
     {
       "id": "H-01",
@@ -305,6 +328,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "Puerta F0 aprobada por el Tech Lead (D. B.). ClickUp: F0 cerrada con comentario de evidencia; F1 en curso. Aviso de arranque en Slack pendiente (lo hará el implementador después)."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "Puerta F1 aprobada por la PM (J. C.), con 2 excepciones (insumos sin fecha, lint). ClickUp: F1 cerrada; F2 en curso."
     }
   ],
   "puntos": {
@@ -336,13 +363,20 @@
   ],
   "equipo": {
     "tech_lead": "D. B.",
-    "implementador": "H. T."
+    "implementador": "H. T.",
+    "pm": "J. C."
   },
   "avisos_pendientes": [
     {
       "tipo": "slack",
       "canal": "#team-deployment",
       "tema": "Arranque del proyecto (hito F0)",
+      "decidio": "implementador lo deja para después (2026-11-16)"
+    },
+    {
+      "tipo": "slack",
+      "canal": "#team-deployment",
+      "tema": "SOW aprobado (hito F1) + excepciones de F1",
       "decidio": "implementador lo deja para después (2026-11-16)"
     }
   ]
