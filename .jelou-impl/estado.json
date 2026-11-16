@@ -332,6 +332,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "Puerta F1 aprobada por la PM (J. C.), con 2 excepciones (insumos sin fecha, lint). ClickUp: F1 cerrada; F2 en curso."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "F2: borrador v0.1 de la spec funcional (docs/04-implementacion/02-spec/spec.md). 9 HU, RF-000..015, 2 marcas abiertas (persona por marca, asignación por agencia elegida). HU-02 escrita según la regla 17 (H-01 pendiente con el TL)."
     }
   ],
   "puntos": {
