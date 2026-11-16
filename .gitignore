@@ -1,0 +1,9 @@
+# Binarios del paquete del cliente: no los revisa el barrido de PII (regla 5)
+*.docx
+*.xlsx
+*.pdf
+*.pptx
+~$*
+.DS_Store
+node_modules/
+.env
