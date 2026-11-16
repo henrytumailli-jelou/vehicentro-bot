@@ -7,16 +7,16 @@ Personas por rol o iniciales (regla 5). El detalle de cada punto está en los ar
 Bot de WhatsApp para Vehicentro (company **13744**, perfil CLI `dev-vehicentro`), Fase 1: bienvenida y enrutamiento por marca, catálogo y agencias, registro del lead en el BDC del cliente y asignación al teleasesor en PMA. Va por **partner** (Claro).
 
 ## 2. Estado actual
-- **Fase:** F0 (pre-kickoff), con la puerta casi lista. F1 (SOW) está prácticamente cumplida: el Brief v1.3 ya está aprobado.
+- **Fase:** **F1 (SOW)**. La puerta de F0 la aprobó el Tech Lead (D. B.) el 16/11. F1 está prácticamente cumplida: el Brief v1.3 ya está aprobado.
 - **Brief/SOW v1.3 aprobado por el cliente:** correo de A. F. del 05/11/2026. **No se emite una versión nueva**: las aclaraciones van en `docs/00-cliente/decisiones.md` y se resuelven en la spec funcional (F2).
 - **Brain:** se construye en **DEV Vehicentro** (`01KYX1WCS2GBQXT355BK6ZHVMD`) y después se **promueve a producción EC-02-113-01 Vehicentro** (`01KYQZ99V5PPM2JSMQF4EMH55X`). DEV ya tiene skills con la forma de la Fase 1 (Bienvenida y Enrutamiento, Ventas, Repuestos, Talleres, Derivar a Asesor; también Crédito Directo, que está fuera de alcance).
 - **Repo:** `henrytumailli-jelou/vehicentro-bot` (privado). `main` para el bot; `vehicentro-sow-hu` para los docs y el estado.
 - **ClickUp:** madre `86e2aact9` (Ai Solution); subtareas F0–F10 creadas. F0 está en curso y el resto en «to do».
 
-## 3. Qué falta para pasar la puerta de F0
-1. **Tech Lead del proyecto**: identificarlo (por iniciales) y obtener su aprobación de la puerta.
-2. **Aviso de arranque en Slack** (#team-deployment): confirmar si ya salió.
-3. Al aprobarse: cerrar la subtarea F0 en ClickUp, pasar F1 a «en curso», registrar la puerta en `estado.json` y hacer `sync`.
+## 3. Qué falta para pasar la puerta de F1
+1. **Aviso de arranque en #team-deployment** (quedó pendiente de F0; lo hace el implementador).
+2. **PM:** que vea la diferencia de esfuerzo (348 h estimadas contra 126 h del cronograma) y ajuste el cronograma.
+3. Aprobación de la puerta de F1 (PM). Después, F2 · Spec funcional.
 
 ## 4. Decisiones clave (detalle en `docs/00-cliente/decisiones.md`)
 | # | Decisión |

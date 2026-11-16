@@ -94,8 +94,15 @@
     "9": "tech-lead+pm",
     "10": "pm"
   },
-  "fase_actual": 0,
-  "puertas": [],
+  "fase_actual": 1,
+  "puertas": [
+    {
+      "fase": 0,
+      "fecha": "2026-11-16",
+      "aprobado_por": "tech-lead (D. B.)",
+      "evidencia": "henrytumailli-jelou/vehicentro-bot@vehicentro-sow-hu: BRIEF.md, decisiones.md, revision-apis-bdc.md, CONTINUIDAD.md"
+    }
+  ],
   "excepciones": [],
   "hallazgos": [
     {
@@ -294,6 +301,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "El Tech Lead aprueba la estimación v2 (87 SP / 348 h). Pendiente avisar al PM de la diferencia contra el cronograma (+176 %)."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "Puerta F0 aprobada por el Tech Lead (D. B.). ClickUp: F0 cerrada con comentario de evidencia; F1 en curso. Aviso de arranque en Slack pendiente (lo hará el implementador después)."
     }
   ],
   "puntos": {
@@ -301,7 +312,7 @@
     "estimado_sp": 87,
     "estimado_horas": 348,
     "diferencia_pct": 176,
-    "revisado_por": "tech-lead",
+    "revisado_por": "tech-lead (D. B.)",
     "estado": "aprobada por el Tech Lead (v2, 87 SP / 348 h). Se escribe en ClickUp al crear las T### en F4.",
     "archivo": "docs/04-implementacion/04-tareas/estimacion-preliminar.md",
     "tareas": [],
@@ -321,6 +332,18 @@
       "fase": 5,
       "que": "El BDC asigna asesor al recibir el POST (con TESTCLARO) y 4.5 lo devuelve de inmediato con email_usuario",
       "prueba": "POST de un lead de prueba y luego GET 4.5 con la misma marca, cédula y celular"
+    }
+  ],
+  "equipo": {
+    "tech_lead": "D. B.",
+    "implementador": "H. T."
+  },
+  "avisos_pendientes": [
+    {
+      "tipo": "slack",
+      "canal": "#team-deployment",
+      "tema": "Arranque del proyecto (hito F0)",
+      "decidio": "implementador lo deja para después (2026-11-16)"
     }
   ]
 }
