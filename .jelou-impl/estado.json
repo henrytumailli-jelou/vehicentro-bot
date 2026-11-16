@@ -151,6 +151,13 @@
       "fecha": "2026-11-05",
       "aprobo": "cliente",
       "fuente": "correo de A. F. (05/11/2026)"
+    },
+    {
+      "fase": 4,
+      "tema": "Estimación preliminar en Story Points v2",
+      "fecha": "2026-11-16",
+      "aprobo": "tech-lead",
+      "fuente": "comunicada por el implementador"
     }
   ],
   "bloqueos": [],
@@ -283,6 +290,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "B-01 cerrado: repo henrytumailli-jelou/vehicentro-bot (pasado a privado antes de subir). main con README; docs y estado en vehicentro-sow-hu. Binarios (docx/xlsx/pdf) excluidos por .gitignore."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "El Tech Lead aprueba la estimación v2 (87 SP / 348 h). Pendiente avisar al PM de la diferencia contra el cronograma (+176 %)."
     }
   ],
   "puntos": {
@@ -290,10 +301,12 @@
     "estimado_sp": 87,
     "estimado_horas": 348,
     "diferencia_pct": 176,
-    "revisado_por": null,
-    "estado": "propuesta preliminar v2 (2026-11-16, webview existente de Shop), sin aprobación del Tech Lead",
+    "revisado_por": "tech-lead",
+    "estado": "aprobada por el Tech Lead (v2, 87 SP / 348 h). Se escribe en ClickUp al crear las T### en F4.",
     "archivo": "docs/04-implementacion/04-tareas/estimacion-preliminar.md",
-    "tareas": []
+    "tareas": [],
+    "fecha_aprobacion": "2026-11-16",
+    "fuente_aprobacion": "comunicada por el implementador"
   },
   "fricciones": [
     {

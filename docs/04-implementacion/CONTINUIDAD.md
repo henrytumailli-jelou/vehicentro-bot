@@ -55,7 +55,7 @@ Bot de WhatsApp para Vehicentro (company **13744**, perfil CLI `dev-vehicentro`)
 
 ## 7. Esfuerzo
 - Estimación preliminar: **87 SP · 348 h** contra **126 h** del cronograma (+176 %); la construcción sola da 204 h contra 72 h. Detalle y motivos en `docs/04-implementacion/04-tareas/estimacion-preliminar.md`.
-- Es una propuesta: **no está aprobada por el Tech Lead ni escrita en ClickUp**. El PM debe ver la diferencia antes de construir.
+- **Aprobada por el Tech Lead (2026-11-16).** Se escribe en ClickUp al crear las T### en F4. El PM debe ver la diferencia contra el cronograma antes de construir.
 
 ## 8. Próximos pasos sugeridos
 1. Cerrar la puerta de F0 (sección 3) y la de F1 (Brief aprobado + el PM revisa el esfuerzo).

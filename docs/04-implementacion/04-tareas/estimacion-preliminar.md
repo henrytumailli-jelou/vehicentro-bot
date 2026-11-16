@@ -1,8 +1,8 @@
-# Estimación preliminar en Story Points (propuesta, sin aprobar)
+# Estimación preliminar en Story Points (aprobada por el Tech Lead, 2026-11-16)
 
 - Fecha: 2026-11-16 (v2) · Base: SOW v1.3 (Brief aprobado el 05/11) + revisión de APIs BDC (`02-apis/revision-apis-bdc.md`).
 - Catálogo: `references/story-points.md`. Escalones aplicados uno por cada riesgo que se nombra.
-- **Es una propuesta previa a F4.** La revisa el Tech Lead; no se escribe en ClickUp hasta su aprobación.
+- **Aprobada por el Tech Lead el 2026-11-16.** Los SP se escriben en ClickUp al crear las tareas `T###` en F4.
 - v2: el Ecommerce WebView es el **webview que ya existe en Jelou Shop**; no se desarrolla, se usa desde el agente (T008 baja de 8 a 3).
 
 | Tarea | Fila del catálogo | Base | Escalones | SP | Falta | SP a cargar | Horas |
