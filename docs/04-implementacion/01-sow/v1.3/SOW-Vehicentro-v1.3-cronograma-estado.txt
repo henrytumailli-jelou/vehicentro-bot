@@ -1,0 +1,4 @@
+Cronograma: PENDIENTE
+  • El SOW está en revisión (meta.estado = en_revision): las horas, las fechas y el Gantt solo se generan al aprobarlo. → Desbloquea: Aprobación del cliente (meta.estado = aprobado).
+  • 3 pregunta(s) abierta(s) que bloquean la aprobación. → Desbloquea: Respuestas del cliente a las preguntas bloqueantes (lista de faltantes).
+  • 6 servicio(s) sin documentación o sin ambiente de pruebas: INT-1, INT-2, INT-3, INT-4, INT-5, INT-6. → Desbloquea: Documentación técnica y ambiente de pruebas del cliente (o avanzar con datos simulados según la cláusula del SOW).

@@ -1,0 +1,1288 @@
+{
+  "info": {
+    "_postman_id": "331b53d5-4037-42a8-98c8-2873aefe8cc4",
+    "name": "BDC Vehicentro – Asistente WhatsApp",
+    "description": "Colección generada desde *Documentación APIs BDC Vehicentro – Asistente WhatsApp* (11-nov-2026).\n\n5 APIs de consulta (GET) y 1 de registro de leads (POST), protegidas con OAuth2 Client Credentials, sobre HTTPS con JSON UTF-8.\n\n**URL base (pruebas y producción comparten servidor y datos):** `https://bdc.vehicentro.com:9443/ords/ws_vehicentro`\n\n### Uso\n1. Completa `client_id` y `client_secret` como *valor actual* (no se sincroniza).\n2. El pre-request de la colección pide y renueva el token solo; o ejecuta **2. Autenticación › Obtener token**.\n3. Para leads usa `id_conexion = TESTCLARO` (pruebas). Las conexiones de producción ingresan al CRM.\n\n### Códigos\n| HTTP | Aplica a | Significado | Acción |\n|---|---|---|---|\n| 200 | GET | Revisar `status`: `success` con datos o `error` con `message` | Si `error`, no reintentar en bucle; registrar y escalar |\n| 201 | POST | Lead registrado | Continuar |\n| 400 | POST | Datos inválidos o `id_conexion` inexistente | Revisar body e id de conexión |\n| 401 | Todos | Token ausente/inválido/expirado | Pedir token nuevo y repetir una vez |\n| 404 | Todos | Ruta inexistente | Revisar URL |\n| 500 | Todos | Error interno (p. ej. parámetro numérico con texto) | Reintentar una vez; si persiste, soporte |\n\n### Flujo recomendado\n1. Token → 2. Marcas (4.1) → 3. Modelos (4.2) → 4. Existe asesor (4.5): con datos, saltar a 7 → 5. Agencias (4.3) → 6. Asesor asignado (4.4) → 7. Ingreso de lead (5) con `id_modelo`, `id_agencias`, `id_asesor` y `notas`.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Obtiene/renueva el token automáticamente (60 s antes de expirar). Se omite en la propia petición de token.",
+          "if (pm.info.requestName === 'Obtener token') return;",
+          "const exp = Number(pm.collectionVariables.get('token_expires_at') || 0);",
+          "if (pm.collectionVariables.get('access_token') && Date.now() < exp - 60000) return;",
+          "const id = pm.collectionVariables.get('client_id'), secret = pm.collectionVariables.get('client_secret');",
+          "if (!id || !secret) { console.warn('Configura client_id y client_secret (valor actual) en la colección'); return; }",
+          "pm.sendRequest({",
+          "  url: pm.collectionVariables.get('baseUrl') + '/oauth/token',",
+          "  method: 'POST',",
+          "  header: { 'Authorization': 'Basic ' + btoa(id + ':' + secret), 'Content-Type': 'application/x-www-form-urlencoded' },",
+          "  body: { mode: 'urlencoded', urlencoded: [{ key: 'grant_type', value: 'client_credentials' }] }",
+          "}, (err, res) => {",
+          "  if (err || res.code !== 200) { console.error('No se pudo obtener token', err || res.code); return; }",
+          "  const t = res.json();",
+          "  pm.collectionVariables.set('access_token', t.access_token);",
+          "  pm.collectionVariables.set('token_expires_at', String(Date.now() + (t.expires_in || 3600) * 1000));",
+          "});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://bdc.vehicentro.com:9443/ords/ws_vehicentro",
+      "type": "string",
+      "description": "URL base (pruebas y producción)"
+    },
+    {
+      "key": "client_id",
+      "value": "",
+      "type": "string",
+      "description": "Client ID (confidencial: solo valor actual)"
+    },
+    {
+      "key": "client_secret",
+      "value": "",
+      "type": "string",
+      "description": "Client Secret (confidencial: solo valor actual)"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string",
+      "description": "Se llena automáticamente"
+    },
+    {
+      "key": "token_expires_at",
+      "value": "",
+      "type": "string",
+      "description": "Epoch ms de expiración del token"
+    },
+    {
+      "key": "id_marca",
+      "value": "7",
+      "type": "string",
+      "description": "id de la API Marcas (7 = LYNK & CO)"
+    },
+    {
+      "key": "id_agencia",
+      "value": "2",
+      "type": "string",
+      "description": "id_agencia de la API Agencias"
+    },
+    {
+      "key": "id_modelo",
+      "value": "138",
+      "type": "string",
+      "description": "id_modelo de la API Modelos"
+    },
+    {
+      "key": "cedula",
+      "value": "null",
+      "type": "string",
+      "description": "Cédula/RUC del cliente o null"
+    },
+    {
+      "key": "celular",
+      "value": "09XXXXXXXX",
+      "type": "string",
+      "description": "Celular del cliente 09XXXXXXXX"
+    },
+    {
+      "key": "lead_nombres",
+      "value": "Cliente Prueba",
+      "type": "string",
+      "description": "Nombres del lead de prueba"
+    },
+    {
+      "key": "id_conexion",
+      "value": "TESTCLARO",
+      "type": "string",
+      "description": "Conexión de pruebas. Producción por marca: [COMPLETAR]"
+    }
+  ],
+  "item": [
+    {
+      "name": "2. Autenticación",
+      "item": [
+        {
+          "name": "Obtener token",
+          "request": {
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{client_id}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{client_secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/oauth/token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            },
+            "description": "OAuth 2.0 Client Credentials. Basic Auth (usuario = Client ID, contraseña = Client Secret). El token dura 3600 s; no hay refresh token: se pide uno nuevo antes de expirar o al recibir 401. Guarda `access_token` en la colección."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "const t = pm.response.json();",
+                  "pm.test('trae access_token', () => pm.expect(t.access_token).to.be.a('string'));",
+                  "pm.collectionVariables.set('access_token', t.access_token);",
+                  "pm.collectionVariables.set('token_expires_at', String(Date.now() + (t.expires_in || 3600) * 1000));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "auth": {
+                  "type": "basic",
+                  "basic": [
+                    {
+                      "key": "username",
+                      "value": "{{client_id}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "password",
+                      "value": "{{client_secret}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/x-www-form-urlencoded"
+                  }
+                ],
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "key": "grant_type",
+                      "value": "client_credentials",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/oauth/token",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "oauth",
+                    "token"
+                  ]
+                },
+                "description": "OAuth 2.0 Client Credentials. Basic Auth (usuario = Client ID, contraseña = Client Secret). El token dura 3600 s; no hay refresh token: se pide uno nuevo antes de expirar o al recibir 401. Guarda `access_token` en la colección."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"Xk3f...q9A\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Consultas (GET)",
+      "description": "Todas requieren `Authorization: Bearer {access_token}` (heredado de la colección). Validar `status` antes de leer `data`; `data: []` no es error. Los campos null no se incluyen.",
+      "item": [
+        {
+          "name": "4.1 Marcas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/conexiones/botwa_marcas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "conexiones",
+                "botwa_marcas"
+              ]
+            },
+            "description": "Lista las marcas disponibles para el asistente. Su `id` es el `id_marca` del resto de APIs."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('status = success', () => pm.expect(body.status, body.message).to.eql('success'));",
+                  "pm.test('data es arreglo', () => pm.expect(body.data).to.be.an('array'));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_marcas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_marcas"
+                  ]
+                },
+                "description": "Lista las marcas disponibles para el asistente. Su `id` es el `id_marca` del resto de APIs."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"data\": [\n    {\n      \"id\": 3,\n      \"nombre\": \"KEYTON\"\n    },\n    {\n      \"id\": 7,\n      \"nombre\": \"LYNK & CO\"\n    },\n    {\n      \"id\": 2,\n      \"nombre\": \"SINOTRUK AUTOS\"\n    },\n    {\n      \"id\": 8,\n      \"nombre\": \"SINOTRUK CAMIONETAS\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 error controlado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_marcas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_marcas"
+                  ]
+                },
+                "description": "Lista las marcas disponibles para el asistente. Su `id` es el `id_marca` del resto de APIs."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"Descripción del error\"\n}"
+            },
+            {
+              "name": "401 token inválido o expirado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_marcas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_marcas"
+                  ]
+                },
+                "description": "Lista las marcas disponibles para el asistente. Su `id` es el `id_marca` del resto de APIs."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "4.2 Modelos por marca",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/conexiones/botwa_modelos/:id_marca",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "conexiones",
+                "botwa_modelos",
+                ":id_marca"
+              ],
+              "variable": [
+                {
+                  "key": "id_marca",
+                  "value": "{{id_marca}}",
+                  "description": "Número. `id` de la API Marcas."
+                }
+              ]
+            },
+            "description": "Catálogo de modelos con precio, ficha técnica e imágenes.\n\n- `json_ficha_tecnica` llega como texto con un JSON dentro: debe parsearse (`JSON.parse`).\n- `imagenes` y `videos` son listas de URLs separadas por coma.\n- `id_modelo` es el valor que se envía como `id_modelo` en el ingreso de lead."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('status = success', () => pm.expect(body.status, body.message).to.eql('success'));",
+                  "pm.test('data es arreglo', () => pm.expect(body.data).to.be.an('array'));",
+                  "if (body.data && body.data.length) { pm.collectionVariables.set('id_modelo', String(body.data[0].id_modelo)); }"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_modelos/:id_marca",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_modelos",
+                    ":id_marca"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    }
+                  ]
+                },
+                "description": "Catálogo de modelos con precio, ficha técnica e imágenes.\n\n- `json_ficha_tecnica` llega como texto con un JSON dentro: debe parsearse (`JSON.parse`).\n- `imagenes` y `videos` son listas de URLs separadas por coma.\n- `id_modelo` es el valor que se envía como `id_modelo` en el ingreso de lead."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"data\": [\n    {\n      \"id_marca\": 3,\n      \"nombre_marca\": \"KEYTON\",\n      \"id_segmento\": 10,\n      \"nombre_segmento\": \"VAN\",\n      \"id_modelo\": 82,\n      \"nombre_modelo\": \"FURGONETA M70L EV\",\n      \"moneda\": \"USD\",\n      \"precio_venta\": 22990,\n      \"json_ficha_tecnica\": \"{\\\"info_base\\\":{\\\"marca\\\":\\\"KEYTON MOTOR\\\",\\\"modelo\\\":\\\"M70L - EV\\\"},\\\"especificaciones\\\":{}}\",\n      \"caracteristicas\": \"...\",\n      \"imagenes\": \"https://vehicentrocdn.com/fotos/keytonBot/M70L_EV/keytonExterior.png,https://vehicentrocdn.com/fotos/keytonBot/M70L_EV/keytonInterior1.jpg\",\n      \"videos\": \"...\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 error controlado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_modelos/:id_marca",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_modelos",
+                    ":id_marca"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    }
+                  ]
+                },
+                "description": "Catálogo de modelos con precio, ficha técnica e imágenes.\n\n- `json_ficha_tecnica` llega como texto con un JSON dentro: debe parsearse (`JSON.parse`).\n- `imagenes` y `videos` son listas de URLs separadas por coma.\n- `id_modelo` es el valor que se envía como `id_modelo` en el ingreso de lead."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"Descripción del error\"\n}"
+            },
+            {
+              "name": "401 token inválido o expirado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_modelos/:id_marca",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_modelos",
+                    ":id_marca"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    }
+                  ]
+                },
+                "description": "Catálogo de modelos con precio, ficha técnica e imágenes.\n\n- `json_ficha_tecnica` llega como texto con un JSON dentro: debe parsearse (`JSON.parse`).\n- `imagenes` y `videos` son listas de URLs separadas por coma.\n- `id_modelo` es el valor que se envía como `id_modelo` en el ingreso de lead."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "4.3 Agencias por marca",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/conexiones/botwa_agencias/:id_marca",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "conexiones",
+                "botwa_agencias",
+                ":id_marca"
+              ],
+              "variable": [
+                {
+                  "key": "id_marca",
+                  "value": "{{id_marca}}",
+                  "description": "Número. `id` de la API Marcas."
+                }
+              ]
+            },
+            "description": "Agencias que atienden la marca, con dirección, ubicación en mapa y horario. `horario_agencia` puede traer saltos de línea (`\\r\\n`)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('status = success', () => pm.expect(body.status, body.message).to.eql('success'));",
+                  "pm.test('data es arreglo', () => pm.expect(body.data).to.be.an('array'));",
+                  "if (body.data && body.data.length) { pm.collectionVariables.set('id_agencia', String(body.data[0].id_agencia)); }"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_agencias/:id_marca",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_agencias",
+                    ":id_marca"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    }
+                  ]
+                },
+                "description": "Agencias que atienden la marca, con dirección, ubicación en mapa y horario. `horario_agencia` puede traer saltos de línea (`\\r\\n`)."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"data\": [\n    {\n      \"id_agencia\": 2,\n      \"nombre_agencia\": \"Ambato Ficoa\",\n      \"nombre_corto_agencia\": \"002-AMB-FCA\",\n      \"provincia_agencia\": \"TUNGURAHUA\",\n      \"ciudad_agencia\": \"AMBATO\",\n      \"direccion_agencia\": \"Av. Los Guaytambos 04-156 y La Delicia\",\n      \"referencia_agencia\": \"Frente a Kywi Centro Comercial Caracol - Ficoa\",\n      \"ubicacion_agencia\": \"https://goo.gl/maps/pBWeoKpyen13WrWR6\",\n      \"web_agencia\": \"https://vehicentro.com/concesionarios?ciudad=Ambato\",\n      \"horario_agencia\": \"Lun-Vier 09:00 a 18:00\\r\\nSábados 09:00 a 13:00\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 error controlado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_agencias/:id_marca",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_agencias",
+                    ":id_marca"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    }
+                  ]
+                },
+                "description": "Agencias que atienden la marca, con dirección, ubicación en mapa y horario. `horario_agencia` puede traer saltos de línea (`\\r\\n`)."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"Descripción del error\"\n}"
+            },
+            {
+              "name": "401 token inválido o expirado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_agencias/:id_marca",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_agencias",
+                    ":id_marca"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    }
+                  ]
+                },
+                "description": "Agencias que atienden la marca, con dirección, ubicación en mapa y horario. `horario_agencia` puede traer saltos de línea (`\\r\\n`)."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "4.4 Asesor asignado por agencia",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/conexiones/botwa_asesores/:id_agencia/:id_marca",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "conexiones",
+                "botwa_asesores",
+                ":id_agencia",
+                ":id_marca"
+              ],
+              "variable": [
+                {
+                  "key": "id_agencia",
+                  "value": "{{id_agencia}}",
+                  "description": "Número. `id_agencia` de la API Agencias."
+                },
+                {
+                  "key": "id_marca",
+                  "value": "{{id_marca}}",
+                  "description": "Número. `id` de la API Marcas."
+                }
+              ]
+            },
+            "description": "Devuelve un solo asesor comercial de la agencia y marca, según la distribución equitativa de leads del BDC.\n\n`id_usuario` e `id_agencia` son los valores que se envían como `id_asesor` e `id_agencias` en el ingreso de lead."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('status = success', () => pm.expect(body.status, body.message).to.eql('success'));",
+                  "pm.test('data es arreglo', () => pm.expect(body.data).to.be.an('array'));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_asesores/:id_agencia/:id_marca",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_asesores",
+                    ":id_agencia",
+                    ":id_marca"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_agencia",
+                      "value": "{{id_agencia}}",
+                      "description": "Número. `id_agencia` de la API Agencias."
+                    },
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    }
+                  ]
+                },
+                "description": "Devuelve un solo asesor comercial de la agencia y marca, según la distribución equitativa de leads del BDC.\n\n`id_usuario` e `id_agencia` son los valores que se envían como `id_asesor` e `id_agencias` en el ingreso de lead."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"data\": [\n    {\n      \"id_usuario\": \"18XXXXXXXX\",\n      \"nombre_usuario\": \"D. C. T.\",\n      \"celular_usuario\": \"+5939XXXXXXXX\",\n      \"email_usuario\": \"asesor@vehicentro.com\",\n      \"id_agencia\": 2,\n      \"nombre_agencia\": \"Ambato Ficoa\",\n      \"direccion_agencia\": \"Av. Los Guaytambos 04-156 y La Delicia\",\n      \"referencia_agencia\": \"Frente a Kywi Centro Comercial Caracol - Ficoa\",\n      \"ubicacion_agencia\": \"https://goo.gl/maps/pBWeoKpyen13WrWR6\",\n      \"web_agencia\": \"https://vehicentro.com/concesionarios?ciudad=Ambato\",\n      \"horario_agencia\": \"Lun-Vier 09:00 a 18:00\\r\\nSábados 09:00 a 13:00\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 error controlado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_asesores/:id_agencia/:id_marca",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_asesores",
+                    ":id_agencia",
+                    ":id_marca"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_agencia",
+                      "value": "{{id_agencia}}",
+                      "description": "Número. `id_agencia` de la API Agencias."
+                    },
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    }
+                  ]
+                },
+                "description": "Devuelve un solo asesor comercial de la agencia y marca, según la distribución equitativa de leads del BDC.\n\n`id_usuario` e `id_agencia` son los valores que se envían como `id_asesor` e `id_agencias` en el ingreso de lead."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"Descripción del error\"\n}"
+            },
+            {
+              "name": "401 token inválido o expirado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_asesores/:id_agencia/:id_marca",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_asesores",
+                    ":id_agencia",
+                    ":id_marca"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_agencia",
+                      "value": "{{id_agencia}}",
+                      "description": "Número. `id_agencia` de la API Agencias."
+                    },
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    }
+                  ]
+                },
+                "description": "Devuelve un solo asesor comercial de la agencia y marca, según la distribución equitativa de leads del BDC.\n\n`id_usuario` e `id_agencia` son los valores que se envían como `id_asesor` e `id_agencias` en el ingreso de lead."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "4.5 Existe asesor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/conexiones/botwa_existe_asesor/:id_marca/:cedula/:celular",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "conexiones",
+                "botwa_existe_asesor",
+                ":id_marca",
+                ":cedula",
+                ":celular"
+              ],
+              "variable": [
+                {
+                  "key": "id_marca",
+                  "value": "{{id_marca}}",
+                  "description": "Número. `id` de la API Marcas."
+                },
+                {
+                  "key": "cedula",
+                  "value": "{{cedula}}",
+                  "description": "Texto. Cédula o RUC del cliente. Si aún no se tiene, enviar `null`."
+                },
+                {
+                  "key": "celular",
+                  "value": "{{celular}}",
+                  "description": "Texto. Celular del cliente: `09XXXXXXXX`."
+                }
+              ]
+            },
+            "description": "Indica si el cliente ya tiene un asesor comercial asignado en la marca. Si devuelve datos, el cliente continúa con ese asesor y no se consulta la API 4.4. Sin asesor asignado la respuesta es `{\"status\":\"success\",\"data\":[]}`.\n\nEjemplo: `GET /api/conexiones/botwa_existe_asesor/7/null/09XXXXXXXX`"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test('status = success', () => pm.expect(body.status, body.message).to.eql('success'));",
+                  "pm.test('data es arreglo', () => pm.expect(body.data).to.be.an('array'));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_existe_asesor/:id_marca/:cedula/:celular",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_existe_asesor",
+                    ":id_marca",
+                    ":cedula",
+                    ":celular"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    },
+                    {
+                      "key": "cedula",
+                      "value": "{{cedula}}",
+                      "description": "Texto. Cédula o RUC del cliente. Si aún no se tiene, enviar `null`."
+                    },
+                    {
+                      "key": "celular",
+                      "value": "{{celular}}",
+                      "description": "Texto. Celular del cliente: `09XXXXXXXX`."
+                    }
+                  ]
+                },
+                "description": "Indica si el cliente ya tiene un asesor comercial asignado en la marca. Si devuelve datos, el cliente continúa con ese asesor y no se consulta la API 4.4. Sin asesor asignado la respuesta es `{\"status\":\"success\",\"data\":[]}`.\n\nEjemplo: `GET /api/conexiones/botwa_existe_asesor/7/null/09XXXXXXXX`"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"data\": [\n    {\n      \"id_usuario\": \"18XXXXXXXX\",\n      \"nombre_usuario\": \"D. C. T.\",\n      \"celular_usuario\": \"+5939XXXXXXXX\",\n      \"email_usuario\": \"asesor@vehicentro.com\",\n      \"id_agencia\": 11,\n      \"nombre_agencia\": \"Guayaquil Juan Tanca Marengo\",\n      \"direccion_agencia\": \"Av. Los Guaytambos 04-156 y La Delicia\",\n      \"referencia_agencia\": \"Frente a Kywi Centro Comercial Caracol - Ficoa\",\n      \"ubicacion_agencia\": \"https://goo.gl/maps/pBWeoKpyen13WrWR6\",\n      \"web_agencia\": \"https://vehicentro.com/concesionarios?ciudad=Ambato\",\n      \"horario_agencia\": \"Lun-Vier 09:00 a 18:00\\r\\nSábados 09:00 a 13:00\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 sin asesor asignado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_existe_asesor/:id_marca/:cedula/:celular",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_existe_asesor",
+                    ":id_marca",
+                    ":cedula",
+                    ":celular"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    },
+                    {
+                      "key": "cedula",
+                      "value": "{{cedula}}",
+                      "description": "Texto. Cédula o RUC del cliente. Si aún no se tiene, enviar `null`."
+                    },
+                    {
+                      "key": "celular",
+                      "value": "{{celular}}",
+                      "description": "Texto. Celular del cliente: `09XXXXXXXX`."
+                    }
+                  ]
+                },
+                "description": "Indica si el cliente ya tiene un asesor comercial asignado en la marca. Si devuelve datos, el cliente continúa con ese asesor y no se consulta la API 4.4. Sin asesor asignado la respuesta es `{\"status\":\"success\",\"data\":[]}`.\n\nEjemplo: `GET /api/conexiones/botwa_existe_asesor/7/null/09XXXXXXXX`"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"success\",\n  \"data\": []\n}"
+            },
+            {
+              "name": "200 error controlado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_existe_asesor/:id_marca/:cedula/:celular",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_existe_asesor",
+                    ":id_marca",
+                    ":cedula",
+                    ":celular"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    },
+                    {
+                      "key": "cedula",
+                      "value": "{{cedula}}",
+                      "description": "Texto. Cédula o RUC del cliente. Si aún no se tiene, enviar `null`."
+                    },
+                    {
+                      "key": "celular",
+                      "value": "{{celular}}",
+                      "description": "Texto. Celular del cliente: `09XXXXXXXX`."
+                    }
+                  ]
+                },
+                "description": "Indica si el cliente ya tiene un asesor comercial asignado en la marca. Si devuelve datos, el cliente continúa con ese asesor y no se consulta la API 4.4. Sin asesor asignado la respuesta es `{\"status\":\"success\",\"data\":[]}`.\n\nEjemplo: `GET /api/conexiones/botwa_existe_asesor/7/null/09XXXXXXXX`"
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "body": "{\n  \"status\": \"error\",\n  \"message\": \"Descripción del error\"\n}"
+            },
+            {
+              "name": "401 token inválido o expirado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa_existe_asesor/:id_marca/:cedula/:celular",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa_existe_asesor",
+                    ":id_marca",
+                    ":cedula",
+                    ":celular"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_marca",
+                      "value": "{{id_marca}}",
+                      "description": "Número. `id` de la API Marcas."
+                    },
+                    {
+                      "key": "cedula",
+                      "value": "{{cedula}}",
+                      "description": "Texto. Cédula o RUC del cliente. Si aún no se tiene, enviar `null`."
+                    },
+                    {
+                      "key": "celular",
+                      "value": "{{celular}}",
+                      "description": "Texto. Celular del cliente: `09XXXXXXXX`."
+                    }
+                  ]
+                },
+                "description": "Indica si el cliente ya tiene un asesor comercial asignado en la marca. Si devuelve datos, el cliente continúa con ese asesor y no se consulta la API 4.4. Sin asesor asignado la respuesta es `{\"status\":\"success\",\"data\":[]}`.\n\nEjemplo: `GET /api/conexiones/botwa_existe_asesor/7/null/09XXXXXXXX`"
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5. Ingreso de lead (POST)",
+      "item": [
+        {
+          "name": "Ingreso de lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"{{lead_nombres}}\",\n  \"cedula\": \"{{cedula}}\",\n  \"celular\": \"{{celular}}\",\n  \"direccion\": \"Cuenca\",\n  \"id_modelo\": \"{{id_modelo}}\",\n  \"notas\": \"Interesado en Lynk & Co 01. Entrada de 15,000. Pendiente confirmar ubicación para la oferta definitiva.\",\n  \"so_id\": null,\n  \"recommendation\": null,\n  \"score\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/conexiones/botwa/:id_conexion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "conexiones",
+                "botwa",
+                ":id_conexion"
+              ],
+              "variable": [
+                {
+                  "key": "id_conexion",
+                  "value": "{{id_conexion}}",
+                  "description": "Identificador de conexión por marca. Pruebas: `TESTCLARO`. LYNK & CO / KEYTON / SINOTRUK AUTOS / SINOTRUK CAMIONETAS: [COMPLETAR]. Las conexiones de producción ingresan al CRM y se asignan a asesores reales."
+                }
+              ]
+            },
+            "description": "Registra al cliente como prospecto en el BDC y, si se envía `id_asesor`, le asigna la cita con ese asesor.\n\n**Pruebas y producción comparten servidor y datos.** Use `id_conexion = TESTCLARO` para probar.\n\n| Campo | Tipo | Obligatorio | Descripción |\n|---|---|---|---|\n| nombres | Texto | Sí | Nombres y apellidos del cliente |\n| celular | Texto | Sí | Mismo formato que en la API 4.5 |\n| cedula | Texto | Recomendado | Cédula o RUC |\n| id_modelo | Texto | Sí | `id_modelo` de la API 4.2 |\n| notas | Texto (máx. 1000) | Sí | Resumen de la conversación: interés, forma de pago, entrada, ubicación |\n| id_agencias | Texto | Si hay asesor | `id_agencia` de la API 4.4 o 4.5. No enviar en pruebas, solo en pruebas con el cliente |\n| id_asesor | Texto | No | `id_usuario` de la API 4.4 o 4.5. Sin este campo el lead ingresa sin cita y lo asigna el BDC. No enviar en pruebas, solo en pruebas con el cliente |\n| direccion | Texto | No | Ciudad o dirección del cliente |\n| telefono | Texto | No | Teléfono fijo |\n| email | Texto | No | Correo del cliente |\n| so_id | Texto | No | Id de precalificación de crédito, si aplica |\n| recommendation | Texto | No | Resultado de precalificación, si aplica |\n| score | Texto | No | Score de buró, si aplica |\n\nRespuestas: **201** lead recibido (sin cuerpo) · **400** `id_conexion` inexistente o datos inválidos · **401** token ausente/inválido/expirado: pedir uno nuevo y reenviar una vez."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombres\": \"{{lead_nombres}}\",\n  \"cedula\": \"{{cedula}}\",\n  \"celular\": \"{{celular}}\",\n  \"direccion\": \"Cuenca\",\n  \"id_modelo\": \"{{id_modelo}}\",\n  \"notas\": \"Interesado en Lynk & Co 01. Entrada de 15,000. Pendiente confirmar ubicación para la oferta definitiva.\",\n  \"so_id\": null,\n  \"recommendation\": null,\n  \"score\": null\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa/:id_conexion",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa",
+                    ":id_conexion"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_conexion",
+                      "value": "{{id_conexion}}",
+                      "description": "Identificador de conexión por marca. Pruebas: `TESTCLARO`. LYNK & CO / KEYTON / SINOTRUK AUTOS / SINOTRUK CAMIONETAS: [COMPLETAR]. Las conexiones de producción ingresan al CRM y se asignan a asesores reales."
+                    }
+                  ]
+                },
+                "description": "Registra al cliente como prospecto en el BDC y, si se envía `id_asesor`, le asigna la cita con ese asesor.\n\n**Pruebas y producción comparten servidor y datos.** Use `id_conexion = TESTCLARO` para probar.\n\n| Campo | Tipo | Obligatorio | Descripción |\n|---|---|---|---|\n| nombres | Texto | Sí | Nombres y apellidos del cliente |\n| celular | Texto | Sí | Mismo formato que en la API 4.5 |\n| cedula | Texto | Recomendado | Cédula o RUC |\n| id_modelo | Texto | Sí | `id_modelo` de la API 4.2 |\n| notas | Texto (máx. 1000) | Sí | Resumen de la conversación: interés, forma de pago, entrada, ubicación |\n| id_agencias | Texto | Si hay asesor | `id_agencia` de la API 4.4 o 4.5. No enviar en pruebas, solo en pruebas con el cliente |\n| id_asesor | Texto | No | `id_usuario` de la API 4.4 o 4.5. Sin este campo el lead ingresa sin cita y lo asigna el BDC. No enviar en pruebas, solo en pruebas con el cliente |\n| direccion | Texto | No | Ciudad o dirección del cliente |\n| telefono | Texto | No | Teléfono fijo |\n| email | Texto | No | Correo del cliente |\n| so_id | Texto | No | Id de precalificación de crédito, si aplica |\n| recommendation | Texto | No | Resultado de precalificación, si aplica |\n| score | Texto | No | Score de buró, si aplica |\n\nRespuestas: **201** lead recibido (sin cuerpo) · **400** `id_conexion` inexistente o datos inválidos · **401** token ausente/inválido/expirado: pedir uno nuevo y reenviar una vez."
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            },
+            {
+              "name": "400 Bad Request",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombres\": \"{{lead_nombres}}\",\n  \"cedula\": \"{{cedula}}\",\n  \"celular\": \"{{celular}}\",\n  \"direccion\": \"Cuenca\",\n  \"id_modelo\": \"{{id_modelo}}\",\n  \"notas\": \"Interesado en Lynk & Co 01. Entrada de 15,000. Pendiente confirmar ubicación para la oferta definitiva.\",\n  \"so_id\": null,\n  \"recommendation\": null,\n  \"score\": null\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa/:id_conexion",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa",
+                    ":id_conexion"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_conexion",
+                      "value": "{{id_conexion}}",
+                      "description": "Identificador de conexión por marca. Pruebas: `TESTCLARO`. LYNK & CO / KEYTON / SINOTRUK AUTOS / SINOTRUK CAMIONETAS: [COMPLETAR]. Las conexiones de producción ingresan al CRM y se asignan a asesores reales."
+                    }
+                  ]
+                },
+                "description": "Registra al cliente como prospecto en el BDC y, si se envía `id_asesor`, le asigna la cita con ese asesor.\n\n**Pruebas y producción comparten servidor y datos.** Use `id_conexion = TESTCLARO` para probar.\n\n| Campo | Tipo | Obligatorio | Descripción |\n|---|---|---|---|\n| nombres | Texto | Sí | Nombres y apellidos del cliente |\n| celular | Texto | Sí | Mismo formato que en la API 4.5 |\n| cedula | Texto | Recomendado | Cédula o RUC |\n| id_modelo | Texto | Sí | `id_modelo` de la API 4.2 |\n| notas | Texto (máx. 1000) | Sí | Resumen de la conversación: interés, forma de pago, entrada, ubicación |\n| id_agencias | Texto | Si hay asesor | `id_agencia` de la API 4.4 o 4.5. No enviar en pruebas, solo en pruebas con el cliente |\n| id_asesor | Texto | No | `id_usuario` de la API 4.4 o 4.5. Sin este campo el lead ingresa sin cita y lo asigna el BDC. No enviar en pruebas, solo en pruebas con el cliente |\n| direccion | Texto | No | Ciudad o dirección del cliente |\n| telefono | Texto | No | Teléfono fijo |\n| email | Texto | No | Correo del cliente |\n| so_id | Texto | No | Id de precalificación de crédito, si aplica |\n| recommendation | Texto | No | Resultado de precalificación, si aplica |\n| score | Texto | No | Score de buró, si aplica |\n\nRespuestas: **201** lead recibido (sin cuerpo) · **400** `id_conexion` inexistente o datos inválidos · **401** token ausente/inválido/expirado: pedir uno nuevo y reenviar una vez."
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            },
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombres\": \"{{lead_nombres}}\",\n  \"cedula\": \"{{cedula}}\",\n  \"celular\": \"{{celular}}\",\n  \"direccion\": \"Cuenca\",\n  \"id_modelo\": \"{{id_modelo}}\",\n  \"notas\": \"Interesado en Lynk & Co 01. Entrada de 15,000. Pendiente confirmar ubicación para la oferta definitiva.\",\n  \"so_id\": null,\n  \"recommendation\": null,\n  \"score\": null\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/conexiones/botwa/:id_conexion",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "conexiones",
+                    "botwa",
+                    ":id_conexion"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id_conexion",
+                      "value": "{{id_conexion}}",
+                      "description": "Identificador de conexión por marca. Pruebas: `TESTCLARO`. LYNK & CO / KEYTON / SINOTRUK AUTOS / SINOTRUK CAMIONETAS: [COMPLETAR]. Las conexiones de producción ingresan al CRM y se asignan a asesores reales."
+                    }
+                  ]
+                },
+                "description": "Registra al cliente como prospecto en el BDC y, si se envía `id_asesor`, le asigna la cita con ese asesor.\n\n**Pruebas y producción comparten servidor y datos.** Use `id_conexion = TESTCLARO` para probar.\n\n| Campo | Tipo | Obligatorio | Descripción |\n|---|---|---|---|\n| nombres | Texto | Sí | Nombres y apellidos del cliente |\n| celular | Texto | Sí | Mismo formato que en la API 4.5 |\n| cedula | Texto | Recomendado | Cédula o RUC |\n| id_modelo | Texto | Sí | `id_modelo` de la API 4.2 |\n| notas | Texto (máx. 1000) | Sí | Resumen de la conversación: interés, forma de pago, entrada, ubicación |\n| id_agencias | Texto | Si hay asesor | `id_agencia` de la API 4.4 o 4.5. No enviar en pruebas, solo en pruebas con el cliente |\n| id_asesor | Texto | No | `id_usuario` de la API 4.4 o 4.5. Sin este campo el lead ingresa sin cita y lo asigna el BDC. No enviar en pruebas, solo en pruebas con el cliente |\n| direccion | Texto | No | Ciudad o dirección del cliente |\n| telefono | Texto | No | Teléfono fijo |\n| email | Texto | No | Correo del cliente |\n| so_id | Texto | No | Id de precalificación de crédito, si aplica |\n| recommendation | Texto | No | Resultado de precalificación, si aplica |\n| score | Texto | No | Score de buró, si aplica |\n\nRespuestas: **201** lead recibido (sin cuerpo) · **400** `id_conexion` inexistente o datos inválidos · **401** token ausente/inválido/expirado: pedir uno nuevo y reenviar una vez."
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

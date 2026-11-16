@@ -1,0 +1,49 @@
+# Decisiones del cliente — Vehicentro
+
+## 2026-11-04 · Reunión «Revisión flujos Vehicentro» (Diio 47d1154e-…)
+Participantes por rol: PM del cliente (Vehicentro), PM y comercial del partner (Claro), PM de Jelou, implementador, arquitecto de Jelou.
+
+Acuerdos y pedidos (por clasificar contra el Brief v1.2 = alcance base):
+| # | Pedido / acuerdo | Clasificación propuesta |
+|---|---|---|
+| D-01 | Guardar el origen del lead (página, campaña, grupo de anuncios, anuncio, formulario) de Meta y TikTok. Jelou confirma qué estructura llega en cada caso | Dentro del alcance (registro de la campaña). Acción: implementador |
+| D-02 | La validación de asesor asignado se hace por **celular**, sin pedir la cédula al inicio. Con BSUID hay que pedir el celular por WhatsApp | Cambio respecto de la preventa (el Brief preveía esta variante) |
+| D-03 | La cédula se pide recién **al cotizar**: el bot invita a cotizar → cédula → ciudad → agencias (API) → el cliente elige agencia → se informa el asesor y la agencia | Cambio de flujo dentro de Flujo_2 |
+| D-04 | El bot sigue el contexto si el cliente cambia de marca o de modelo: compara modelos y responde precios y características | Dentro del alcance (agente IA + catálogo) |
+| D-05 | Agrupar los mensajes consecutivos: espera de unos 2 s y responde al último. Se ajusta en pruebas | Dentro del alcance (configuración) |
+| D-06 | Si detecta interacción negativa o falta de interés: se disculpa y termina, sin insistir | Dentro del alcance (Brief: «si no está interesado, cierra») |
+| D-07 | **Envío del prospecto al sistema de Vehicentro (JSON)**, que devuelve el **correo del teleasesor** asignado. Jelou asigna la conversación a ese usuario en PMA. Si abandona después de elegir el modelo, igual se envía lo que haya. El servicio que devuelve el asesor **no existe todavía** del lado del cliente | **Posible ampliación**: el Brief excluye crear o actualizar registros en el CRM → pregunta a Comercial + nuevo insumo [C] |
+| D-08 | Recordatorios: hasta 5 (el Brief decía 3), con intervalos, sin mensajes en la noche. Fuera de las 24 h haría falta una plantilla de utilidad (HSM, con costo) | 3→5 es un cambio a confirmar; usar HSM es una **posible ampliación** (el Brief retiró los HSM) |
+| D-09 | Si el usuario borra el mensaje predeterminado del anuncio, el bot pide la marca antes de seguir | Dentro del alcance |
+| D-10 | Consentimiento: mensaje «al continuar, acepta los términos» con link; si sigue chateando, aceptó | Decisión del cliente; **choca con la regla 17** (H-01) |
+| D-11 | Llegan prospectos también por Google Ads y otros medios, no solo por Meta y TikTok | Por aclarar (el Brief solo nombra Meta y TikTok) |
+
+Compromisos:
+- Implementador: Brief actualizado (v1.3) con el flujo, las integraciones, la asignación, los recordatorios, la agrupación de mensajes y las interacciones negativas → a la PM del partner, que lo remite al cliente. **Fecha: 2026-11-06.**
+- PM del cliente: aprobar el Brief el mismo día que lo reciba.
+- PM del partner: pedir el cronograma actualizado tras la aprobación (desarrollo estimado en 21 días hábiles). Fecha: 2026-11-09.
+
+## 2026-11-04 · Resolución de alcance para el Brief v1.3 (implementador)
+- D-07 **entra** en v1.3: envío del prospecto (JSON) al sistema de Vehicentro y asignación en PMA por el correo del teleasesor que devuelva. Nuevo insumo del cliente: el servicio que devuelve el asesor asignado (no existe aún).
+- D-08 **entra acotado**: máximo **4** recordatorios, con intervalos y sin envíos nocturnos. Los HSM fuera de 24 h **no son obligatorios** (opcionales, con costo aparte; no se comprometen en el alcance).
+- D-11 **no entra**: solo Meta y TikTok como origen de campaña.
+- Formato: el v1.3 se emite en el mismo formato del Brief (v1.0–v1.2).
+
+## 2026-11-16 · Aclaraciones tras la revisión de las APIs BDC (implementador)
+**No se emite un Brief nuevo: se trabaja con el v1.3 aprobado (05/11).** Lo que la documentación de las APIs cambia respecto del texto del v1.3 se resuelve en la spec funcional (F2) como detalle de implementación, sin cambiar el alcance.
+
+| # | Tema | Decisión |
+|---|---|---|
+| D-12 | Marcas | **4 marcas** (KEYTON, LYNK & CO, SINOTRUK AUTOS, SINOTRUK CAMIONETAS), verificado consumiendo la API 4.1 |
+| D-13 | `id_conexion` del lead | Por ahora se usa **TESTCLARO** (pruebas); los de producción por marca quedan pendientes para antes del go-live |
+| D-14 | Origen de la campaña | Va **como texto en `notas`** del lead (y en Datum); el BDC no agrega campos |
+| D-15 | Datos del lead | El bot **no pregunta** forma de pago ni entrada: no están en el alcance. `notas` se arma con lo que haya en la conversación |
+| D-16 | Recordatorios | Se empieza con **un recordatorio cada 1 hora** (máximo 4, dentro de 24 h); se ajusta en pruebas |
+| D-17 | Horarios del contact center | No se modelan en el bot: el nodo de atención humana (PMA) evalúa el horario por su cuenta |
+| D-18 | Retención en Datum | Se conservan los datos **de forma indefinida** |
+| D-19 | Disponibilidad de las APIs | 24/7, según el cliente |
+| D-20 | Credenciales OAuth | Entregadas por el cliente; se cargan como secretos en la plataforma, nunca por chat ni en el repo |
+| D-21 | Brain | Se construye en `DEV Vehicentro` y se promueve a `EC-02-113-01 Vehicentro` |
+| D-22 | Ecommerce WebView | Es el webview que ya existe en Jelou Shop; no se desarrolla |
+| D-23 | Asignación del asesor (D-07) | **Primero se registra el lead** (POST, sin `id_asesor`; el BDC lo asigna) y **después se consulta 4.5 Existe asesor**, que devuelve el asesor con su correo para asignar la conversación en PMA. Si 4.5 ya devolvía asesor al inicio, se usa ese. 4.4 queda como respaldo. Por verificar en F5: que el BDC asigna al momento del POST (también con `TESTCLARO`) |
+| D-24 | Aprobación de D-07 | No requiere ratificación de Comercial: el proyecto va por partner y el Brief v1.3 aprobado ya lo incluye. Q-CP-1 cerrada |

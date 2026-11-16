@@ -1,0 +1,57 @@
+=== BLOQUEANTES (14): resolver antes de pasar a aprobado ===
+  integraciones: 6
+    [INT] integraciones[0]: INT-1: no test environment and no client dependency with a date to obtain it: it cannot be built or tested. Add a dependency (with fecha_limite) that covers INT-1 (field "integracion": "INT-1" or its INT-n/WS#n in the text).
+    [INT] integraciones[1]: INT-2: no test environment and no client dependency with a date to obtain it: it cannot be built or tested. Add a dependency (with fecha_limite) that covers INT-2 (field "integracion": "INT-2" or its INT-n/WS#n in the text).
+    [INT] integraciones[2]: INT-3: no test environment and no client dependency with a date to obtain it: it cannot be built or tested. Add a dependency (with fecha_limite) that covers INT-3 (field "integracion": "INT-3" or its INT-n/WS#n in the text).
+    [INT] integraciones[3]: INT-4: no test environment and no client dependency with a date to obtain it: it cannot be built or tested. Add a dependency (with fecha_limite) that covers INT-4 (field "integracion": "INT-4" or its INT-n/WS#n in the text).
+    [INT] integraciones[4]: INT-5: no documentation, no test environment and no client dependency with a date to obtain them: it cannot be built or tested. Add a dependency (with fecha_limite) that covers INT-5 (field "integracion": "INT-5" or its INT-n/WS#n in the text).
+    [INT] integraciones[5]: INT-6: no documentation, no test environment and no client dependency with a date to obtain them: it cannot be built or tested. Add a dependency (with fecha_limite) that covers INT-6 (field "integracion": "INT-6" or its INT-n/WS#n in the text).
+  datos: 2
+    [DATA] datos[0]: Entity "Usuarios" stores personal data and declares no retention period (needed for data-protection compliance and for the Datum design).
+    [DATA] datos[2]: Entity "Leads" stores personal data and declares no retention period (needed for data-protection compliance and for the Datum design).
+  parametros: 1
+    [DATA] parametros.retencion_datos: The personal-data retention parameter is missing or pending while the solution stores personal data.
+  dependencias_cliente: 5
+    [DEP] dependencias_cliente[0]: The dependency "Esquema de autenticación, datos de prueba y URL de conexión de las APIs (INT-1 a INT-6)" has no deadline (fecha_limite): the schedule depends on it.
+    [DEP] dependencias_cliente[1]: The dependency "Estructura del cuerpo del servicio botwa/:id (INT-6)" has no deadline (fecha_limite): the schedule depends on it.
+    [DEP] dependencias_cliente[2]: The dependency "Servicio de prospectos que devuelve el correo del teleasesor (INT-5) y usuarios de los teleasesores creados en PMA con ese correo" has no deadline (fecha_limite): the schedule depends on it.
+    [DEP] dependencias_cliente[3]: The dependency "Link a los términos y a la política de datos de Vehicentro" has no deadline (fecha_limite): the schedule depends on it.
+    [DEP] dependencias_cliente[4]: The dependency "Ejecución de la UAT y reporte escrito de observaciones dentro de las fechas del cronograma" has no deadline (fecha_limite): the schedule depends on it.
+
+=== ADVERTENCIAS (27) ===
+  parametros: 3 pendientes, 2 avisos
+    WARN  [PARAM] parametros.moneda: The SOW handles amounts but "moneda" is missing.
+    WARN  [PARAM] parametros.impuestos: The SOW handles amounts but "impuestos" is missing.
+    pendientes: parametros.horario_agentes, parametros.recordatorios, parametros.fuera_de_horario
+  agentes: 3 pendientes, 1 aviso
+    WARN  [FLOW] agentes: 1 agent(s) are not named "Flujo_N: <Nombre>" while others are. Keep the design's flow names exactly (or none).
+    pendientes: agentes[0].persona.nombre, agentes[1].persona.nombre, agentes[2].persona.nombre
+  datos: 1 pendiente, 1 aviso
+    WARN  [DATA] datos[1]: Entity "Viaje del usuario" declares no retention.
+    pendientes: datos[1].retencion
+  demo: 2 avisos
+    WARN  [PII] demo.usuario.telefono: This looks like a phone number outside the team table.
+    WARN  [PII] demo.variables.contacto_asesor: This looks like a phone number outside the team table.
+  equipo: 2 pendientes
+    pendientes: equipo[7].nombre, equipo[7].cargo
+  reglas: 2 pendientes
+    pendientes: reglas[9].parametros.intervalos, reglas[9].parametros.franja_sin_envios
+  escalamiento: 6 pendientes
+    pendientes: escalamiento[0].horario, escalamiento[0].fuera_de_horario, escalamiento[1].horario, escalamiento[1].fuera_de_horario, … (+2)
+  firmas: 2 pendientes
+    pendientes: firmas.cliente.nombre, firmas.cliente.cargo
+  cronograma: 1 aviso
+    WARN  [SCHED] cronograma: The critical path of the schedule adds up to 21 business days (parallel lanes count once, as the longest lane); the limit is 15. An exception is declared in meta.excepcion_plazo.
+  meta: 1 aviso
+    WARN  [LEGAL] meta.clausula_uat_revisada_legal: The UAT clause (client tests on the stipulated dates, otherwise deemed accepted and closed) is a DRAFT pending review by Legal. Set meta.clausula_uat_revisada_legal: true once Legal approves the wording.
+
+=== PROPUESTA DE FECHAS PARA DEPENDENCIAS SIN FECHA (sugerencia; no se escribe en el documento) ===
+  Define cronograma.inicio para calcular las fechas propuestas.
+  dependencias_cliente[0]: "Esquema de autenticación, datos de prueba y URL de conexión de las APIs (INT-1 a" -> sin cálculo (la necesita el hito "Construcción del bot e integración")
+  dependencias_cliente[1]: "Estructura del cuerpo del servicio botwa/:id (INT-6)" -> sin cálculo (la necesita el hito "Construcción del bot e integración")
+  dependencias_cliente[2]: "Servicio de prospectos que devuelve el correo del teleasesor (INT-5) y usuarios " -> sin cálculo (la necesita el hito "Construcción del bot e integración")
+  dependencias_cliente[3]: "Link a los términos y a la política de datos de Vehicentro" -> sin cálculo (la necesita el hito "Construcción del bot e integración")
+  dependencias_cliente[4]: "Ejecución de la UAT y reporte escrito de observaciones dentro de las fechas del " -> sin cálculo (la necesita el hito "UAT del cliente")
+  El cronograma suma 21 días hábiles (sin holgura): 15 de ellos dependen de entregables del cliente sin fecha.
+
+0 error(s), 41 warning(s) (14 blocking, 19 pending values). Status: en_revision.

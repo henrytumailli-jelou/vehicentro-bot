@@ -1,0 +1,1564 @@
+{
+  "panel": {
+    "titulo": "Vehicentro · Gestión de pedidos y agendamiento – Fase 1: Consulta de catálogo y agencias",
+    "subtitulo": "Simulación del SOW v1.3 · en revisión",
+    "version": "SOW v1.3",
+    "pie": "Prototipo con datos simulados.",
+    "titulo_pagina": "Jelou · Simulación Vehicentro",
+    "resumen": false
+  },
+  "marca": {
+    "nombre": "Vehicentro",
+    "color": "#B71C1C",
+    "verificado": true,
+    "subtitulo": "Cuenta de empresa",
+    "iniciales": "V"
+  },
+  "usuario": {
+    "nombre": "Carlos Ejemplo",
+    "telefono": "+593 99 000 0000"
+  },
+  "journeys": [
+    {
+      "id": "f1",
+      "nombre": "Flujo_1: Bienvenida y Enrutamiento",
+      "canal": "whatsapp",
+      "tech": "webview",
+      "resumen": "El prospecto llega desde un anuncio de Meta o TikTok → ¿Ya tiene asesor asignado? → Recibe los datos de su asesor → Se identifica la marca y la intención",
+      "puntos": [
+        "Entrada y origen",
+        "Registro del origen",
+        "Bienvenida y términos",
+        "Validación de asesor",
+        "Pedir celular",
+        "¿Tiene asesor?"
+      ],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "Hola, quiero información del modelo del anuncio",
+          "nota": "Etapa: Entrada.",
+          "id": "p1",
+          "ir": "p3"
+        },
+        {
+          "tipo": "texto",
+          "texto": "¡Hola! Soy el asistente virtual de Vehicentro. Al continuar con esta conversación usted acepta nuestros términos y la política de tratamiento de datos personales: https://vehicentro.example/terminos",
+          "nota": "Etapa: Bienvenida y términos. RN-02 · Aceptación de términos y tratamiento de datos. Detrás de escena: Jelou Registra el origen: página, campaña, grupo, anuncio y formulario (INT-6: botwa/:id (WS#6, POST); documentación pendiente, respuesta simulada).",
+          "id": "p3",
+          "ir": "p8"
+        },
+        {
+          "tipo": "texto",
+          "texto": "Usted ya tiene un asesor asignado: Asesor Demo. Puede escribirle al +593 99 111 1111.",
+          "nota": "Etapa: Asesor asignado. Decisión: ¿Meta entregó el número de celular? → sí. Detrás de escena: Jelou Consulta si ya tiene asesor asignado (por celular) (INT-1: botwa_existe_asesor (WS#1)). Decisión: ¿Tiene asesor asignado? → sí.",
+          "id": "p8",
+          "ir": "f2_q3"
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "El modelo Modelo A 4x2 tiene un precio de USD 28.990. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            {
+              "titulo": "Ver catálogo",
+              "ir": "f2_q4"
+            },
+            {
+              "titulo": "Cotizar",
+              "ir": "f2_q5"
+            },
+            {
+              "titulo": "Agencias",
+              "ir": "f2_q7"
+            }
+          ],
+          "nota": "Etapa: Respuesta del agente IA. El agente identifica la intención y enruta. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3)).",
+          "id": "f2_q3",
+          "principal": 0
+        },
+        {
+          "tipo": "cta_url",
+          "header": {
+            "tipo": "imagen",
+            "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeAAAAHgCAYAAAB91L6VAAAoKElEQVR4nO3dD5BVV2HH8RMhYiA+C4JZu9WdgYCuEkWDdE38y4J/atqy4ozpWBZndKYqMBNHa1mi7bQalvpnzAxLtDM6I1CncSZkaRurBhbjn8QtIUoMySYQ6Gzsmo0g1BcgYkB7fo8cuHv3PXhvee+de8/5fmYue96f+//P797z7j1cdrR4/A8GAAA0FQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDCQYfsff9wcP37Cloz56d4H7b8X9/oFr7X/GnPlldPMvKuvtiUAWUQAAxmgcFWnsFXoPjn6lO1G7SeX7qUtLba7qhTGCmUFtDoAfhHAgAcK22Tng0JY3VvedF0pnAE0FwEMNMkPf3yf+cGP77V/7zVPHz9u38mOF155pQ3i681bbadABtB4BDDQQKpG/vZ37y51KueBqqzf8653lDqVATQGAQw0gKqVv/aNLaW/eaYq6g9/sLv0F0B9EcBAHSlwQwjeNAUwQQzUFwEM1IHuXL617yvBBW+aAvgza/+WqmmgDghg4BLoZqqvf2Oruf2ObfZVPG5833LzoQ+uKN28BWBiCGBggnS1+9kNX8jNzVX1pqtgXQ3rqhhA7QhgoEaxXvVWwtUwMDEEMFAD/db7uQ1fLP1tprlXzxkXcGrdStRqVpJOEA48ftCWmkcNeXx67SdLfwFUhwAGqqRGND5nq5wVcI2ioFWVrsJWfxWyquqdCFWNK5xVVa5p1t9GBrOm+dO2SlqNeQC4OAIYqMK3v/u90u+99aaAVQtUClt1CrFGckGsTi1yKaDrTb8Lv+dd77QlABdCAAMXoeBVANeL/kMEXSW+/33v9V5lq6r0b91xZ+nqXv8RRL3od+GbVn/UlgBUQgADF1DP8NUVrpp3zOrVoeZTTWbq6rgeNJ+6GgZQHgEMVFCv8FU1802rP1a66s0DXQ3f2ndbXaqnCWGgMgIYKKMe4avgVfONCqE80vyrWc1LDWLNPyEMjEcAAyn1CF/9vqvwbfRNVY2mm7YUwvqd+FIQwsB4BDCQoOBVAE+Urno/s/ZTpd97Q6LfhT+74fOXdDWsAFYQAziLAAaec6nhqxus9Ftv3q96K9HVsH4b1o1aE0UIA+cRwIClx3FW3fTJUshMhB650aM3MVATnPqfnyZCJyebbv2i98evgCwggBE9ha7CVyFcKz3T+3F71RvbVd2l1BYofBXCCmMgZgQwoqcgUaDUSuF7261fKgVKjHTC8rGbPjGhBjx0wqLqaCBmBDCipuBVANcq9vB1LiWE//lz/5ibZ6OBRiCAES39ZwXdH/5IqQq6Vlu+9tXow9dRCGs51kpV0FqOE/3PJoC8I4ARLV256fGaWqnqVFWoOG+iNQl6XEs1CUCMCGBESc0t/t2n/8GWakP4VjbREKYqGrEigBEdVTmrylRV0LXQc75qZAOVqbGOWp8TVhW0qqJVJQ3EhABGdNS0orpa6D/KV1UpIXFhOrlR1X6t//G/mu1UB8SEAEZUdNXbdeNf21L1uOO5NropSyFc653R/bf/a+lqGIgFAYyoKBhqvfGK331rN5Hfg/U7sH4PBmJBACMaCl4FcC3e8qbrzOc/90+2hFppWWuZ10K/BVPTgFgQwIjGRG4Qolp04iZS3c+NbogJAYwoTCQMdFOQOkycbnZTVwtOehALAhhRqPXqV/+v75av/Qt3PV8i3RXddeMHarohi6tgxIIARvAUAu+1V7/6Wy1uvKqfWm/I0knPnfYqWH+BkBHACJ6qQNVVS8/8brVXv6ifFR/+m5qeDVbVvzogZAQwgrf0hmVc/Xo2kavgHXdttyUgXAQwglZrm8/67bf/9m/aEupNvwU/OfqULVVHzwTr2WAgVAQwglbrzVc3rf6oufF9y20J9Xb7HdvMrX1fsaXqcDMWQkcAI2i1VD+ryUld/ar6E/Wn9aCr4GrviNZ6oBoaISOAEaxaf3fUTT/q0Dhf7rvNfOuOO22pOlRDI2QEMIL1qU//vfnhj++zperQAETj1dogCk2BImQEMIKk6k5VP1eLR4+ap9ZHklQNrepoIDQEMIJUa/UzN181T603Y/FYGEJFACNItd79TPVz89RaDc3d0AgVAYwg6QCvA301qH5uvlqqoXVipBMkIDQEMIKj4FUAV4vq5+artRpaAawgBkJCACM4tf7+y8G9+fY//rjp/vBHbKk6/A6MEBHACE4tv//S9KQ/S274y6ob5eB3YISIAEZwVP2sauhq8JypP7U8p60aCtVUACEhgBEUBa8CuFr8/usPvwMjdgQwglLr/3605WtfNfOuvtqW0Gy1/g58261fMq9f8FpbAsJAACMo+o/31VVD//nCzrv+3ZbgSy2/A6udbnVAKAhgBKWW3xX5/dc/1hdiRgAjKKrSVNVmNXQ1pQ7+qLZCXTX0U4F+MgBCQQAjKB1vW2L/rQ7/1Z1/tf5mP3jPTvsvEAYCGMHQla+ugKulqyldVcGfn+590Hzspk/YUnVYZwgJAYxgcDWVT9RaIFYEMIKh3xLVVYP/gCE7um78gHly9Clbujj9Zq8OCAEBjGB8ue8286077rSli+OO2uxQFbSqoqvx/ve913x89cdsCcg/AhjBqOVArqsodfBPtRbqqqGGONQgBxACAhjBIIDzSeGrrhoEMEJCACMYS29YZp4+ftyWLk4HcR3M4V8tN8+pLWi1CQ2EgABGMGq5m5YAzg7VWqj2olrcvY5QEMAIgq58dQVcLZ4nzQ4CGLEigBEEDuL5Ru0FYkQAIwgEcL4RwIgRAYwg1BLAL225yvTf/k1bQlbU0hgHAYxQEMAIwre/+z3z2Q1fsKWL08FbB3Fkh06edBJVDZqjRCgIYARBz5GqqwYBnD21BLCe31YH5B0BjCAofNVVgwDOHgIYMSKAEQSFr7pqEMDZQwAjRgQwgqDwVVcNAjh7CGDEiABGEBS+6qpBAGcPAYwYEcAIgsJXXTUI4OwhgBEjAhhBUPiqq4YO3uqQHbX8X85ad+qAvCOAcUH//apX2n+z7zvTCua7tqvGu04Uzbtth+wIdf396SOP2n+B8ghgVHRiaMjsW95lS9n38ylXmK+/6MW2dHEf+s2vzWtOPWNLyIpQ19/8bf1mWnu7LQHjEcCoqLh7txnKSVXfM897nvn8jKvM0edNsq8qm/H7M+ZTR58yV/z+9/YVsiLU9ddufxYpLFpkS8B4BDAqOtzfbw7d3GNL+fD486eYjX80y5YqW/N/h83VvztlS8iaENff7Ft6zayufNQiofkIYFT0v5v6zIjt8kQH8W8WZoy7ktKV0weKR3N18I5RaOuvddVq8ye2A8ohgFHRcO96M7q1ujuLs0TVmQcun2JGJl9uX9mD4OlnzdxnT+Wm2jJ2Ia2/lhXdpq1nnS0B4xHAqOiRld3m6ft32xKAiXjhGxaZV23O30ksmoMARkUEMHBpCGBcCAGMivZ0LDJnivl43hLIokmFglk4yEksyiOAUVFeGuEAsozGOFAJAYyyTo2MmL1LO20JwKVYsGPATGlttSVgLAIYZeWpEQ4gy2iMA5UQwCjr6MBOc2ANzy8Cl2ruxj4zo3OJLQFjEcAoK4+NcABZRGMcqIQARlkEMFAfBDAqIYBR1v7Vq8yxXQO2BOBSTF/caeb1bbIlYCwCGGXRCAdQHzTGgUoIYJSlR5D0KBKAS6NHkPQoEpBGAKMsGuEA6ofGOFAOAYxxTheL5oEOnlsE6uXawd1mcqFgS8B5BDDGoREOoL5ojAPlEMAYhwAG6osARjkEMMYZ3bLZDG/otSUA9dC2tse0dK+0JeA8Ahjj0AgHUF80xoFyCGCMc3Bdjzmyvd+WANTDzGVdZs56apUwFgGMcWiEA6gvGuNAOQQwxnloeZc5OTRkSwDqYWp7u7lmG7VKGIsAxjg0wgHUH41xII0AxjgEMFB/BDDSCGCMccJWPe+zVdAA6mu+rYKeZquiAYcAxhg0wgE0Bo1xII0AxhiH+/vNoZt7bAlAPc2+pdfM6qJ2CecRwBiDRjiAxqAxDqQRwBhjuHe9Gd3K84pAvbWs6DZtPetsCTiLAMYYNMIBNAaNcSCNAMYYBDDQGAQw0ghgjLGnY5E5UyzaEoB6mlQomIWDnNziPAIYY9AIB9A4NMaBJAIY55waGTF7l3baEoBGWLBjwExpbbUlgABGAo1wAI1FYxxIIoBxztGBnebAGp5TBBpl7sY+M6NziS0BBDASaIQDaCwa40ASAYxzCGCgsQhgJBHAOGf/6lXm2K4BWwLQCNMXd5p5fZtsCSCAkUAjHEBj0RgHkghgnKNHkPQoEoDG0CNIehQJEAIY59AIB9B4NMYBhwBGyeli0TzQwfOJQKNdO7jbTC4UbAmxI4BRQiMcQHPQGAccAhglBDDQHAQwHAIYJaNbNpvhDb22BKCR2tb2mJbulbaE2BHAKKERDqA5aIwDDgGMkoPresyR7f22BKCRZi7rMnPWU9sEAhjPoREOoDlojAMOAYySh5Z3mZNDQ7YEoJGmtreba7ZR2wQCGM+hEQ6geWiMA0IAo4QABpqHAIYQwDAnbNXzPlsFDaA55tsq6Gm2KhpxI4BBIxxAk9EYB4QAhjnc328O3dxjSwCaYfYtvWZWF7VOsSOAYWiEA2guGuOAEMAww73rzehWnksEmqVlRbdp61lnS4gZAQwa4QCajMY4IAQwCGCgyQhgCAEMs6djkTlTLNoSgGaYVCiYhYOc9MaOAAaNcAAe0BgHCODInRoZMXuXdtoSgGZasGPATGlttSXEigCOHI1wAH7QGAcI4MgdHdhpDqzheUSg2eZu7DMzOpfYEmJFAEeORjgAP2iMAwRw5AhgwA8CGARw5PavXmWO7RqwJQDNNH1xp5nXt8mWECsCOHI0wgH4QWMcIIAjp0eQ9CgSgObSI0h6FAnxIoAjRyMcgD80xhE3Ajhip4tF80AHzyECvlw7uNtMLhRsCTEigCNGIxyAXzTGETcCOGIEMOAXARw3Ajhio1s2m+ENvbYEwIe2tT2mpXulLSFGBHDEaIQD8IvGOOJGAEfs4Loec2R7vy0B8GHmsi4zZz21ULEigCNGIxyAXzTGETcCOGIPLe8yJ4eGbAmAD1Pb280126iFihUBHDEa4QD8ozGOeBHAESOAAf8I4HgRwJE6Yaue99kqaAB+zbdV0NNsVTTiQwBHikY4gGygMY54EcCROtzfbw7d3GNLAHyafUuvmdVFbVSMCOBI0QgHkA00xhEvAjhSw73rzehWnj8EfGtZ0W3aetbZEmJDAEeKRjiAbKAxjngRwJEigIFsIIDjRQBHak/HInOmWLQlAD5NKhTMwkFOhmNEAEeKRjiA7KAxjjgRwBE6NTJi9i7ttCUAWbBgx4CZ0tpqS4gJARwhGuEAsoXGOOJEAEfo6MBOc2ANzx0CWTF3Y5+Z0bnElhATAjhCNMIBZAuNccSJAI4QAQxkCwEcJwI4QvtXrzLHdg3YEoAsmL6408zr22RLiAkBHCEa4QCyhcY44kQAR0iPIOlRJADZoEeQ9CgS4kIAR4hGOIDsoTGO+BDAkTldLJoHOnjeEMiaawd3m8mFgi0hFgRwZGiEA8gmGuOIDwEcGQIYyCYCOD4EcGRGt2w2wxt6bQlAlrSt7TEt3SttCbEggCNDIxxANtEYR3wI4MgcXNdjjmzvtyUAWTJzWZeZs57aqZgQwJGhEQ4gm2iMIz4EcGQeWt5lTg4N2RKALJna3m6u2UbtVEwI4MjQCAeQXTTGERcCODIEMJBdBHBcCOCInLBVz/tsFTSAbJpvq6Cn2apoxIEAjgiNcADZRmMccSGAI3K4v98curnHlgBk0exbes2sLmqpYkEAR4RGOIBsozGOuBDAERnuXW9Gt/KcIZBVLSu6TVvPOltCDAjgiNAIB5BtNMYRFwI4IgQwkG0EcFwI4Ijs6VhkzhSLtgQgiyYVCmbhICfJsSCAI0IjHED20RhHPAjgSJwaGTF7l3baEoAsW7BjwExpbbUlhI4AjgSNcAD5QGMc8SCAI3F0YKc5sIbnC4Gsm7uxz8zoXGJLCB0BHAka4QDygcY44kEAR4IABvKBAI4HARyJ/atXmWO7BmwJQJZNX9xp5vVtsiWEjgCOBI1wAPlAYxzxIIAjoUeQ9CgSgGzTI0h6FAnhI4AjQSMcQH7QGEccCOAInC4WzQMdPFcI5MW1g7vN5ELBlhAyAjgCNMIB5AuNccSBAI4AAQzkCwEcBwI4AqNbNpvhDb22BCAP2tb2mJbulbaEkBHAEaARDiBfaIwjDgRwBA6u6zFHtvfbEoA8mLmsy8xZT61V6AjgCNAIB5AvNMYRBwI4Ag8t7zInh4ZsCUAeTG1vN9dso9YqdARwBGiEA8gfGuMIHwEcAQIYyB8COHwEcOBO2KrnfbYKGkC+zLdV0NNsVTTCRQAHjkY4gHyiMY7wEcCBO9zfbw7d3GNLAPJk9i29ZlYXtVchI4ADRyMcQD7RGEf4CODADfeuN6NbeZ4QyJuWFd2mrWedLSFUBHDgaIQDyCca4wgfARw4AhjIJwI4fARw4PZ0LDJnikVbApAnkwoFs3CQk+eQEcCBoxEOIL9ojCNsBHDATo2MmL1LO20JQB4t2DFgprS22hJCRAAHjEY4gHyjMY6wEcABOzqw0xxYw3OEQF7N3dhnZnQusSWEiAAOGI1wAPlGYxxhI4ADRgAD+UYAh40ADtj+1avMsV0DtgQgj6Yv7jTz+jbZEkJEAAeMRjiAfKMxjrARwAHTI0h6FAlAPukRJD2KhDARwAGjEQ4g/2iMI1wEcKBOF4vmgQ6eHwTy7trB3WZyoWBLCA0BHCga4QDCQGMc4SKAA0UAA2EggMNFAAdqdMtmM7yh15YA5Fnb2h7T0r3SlhAaAjhQNMIBhIHGOMJFAAfq4Loec2R7vy0ByLOZy7rMnPXUZoWIAA4UjXAAYaAxjnARwIF6aHmXOTk0ZEsA8mxqe7u5Zhu1WSEigANFIxxAOGiMI0wEcKAIYCAcBHCYCOAAnbBVz/tsFTSAMMy3VdDTbFU0wkIAB4hGOICw0BhHmAjgAB3u7zeHbu6xJQAhmH1Lr5nVRa1WaAjgANEIBxAWGuMIEwEcoOHe9WZ0K88NAqFoWdFt2nrW2RJCQgAHiEY4gLDQGEeYCOAAEcBAWAjgMBHAAdrTscicKRZtCUAIJhUKZuEgJ9WhIYADRCMcQHhojCM8BHBgTo2MmL1LO20JQEgW7BgwU1pbbQmhIIADQyMcQJhojCM8BHBgjg7sNAfW8LwgEJq5G/vMjM4ltoRQEMCBoREOIEw0xhEeAjgwBDAQJgI4PARwYPavXmWO7RqwJQAhmb6408zr22RLCAUBHBga4QDCRGMc4SGAA6NHkPQoEoCw6BEkPYqEcBDAgaERDiBcNMYRFgI4IKeLRfNAB88JAqG6dnC3mVwo2BJCQAAHhEY4gLDRGEdYCOCAEMBA2AjgsBDAARndstkMb+i1JQAhalvbY1q6V9oSQkAAB4RGOICw0RhHWAjggBxc12OObO+3JQAhmrmsy8xZTy1XKAjggNAIBxA2GuMICwEckIeWd5mTQ0O2BCBEU9vbzTXbqOUKBQEcEBrhAMJHYxzhIIADQgAD4SOAw0EAB+KErXreZ6ugAYRtvq2CnmaropF/BHAgaIQDiAONcYSDAA7E4f5+c+jmHlsCELLZt/SaWV3UdoWAAA4EjXAAcaAxjnAQwIEY7l1vRrfyfCAQupYV3aatZ50tIe8I4EDQCAcQBxrjCAcBHAgCGIgDARwOAjgQezoWmTPFoi0BCNmkQsEsHORkOwQEcCBohAOIB41xhIEADsCpkRGzd2mnLQGIwYIdA2ZKa6stIc8I4ADQCAcQFxrjCAMBHICjAzvNgTU8FwjEYu7GPjOjc4ktIc8I4ADQCAcQFxrjCAMBHAACGIgLARwGAjgA+1evMsd2DdgSgBhMX9xp5vVtsiXkGQEcABrhAOJCYxxhIIADoEeQ9CgSgDjoESQ9ioR8I4ADQCMcQHxojCP/COCcO10smgc6eB4QiM21g7vN5ELBlpBXBHDO0QgHECca48g/AjjnCGAgTgRw/hHAOTe6ZbMZ3tBrSwBi0ra2x7R0r7Ql5BUBnHM0wgHEicY48o8AzrmD63rMke39tgQgJjOXdZk566n9yjMCOOdohAOIE41x5B8BnHMPLe8yJ4eGbAlATKa2t5trtlH7lWcEcM7RCAcQLxrjyDcCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAACd/zkM+bKqVfYErKEAEZT3b/vUTO98EJz9ctb7avG0DieOnLM3PC2N9pX2fD4EyPmWPFp84b5r7SvwqJ5O/iLX5p3Xv8G+6r+vnfv/Xa5vcLMeFHBvkKawvWuH/zEXLdgvnn5S19i3zlv9MhR8+BjB83LWl5iXjWnzb6DLCGAm0QHkZaZM8xrXzHHvopXM5aDAuEXo78yb1/0OvsqG3QQ1MGwUSHlk+ZNXfdfvMO+qr8t/3G3ecd1C0vbTR40YxtP+t2zz5p7f7bPzHlZ65gA1n6g9XL96+aXpgfZQwA3SbN3yqyKdTnoQEgATwwBPDG6MqbaOdsI4CZJ7pQ6EN993x5zw1s7zD33P1jaUZ5/+eTSZ+2z20oHs6FDw/bM9rSZYatrr3vdq8dUvx39TdFWsz5mnvr1MfvK2DPfPy5VMd1z/94xB8EnnvyV2fPwY+eGr2GLxp8MguT4tMNqeJoWRwfAha9+RemqUuPUsNx3nn/55fYb5SWHq/lYaKsR9Z5bDqKzd82LqjBF33uN/Sx5Jp+Wnn/N+2tfMfvcMtI46jWPqjJOLkf1+5p5s89VoWs8d9t1+bY3LCj16+bjqhdPt/2erzbV+PXd9DTp+xquG5+mqdIydduQJOdF051cXull6qblrh8MloavTtNy93PTrXlz41a/bro0fK2PcustSZ+pS257ep2eRr2W5DJI0np98LFDpeUomiZN9+3f+f6YANb6+Lkd/lFbpS/ue265aTnJjBe98Nx8uGWg7+hqUetY2me/vDRPet9RP5p+t160fbl+Rcvo3p89fG469fn1dh/V5xq3G7Zo2Or0vqZH06Lhu2Wleda6Uj8al+blqhfPuOi+rHEmp0nbb3IZabjJZan513S4z936Tx6DtJ60PNxxAo1HADeJdkBt/NoJ3MavnUIb+5VTX2B3lMN2hzn7W40xfyh9T/Seds73LnlzaWfTjpXsVzuj+tXBTTu322lV/XTf3odLw3lZy6zSZ/qOhqXfYN1B8Pu795aGqaDRAeLob562B5d9NmB0UDv7e6V27mlXvKA0LH3n+MnfjvtOmoar+dRBwvWj32afPX26NN0alg5kCoXphStL7+kA4A40CoZkqDiaVvWjA4UOVjJ06Am7DH5lDyZvLA1Dy0zjvpR51Hd0YNQ608FJ7yfXkzvYaTxaH1oPmge3rPUd/eZbaZq0LB5/4pd2/OeXj76j4bjvpGkb0jDT6179Xbfg1XZ+zp4U3HXPT+wWdPbgr2nWvOg7J575bek9dZoWTbfmWctZw9N0ahz6vqZLrzUvmtbLLrustLzVb5qGrc5te/p+uXk78cwzdl2f3/aStC3cufNHpc81Djdvv7Dbg4LWLW9tHwonfUfTo/407GPF43ZZd9j+zoegPtd2cnYeHitte8+fPNnMtu+3zJxemq70dqBhPXJw2L4eO+2X2c/ecf3C0vC/v/tnpfcVuqIw1nLWTx7azvRa/Wr8WobqNE1ad5o/va91pe/eZbdlbTNa/ppnhbPmW9ucW56aHk2D5lnrSutHr/V9tyy1/bplpOFq3Sa3Ew1X+4mWkU4K3frX9Gi4mv7RI8dK+15yW0JjEcBNoh1QO4c2drfxp0PmP+2BUzve8qVvtjvN2TNbHWB0BeB2Ch0wtAP+eeoGI72vnczttDqYacd2BxZn244f2p3titKOq3Hpe27HddxB7sZ3v91oOrRz60CWHJYLeDe+pErDde9rGajTgUUnBZoXjcfRAbzSTVSaTw1H05+kZaeDqqZRByctY31H39U409NSzTxqOnTQSvebHJfGo3Wp+VGXpGWt9avvlZum9Pqv9L6jbUjfWb70LfbVeZpOHbR1kubWi8paz46bX02jOk2Lpjs5Lh24FQjp+XXvqz91aZo3ddoWNH2aB7e9Ou59hYKWQZrmQdOY3hY0XHVumnRycdVzyz5Jy1phoxuNyi0nvdb40+tY2+DP9x+028Hi0r6m7+hqPTnten/bjh/Z/s6+r+ErYN1wtHy0/N2y0eeaVvda9J6mITlNCnKdHKSXh97X8LQ85fbv7LLTffak1dH603LR77taz9p+3TKqtI9ouG586j+9/qVSv2gMArhJtANq59BO5DZ+d/B3tEPps/TGrwO+dhL1qwPQy54rJ6k/DVM7rQ4YCm23QyYlx+EO1ulhqf9k8GjnTu+oGoYbX5obbrnPkstBBwRdueiKIEnD1hVMuf51gNRVm4aRpCuly+2ZvuZrovPoyo6GUW4ekwcp9510v5KcjmRZf9VPeriSXD5plT5zw9P2pHnSa40nTfOoftXpO+onOQ2aRgXSX/3ZYvtqLAWcwkf9pqk/dRpWueE6mn4pN236LBlqjhueW76aB9US6btJOvl0J5walqTHo37TJwZu+JpeV9ZyTO6XomEq6BR4OlHQyYxOJjQs/dVnjr6raU0uK72nadb0OeWCVdzwNU0Kd538uPmvRPPmvqN9RPvUhYZbaV61HvVZetmhMQjgJtEOqJ1DO4U2cG382hGSKm38yX6TYZyk/twwFS6XEsCOdmIdWJI7t6NhuPGlueGW+yw5LwpgXc3rIFaOvpOmINA0aRhpCmYNq9HzmBy+/uo76X4l+b1kOXkgTEsun7RKn2m4mgZd9SqI9FrjSdM8ql91+o76SU6DplE1EroaTKt04ifqT52GVW64jqZfyk2bPksHlKQDSPPg1lmaqlO1b2hYkh6P+nXDcZLTmyynaZgapwJYdAKm9ajlrarlZLDruxpHclmVe+/f/mtX6Yo9+Z4kp8OV09Odlpw37SOalvRwNb1uu3PDVTlJ61GfpZcdGoMAbpLkDqgNvJaNP9mvrr6O2dBKV8+qCk9XP26YlXZCHUjdlaI7uOnArYOLo/dVBeb6Te7cjqaz3DyI+tdw0/3ooKWzcw1Xna62Hv2fJ0rjT9KBQicRmv40hbbO2N2B0FFw6ACs8SWXo5sWjaNe85gcvv7qOxqOuiTNq7sqS/bjlkN6fJpnnTilaxscbQfP2irE9LrXsHWioepN/dUJR/rKRuNOTqd7nZw3LRMtK/c7oeOmV/2pS9P41WlY7rvpedC86X2tIy2DNG2/Wh9aT0karjq3rHQC6qr/k/QdLWtNt5aTpMdzsXWsadTyT4ap6H1Nu6uaVj/altSJtlcXbKLxaxzJZVXuPW3Lrko4Sfu4gt0NT0Htqr8dLWd9R1XqWs/JebvQcHXCq2p+zYOb7yQtR32W7heNQQA3SXIH1AZey8af7NcdJHUVoNfuBou9jx4s3WTihqlw0w0V2nFVzaUdVsPXwUJXGm4c2llPnPxt6U5XjUPDv+9nD4/5nS25czuaznLz4Gi4qkbWgVj9ueE+bafDnfXrwKbf1nSg1nTqQKJ50YFC/en9NA1H86/+dfAR9aP514FFB0XNp6avUfOYHL7+6juXT55sFrxS0zR2WV9omsotH+2M6qccbQc6gGq5aP41XJ146AYjhYOWqyikdNOQu3te49UyLXcTVnreNA6FvFtW+t4eO/xTdl0pANRvmuZNnRuWm7frF8wvXTW7edO6T257SVpmmm6NU9uCmzctQw3LrRu9VtjpBEz7gLYhzb/ed/dOaB4kPZ5q1rFOBLQ9paf9D/azdz53E5Yb/tsXLSi91rxrf3NV95p/e2g9Nx+ifjTe5PJz49Z27N7XuLUtJ/dlDV/Lwk2TltU9u/eeO5GW5Lxpmu9K7SM6Oddw3HfcuN04HH1Hn7nhorEI4CZJ7oDawGvZ+JP9ir7jDqii36B04NeBKTlMHRQ0TO3MCgjd7akDhvp349ABTN/RDurowKYDnJPcuR0No9w8OBquDow6oIiqhzX9eq3hqCw6WOh7OsiKplMHLh3sK9G4k/OvYetgqLARzY++c6F51IHJha/UMo8alj7T8PVX39FVk+bNzYeu9HSXbKVpEh3sdbew1o9ouWvetY7KcduB5sf1p+WlZenCV/S57vx20+KWz13PHZTVaVo03el5U79aH5oXUb9aTgoAjVv9pmne1LlhaRh67Za3plHz5YaZXAZJ2hZ0B7GqdEXbtfrTdCfXja7yNXy3/t333LLWcpL0eKpdxxq29h0tX9GVtfYHt140nVpGyeWrz91w9bmWv6ZPy0udpkmfq5ykEwdtB/quaFxqUCO9L6enKb2tpOdN86VpdMtS06j1qJM30efp+RaNR5+llx0agwCOTAw7WDPnUePRgSx58GuUSgfxC1EYuoO0D40cfyOHLY0e/kRkcZowcQRwoHS2rLNfnZkn6bcsXTGk3w8JAQwgDwjgQKka7Hv37ikdsK+21VXyiK1G1G+I+o3R/TYVGlVzDtmTj2lTVe3a+LagCWAAE0UAB0w3a+hqUH91V6RugNHBO9TwFYWU5q9Z86kTHf3Wpt/j3G+QjaLfCvXb8oV+HweQHwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACAB/8PfVU3Ftim0ZYAAAAASUVORK5CYII="
+          },
+          "cuerpo": "Encontré estos productos para ti 👇",
+          "boton": "Ver Detalles",
+          "webview": "f1_f2__q4_wv",
+          "nota": "Etapa: Ecommerce WebView. Componente Jelou: Ecommerce WebView. Integración INT-3: botwa_modelos/:id_marca (WS#3). Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural.",
+          "id": "f2_q4"
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "✅ ¡Pedido confirmado!\n💰 Total a pagar: $3,50",
+          "botones": [
+            {
+              "titulo": "💳 Ir al pago",
+              "ir": "f2_q5"
+            },
+            {
+              "titulo": "🔍 Agregar más",
+              "ir": "f2_q4"
+            },
+            {
+              "titulo": "🛒 Ver mi carrito",
+              "ir": "f2_q4"
+            }
+          ],
+          "nota": "Mensaje de pedido confirmado que sugiere la documentación de Jelou Shop tras el checkout (el agente usa «Enviar mensaje con opciones»).",
+          "principal": 0
+        },
+        {
+          "tipo": "texto",
+          "texto": "Con gusto preparamos su cotización. ¿Me ayuda con su número de cédula?",
+          "nota": "Etapa: Invitación a cotizar. RN-06 · Cédula solo al cotizar.",
+          "id": "f2_q5",
+          "ir": "f2_q6"
+        },
+        {
+          "tipo": "usuario",
+          "texto": "0102030405",
+          "nota": "Etapa: Cédula.",
+          "id": "f2_q6",
+          "ir": "f2_q7"
+        },
+        {
+          "tipo": "texto",
+          "texto": "¿En qué ciudad le gustaría ser atendido?",
+          "nota": "Etapa: Ciudad.",
+          "id": "f2_q7",
+          "ir": "f2_q9"
+        },
+        {
+          "tipo": "lista",
+          "cuerpo": "Estas son nuestras agencias en Quito. ¿En cuál desea ser atendido?",
+          "boton": "Ver opciones",
+          "secciones": [
+            {
+              "titulo": "Opciones",
+              "filas": [
+                {
+                  "titulo": "Agencia Norte",
+                  "id": "r0",
+                  "ir": "f2_q11"
+                },
+                {
+                  "titulo": "Agencia Centro",
+                  "id": "r1",
+                  "ir": "f2_q11"
+                },
+                {
+                  "titulo": "Agencia Sur",
+                  "id": "r2",
+                  "ir": "f2_q11"
+                }
+              ]
+            }
+          ],
+          "nota": "Etapa: Elegir agencia. Detrás de escena: Jelou Consulta las agencias de la marca y filtra por ciudad (INT-4: botwa_agencias/:id_marca (WS#4)).",
+          "id": "f2_q9"
+        },
+        {
+          "tipo": "texto",
+          "texto": "Listo. Le atenderá Asesor Demo de la agencia Agencia Norte. En breve continuará con usted por este chat.",
+          "nota": "Etapa: Quién lo atiende. Detrás de escena: Jelou Envía el prospecto al sistema de Vehicentro, que devuelve el correo del teleasesor (INT-5: Servicio de prospectos y asignación de teleasesor (WS#5); documentación pendiente, respuesta simulada).",
+          "id": "f2_q11",
+          "ir": "f2_q12"
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Asigna la conversación en PMA al teleasesor devuelto",
+          "nota": "Etapa: Asignación en PMA.",
+          "id": "f2_q12",
+          "ir": "f2_q21"
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin",
+          "id": "f2_q21"
+        }
+      ]
+    },
+    {
+      "id": "f1_alt1",
+      "nombre": "Flujo_1 · Tiene asesor asignado: marca desconocida",
+      "canal": "whatsapp",
+      "tech": "webview",
+      "resumen": "Camino alterno decidido por el sistema: marca desconocida.",
+      "puntos": [],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "Hola, quiero información del modelo del anuncio",
+          "nota": "Etapa: Entrada."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¡Hola! Soy el asistente virtual de Vehicentro. Al continuar con esta conversación usted acepta nuestros términos y la política de tratamiento de datos personales: https://vehicentro.example/terminos",
+          "nota": "Etapa: Bienvenida y términos. RN-02 · Aceptación de términos y tratamiento de datos. Detrás de escena: Jelou Registra el origen: página, campaña, grupo, anuncio y formulario (INT-6: botwa/:id (WS#6, POST); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "lista",
+          "cuerpo": "¿Qué marca le interesa?",
+          "boton": "Ver opciones",
+          "secciones": [
+            {
+              "titulo": "Opciones",
+              "filas": [
+                {
+                  "titulo": "Marca 1",
+                  "id": "r0"
+                },
+                {
+                  "titulo": "Marca 2",
+                  "id": "r1"
+                },
+                {
+                  "titulo": "Marca 3",
+                  "id": "r2"
+                },
+                {
+                  "titulo": "Marca 4",
+                  "id": "r3"
+                },
+                {
+                  "titulo": "Marca 5",
+                  "id": "r4"
+                },
+                {
+                  "titulo": "Marca 6",
+                  "id": "r5"
+                },
+                {
+                  "titulo": "Marca 7",
+                  "id": "r6"
+                },
+                {
+                  "titulo": "Marca 8",
+                  "id": "r7"
+                }
+              ]
+            }
+          ],
+          "nota": "Etapa: Pedir marca. Decisión: ¿Meta entregó el número de celular? → marca desconocida. Detrás de escena: Jelou Consulta si ya tiene asesor asignado (por celular) (INT-1: botwa_existe_asesor (WS#1)). Decisión: ¿Tiene asesor asignado? → marca desconocida. El agente identifica la intención y enruta."
+        },
+        {
+          "tipo": "usuario",
+          "texto": "Marca 1",
+          "nota": "Etapa: Elige marca."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¡Gracias por escribirnos! ¿Qué vehículo le gustaría conocer?",
+          "nota": "Etapa: Persona de la marca. Decisión: ¿Meta entregó el número de celular? → Comercial. Detrás de escena: Jelou Consulta si ya tiene asesor asignado (por celular) (INT-1: botwa_existe_asesor (WS#1)). Decisión: ¿Tiene asesor asignado? → Comercial. El agente identifica la intención y enruta."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "El modelo Modelo A 4x2 tiene un precio de USD 28.990. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            {
+              "titulo": "Ver catálogo"
+            },
+            {
+              "titulo": "Cotizar"
+            },
+            {
+              "titulo": "Agencias"
+            }
+          ],
+          "nota": "Etapa: Respuesta del agente IA. El agente identifica la intención y enruta. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3)).",
+          "principal": 0
+        },
+        {
+          "tipo": "cta_url",
+          "header": {
+            "tipo": "imagen",
+            "src": "data:image/png;base64,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"
+          },
+          "cuerpo": "Encontré estos productos para ti 👇",
+          "boton": "Ver Detalles",
+          "webview": "f1_f2__q4_wv",
+          "nota": "Etapa: Ecommerce WebView. Componente Jelou: Ecommerce WebView. Integración INT-3: botwa_modelos/:id_marca (WS#3). Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "✅ ¡Pedido confirmado!\n💰 Total a pagar: $3,50",
+          "botones": [
+            {
+              "titulo": "💳 Ir al pago"
+            },
+            {
+              "titulo": "🔍 Agregar más"
+            },
+            {
+              "titulo": "🛒 Ver mi carrito"
+            }
+          ],
+          "nota": "Mensaje de pedido confirmado que sugiere la documentación de Jelou Shop tras el checkout (el agente usa «Enviar mensaje con opciones»)."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Con gusto preparamos su cotización. ¿Me ayuda con su número de cédula?",
+          "nota": "Etapa: Invitación a cotizar. RN-06 · Cédula solo al cotizar."
+        },
+        {
+          "tipo": "usuario",
+          "texto": "0102030405",
+          "nota": "Etapa: Cédula."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¿En qué ciudad le gustaría ser atendido?",
+          "nota": "Etapa: Ciudad."
+        },
+        {
+          "tipo": "lista",
+          "cuerpo": "Estas son nuestras agencias en Quito. ¿En cuál desea ser atendido?",
+          "boton": "Ver opciones",
+          "secciones": [
+            {
+              "titulo": "Opciones",
+              "filas": [
+                {
+                  "titulo": "Agencia Norte",
+                  "id": "r0"
+                },
+                {
+                  "titulo": "Agencia Centro",
+                  "id": "r1"
+                },
+                {
+                  "titulo": "Agencia Sur",
+                  "id": "r2"
+                }
+              ]
+            }
+          ],
+          "nota": "Etapa: Elegir agencia. Detrás de escena: Jelou Consulta las agencias de la marca y filtra por ciudad (INT-4: botwa_agencias/:id_marca (WS#4))."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Listo. Le atenderá Asesor Demo de la agencia Agencia Norte. En breve continuará con usted por este chat.",
+          "nota": "Etapa: Quién lo atiende. Detrás de escena: Jelou Envía el prospecto al sistema de Vehicentro, que devuelve el correo del teleasesor (INT-5: Servicio de prospectos y asignación de teleasesor (WS#5); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Asigna la conversación en PMA al teleasesor devuelto",
+          "nota": "Etapa: Asignación en PMA."
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "f1_alt2",
+      "nombre": "Flujo_1 · Tiene asesor asignado: Comercial",
+      "canal": "whatsapp",
+      "tech": "webview",
+      "resumen": "Camino alterno decidido por el sistema: Comercial.",
+      "puntos": [],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "Hola, quiero información del modelo del anuncio",
+          "nota": "Etapa: Entrada."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¡Hola! Soy el asistente virtual de Vehicentro. Al continuar con esta conversación usted acepta nuestros términos y la política de tratamiento de datos personales: https://vehicentro.example/terminos",
+          "nota": "Etapa: Bienvenida y términos. RN-02 · Aceptación de términos y tratamiento de datos. Detrás de escena: Jelou Registra el origen: página, campaña, grupo, anuncio y formulario (INT-6: botwa/:id (WS#6, POST); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¡Gracias por escribirnos! ¿Qué vehículo le gustaría conocer?",
+          "nota": "Etapa: Persona de la marca. Decisión: ¿Meta entregó el número de celular? → Comercial. Detrás de escena: Jelou Consulta si ya tiene asesor asignado (por celular) (INT-1: botwa_existe_asesor (WS#1)). Decisión: ¿Tiene asesor asignado? → Comercial. El agente identifica la intención y enruta."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "El modelo Modelo A 4x2 tiene un precio de USD 28.990. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            {
+              "titulo": "Ver catálogo"
+            },
+            {
+              "titulo": "Cotizar"
+            },
+            {
+              "titulo": "Agencias"
+            }
+          ],
+          "nota": "Etapa: Respuesta del agente IA. El agente identifica la intención y enruta. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3)).",
+          "principal": 0
+        },
+        {
+          "tipo": "cta_url",
+          "header": {
+            "tipo": "imagen",
+            "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeAAAAHgCAYAAAB91L6VAAAoKElEQVR4nO3dD5BVV2HH8RMhYiA+C4JZu9WdgYCuEkWDdE38y4J/atqy4ozpWBZndKYqMBNHa1mi7bQalvpnzAxLtDM6I1CncSZkaRurBhbjn8QtIUoMySYQ6Gzsmo0g1BcgYkB7fo8cuHv3PXhvee+de8/5fmYue96f+//P797z7j1cdrR4/A8GAAA0FQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDAAAB4QwAAAeEAAAwDgAQEMAIAHBDCQYfsff9wcP37Cloz56d4H7b8X9/oFr7X/GnPlldPMvKuvtiUAWUQAAxmgcFWnsFXoPjn6lO1G7SeX7qUtLba7qhTGCmUFtDoAfhHAgAcK22Tng0JY3VvedF0pnAE0FwEMNMkPf3yf+cGP77V/7zVPHz9u38mOF155pQ3i681bbadABtB4BDDQQKpG/vZ37y51KueBqqzf8653lDqVATQGAQw0gKqVv/aNLaW/eaYq6g9/sLv0F0B9EcBAHSlwQwjeNAUwQQzUFwEM1IHuXL617yvBBW+aAvgza/+WqmmgDghg4BLoZqqvf2Oruf2ObfZVPG5833LzoQ+uKN28BWBiCGBggnS1+9kNX8jNzVX1pqtgXQ3rqhhA7QhgoEaxXvVWwtUwMDEEMFAD/db7uQ1fLP1tprlXzxkXcGrdStRqVpJOEA48ftCWmkcNeXx67SdLfwFUhwAGqqRGND5nq5wVcI2ioFWVrsJWfxWyquqdCFWNK5xVVa5p1t9GBrOm+dO2SlqNeQC4OAIYqMK3v/u90u+99aaAVQtUClt1CrFGckGsTi1yKaDrTb8Lv+dd77QlABdCAAMXoeBVANeL/kMEXSW+/33v9V5lq6r0b91xZ+nqXv8RRL3od+GbVn/UlgBUQgADF1DP8NUVrpp3zOrVoeZTTWbq6rgeNJ+6GgZQHgEMVFCv8FU1802rP1a66s0DXQ3f2ndbXaqnCWGgMgIYKKMe4avgVfONCqE80vyrWc1LDWLNPyEMjEcAAyn1CF/9vqvwbfRNVY2mm7YUwvqd+FIQwsB4BDCQoOBVAE+Urno/s/ZTpd97Q6LfhT+74fOXdDWsAFYQAziLAAaec6nhqxus9Ftv3q96K9HVsH4b1o1aE0UIA+cRwIClx3FW3fTJUshMhB650aM3MVATnPqfnyZCJyebbv2i98evgCwggBE9ha7CVyFcKz3T+3F71RvbVd2l1BYofBXCCmMgZgQwoqcgUaDUSuF7261fKgVKjHTC8rGbPjGhBjx0wqLqaCBmBDCipuBVANcq9vB1LiWE//lz/5ibZ6OBRiCAES39ZwXdH/5IqQq6Vlu+9tXow9dRCGs51kpV0FqOE/3PJoC8I4ARLV256fGaWqnqVFWoOG+iNQl6XEs1CUCMCGBESc0t/t2n/8GWakP4VjbREKYqGrEigBEdVTmrylRV0LXQc75qZAOVqbGOWp8TVhW0qqJVJQ3EhABGdNS0orpa6D/KV1UpIXFhOrlR1X6t//G/mu1UB8SEAEZUdNXbdeNf21L1uOO5NropSyFc653R/bf/a+lqGIgFAYyoKBhqvfGK331rN5Hfg/U7sH4PBmJBACMaCl4FcC3e8qbrzOc/90+2hFppWWuZ10K/BVPTgFgQwIjGRG4Qolp04iZS3c+NbogJAYwoTCQMdFOQOkycbnZTVwtOehALAhhRqPXqV/+v75av/Qt3PV8i3RXddeMHarohi6tgxIIARvAUAu+1V7/6Wy1uvKqfWm/I0knPnfYqWH+BkBHACJ6qQNVVS8/8brVXv6ifFR/+m5qeDVbVvzogZAQwgrf0hmVc/Xo2kavgHXdttyUgXAQwglZrm8/67bf/9m/aEupNvwU/OfqULVVHzwTr2WAgVAQwglbrzVc3rf6oufF9y20J9Xb7HdvMrX1fsaXqcDMWQkcAI2i1VD+ryUld/ar6E/Wn9aCr4GrviNZ6oBoaISOAEaxaf3fUTT/q0Dhf7rvNfOuOO22pOlRDI2QEMIL1qU//vfnhj++zperQAETj1dogCk2BImQEMIKk6k5VP1eLR4+ap9ZHklQNrepoIDQEMIJUa/UzN181T603Y/FYGEJFACNItd79TPVz89RaDc3d0AgVAYwg6QCvA301qH5uvlqqoXVipBMkIDQEMIKj4FUAV4vq5+artRpaAawgBkJCACM4tf7+y8G9+fY//rjp/vBHbKk6/A6MEBHACE4tv//S9KQ/S274y6ob5eB3YISIAEZwVP2sauhq8JypP7U8p60aCtVUACEhgBEUBa8CuFr8/usPvwMjdgQwglLr/3605WtfNfOuvtqW0Gy1/g58261fMq9f8FpbAsJAACMo+o/31VVD//nCzrv+3ZbgSy2/A6udbnVAKAhgBKWW3xX5/dc/1hdiRgAjKKrSVNVmNXQ1pQ7+qLZCXTX0U4F+MgBCQQAjKB1vW2L/rQ7/1Z1/tf5mP3jPTvsvEAYCGMHQla+ugKulqyldVcGfn+590Hzspk/YUnVYZwgJAYxgcDWVT9RaIFYEMIKh3xLVVYP/gCE7um78gHly9Clbujj9Zq8OCAEBjGB8ue8286077rSli+OO2uxQFbSqoqvx/ve913x89cdsCcg/AhjBqOVArqsodfBPtRbqqqGGONQgBxACAhjBIIDzSeGrrhoEMEJCACMYS29YZp4+ftyWLk4HcR3M4V8tN8+pLWi1CQ2EgABGMGq5m5YAzg7VWqj2olrcvY5QEMAIgq58dQVcLZ4nzQ4CGLEigBEEDuL5Ru0FYkQAIwgEcL4RwIgRAYwg1BLAL225yvTf/k1bQlbU0hgHAYxQEMAIwre/+z3z2Q1fsKWL08FbB3Fkh06edBJVDZqjRCgIYARBz5GqqwYBnD21BLCe31YH5B0BjCAofNVVgwDOHgIYMSKAEQSFr7pqEMDZQwAjRgQwgqDwVVcNAjh7CGDEiABGEBS+6qpBAGcPAYwYEcAIgsJXXTUI4OwhgBEjAhhBUPiqq4YO3uqQHbX8X85ad+qAvCOAcUH//apX2n+z7zvTCua7tqvGu04Uzbtth+wIdf396SOP2n+B8ghgVHRiaMjsW95lS9n38ylXmK+/6MW2dHEf+s2vzWtOPWNLyIpQ19/8bf1mWnu7LQHjEcCoqLh7txnKSVXfM897nvn8jKvM0edNsq8qm/H7M+ZTR58yV/z+9/YVsiLU9ddufxYpLFpkS8B4BDAqOtzfbw7d3GNL+fD486eYjX80y5YqW/N/h83VvztlS8iaENff7Ft6zayufNQiofkIYFT0v5v6zIjt8kQH8W8WZoy7ktKV0weKR3N18I5RaOuvddVq8ye2A8ohgFHRcO96M7q1ujuLs0TVmQcun2JGJl9uX9mD4OlnzdxnT+Wm2jJ2Ia2/lhXdpq1nnS0B4xHAqOiRld3m6ft32xKAiXjhGxaZV23O30ksmoMARkUEMHBpCGBcCAGMivZ0LDJnivl43hLIokmFglk4yEksyiOAUVFeGuEAsozGOFAJAYyyTo2MmL1LO20JwKVYsGPATGlttSVgLAIYZeWpEQ4gy2iMA5UQwCjr6MBOc2ANzy8Cl2ruxj4zo3OJLQFjEcAoK4+NcABZRGMcqIQARlkEMFAfBDAqIYBR1v7Vq8yxXQO2BOBSTF/caeb1bbIlYCwCGGXRCAdQHzTGgUoIYJSlR5D0KBKAS6NHkPQoEpBGAKMsGuEA6ofGOFAOAYxxTheL5oEOnlsE6uXawd1mcqFgS8B5BDDGoREOoL5ojAPlEMAYhwAG6osARjkEMMYZ3bLZDG/otSUA9dC2tse0dK+0JeA8Ahjj0AgHUF80xoFyCGCMc3Bdjzmyvd+WANTDzGVdZs56apUwFgGMcWiEA6gvGuNAOQQwxnloeZc5OTRkSwDqYWp7u7lmG7VKGIsAxjg0wgHUH41xII0AxjgEMFB/BDDSCGCMccJWPe+zVdAA6mu+rYKeZquiAYcAxhg0wgE0Bo1xII0AxhiH+/vNoZt7bAlAPc2+pdfM6qJ2CecRwBiDRjiAxqAxDqQRwBhjuHe9Gd3K84pAvbWs6DZtPetsCTiLAMYYNMIBNAaNcSCNAMYYBDDQGAQw0ghgjLGnY5E5UyzaEoB6mlQomIWDnNziPAIYY9AIB9A4NMaBJAIY55waGTF7l3baEoBGWLBjwExpbbUlgABGAo1wAI1FYxxIIoBxztGBnebAGp5TBBpl7sY+M6NziS0BBDASaIQDaCwa40ASAYxzCGCgsQhgJBHAOGf/6lXm2K4BWwLQCNMXd5p5fZtsCSCAkUAjHEBj0RgHkghgnKNHkPQoEoDG0CNIehQJEAIY59AIB9B4NMYBhwBGyeli0TzQwfOJQKNdO7jbTC4UbAmxI4BRQiMcQHPQGAccAhglBDDQHAQwHAIYJaNbNpvhDb22BKCR2tb2mJbulbaE2BHAKKERDqA5aIwDDgGMkoPresyR7f22BKCRZi7rMnPWU9sEAhjPoREOoDlojAMOAYySh5Z3mZNDQ7YEoJGmtreba7ZR2wQCGM+hEQ6geWiMA0IAo4QABpqHAIYQwDAnbNXzPlsFDaA55tsq6Gm2KhpxI4BBIxxAk9EYB4QAhjnc328O3dxjSwCaYfYtvWZWF7VOsSOAYWiEA2guGuOAEMAww73rzehWnksEmqVlRbdp61lnS4gZAQwa4QCajMY4IAQwCGCgyQhgCAEMs6djkTlTLNoSgGaYVCiYhYOc9MaOAAaNcAAe0BgHCODInRoZMXuXdtoSgGZasGPATGlttSXEigCOHI1wAH7QGAcI4MgdHdhpDqzheUSg2eZu7DMzOpfYEmJFAEeORjgAP2iMAwRw5AhgwA8CGARw5PavXmWO7RqwJQDNNH1xp5nXt8mWECsCOHI0wgH4QWMcIIAjp0eQ9CgSgObSI0h6FAnxIoAjRyMcgD80xhE3Ajhip4tF80AHzyECvlw7uNtMLhRsCTEigCNGIxyAXzTGETcCOGIEMOAXARw3Ajhio1s2m+ENvbYEwIe2tT2mpXulLSFGBHDEaIQD8IvGOOJGAEfs4Loec2R7vy0B8GHmsi4zZz21ULEigCNGIxyAXzTGETcCOGIPLe8yJ4eGbAmAD1Pb280126iFihUBHDEa4QD8ozGOeBHAESOAAf8I4HgRwJE6Yaue99kqaAB+zbdV0NNsVTTiQwBHikY4gGygMY54EcCROtzfbw7d3GNLAHyafUuvmdVFbVSMCOBI0QgHkA00xhEvAjhSw73rzehWnj8EfGtZ0W3aetbZEmJDAEeKRjiAbKAxjngRwJEigIFsIIDjRQBHak/HInOmWLQlAD5NKhTMwkFOhmNEAEeKRjiA7KAxjjgRwBE6NTJi9i7ttCUAWbBgx4CZ0tpqS4gJARwhGuEAsoXGOOJEAEfo6MBOc2ANzx0CWTF3Y5+Z0bnElhATAjhCNMIBZAuNccSJAI4QAQxkCwEcJwI4QvtXrzLHdg3YEoAsmL6408zr22RLiAkBHCEa4QCyhcY44kQAR0iPIOlRJADZoEeQ9CgS4kIAR4hGOIDsoTGO+BDAkTldLJoHOnjeEMiaawd3m8mFgi0hFgRwZGiEA8gmGuOIDwEcGQIYyCYCOD4EcGRGt2w2wxt6bQlAlrSt7TEt3SttCbEggCNDIxxANtEYR3wI4MgcXNdjjmzvtyUAWTJzWZeZs57aqZgQwJGhEQ4gm2iMIz4EcGQeWt5lTg4N2RKALJna3m6u2UbtVEwI4MjQCAeQXTTGERcCODIEMJBdBHBcCOCInLBVz/tsFTSAbJpvq6Cn2apoxIEAjgiNcADZRmMccSGAI3K4v98curnHlgBk0exbes2sLmqpYkEAR4RGOIBsozGOuBDAERnuXW9Gt/KcIZBVLSu6TVvPOltCDAjgiNAIB5BtNMYRFwI4IgQwkG0EcFwI4Ijs6VhkzhSLtgQgiyYVCmbhICfJsSCAI0IjHED20RhHPAjgSJwaGTF7l3baEoAsW7BjwExpbbUlhI4AjgSNcAD5QGMc8SCAI3F0YKc5sIbnC4Gsm7uxz8zoXGJLCB0BHAka4QDygcY44kEAR4IABvKBAI4HARyJ/atXmWO7BmwJQJZNX9xp5vVtsiWEjgCOBI1wAPlAYxzxIIAjoUeQ9CgSgGzTI0h6FAnhI4AjQSMcQH7QGEccCOAInC4WzQMdPFcI5MW1g7vN5ELBlhAyAjgCNMIB5AuNccSBAI4AAQzkCwEcBwI4AqNbNpvhDb22BCAP2tb2mJbulbaEkBHAEaARDiBfaIwjDgRwBA6u6zFHtvfbEoA8mLmsy8xZT61V6AjgCNAIB5AvNMYRBwI4Ag8t7zInh4ZsCUAeTG1vN9dso9YqdARwBGiEA8gfGuMIHwEcAQIYyB8COHwEcOBO2KrnfbYKGkC+zLdV0NNsVTTCRQAHjkY4gHyiMY7wEcCBO9zfbw7d3GNLAPJk9i29ZlYXtVchI4ADRyMcQD7RGEf4CODADfeuN6NbeZ4QyJuWFd2mrWedLSFUBHDgaIQDyCca4wgfARw4AhjIJwI4fARw4PZ0LDJnikVbApAnkwoFs3CQk+eQEcCBoxEOIL9ojCNsBHDATo2MmL1LO20JQB4t2DFgprS22hJCRAAHjEY4gHyjMY6wEcABOzqw0xxYw3OEQF7N3dhnZnQusSWEiAAOGI1wAPlGYxxhI4ADRgAD+UYAh40ADtj+1avMsV0DtgQgj6Yv7jTz+jbZEkJEAAeMRjiAfKMxjrARwAHTI0h6FAlAPukRJD2KhDARwAGjEQ4g/2iMI1wEcKBOF4vmgQ6eHwTy7trB3WZyoWBLCA0BHCga4QDCQGMc4SKAA0UAA2EggMNFAAdqdMtmM7yh15YA5Fnb2h7T0r3SlhAaAjhQNMIBhIHGOMJFAAfq4Loec2R7vy0ByLOZy7rMnPXUZoWIAA4UjXAAYaAxjnARwIF6aHmXOTk0ZEsA8mxqe7u5Zhu1WSEigANFIxxAOGiMI0wEcKAIYCAcBHCYCOAAnbBVz/tsFTSAMMy3VdDTbFU0wkIAB4hGOICw0BhHmAjgAB3u7zeHbu6xJQAhmH1Lr5nVRa1WaAjgANEIBxAWGuMIEwEcoOHe9WZ0K88NAqFoWdFt2nrW2RJCQgAHiEY4gLDQGEeYCOAAEcBAWAjgMBHAAdrTscicKRZtCUAIJhUKZuEgJ9WhIYADRCMcQHhojCM8BHBgTo2MmL1LO20JQEgW7BgwU1pbbQmhIIADQyMcQJhojCM8BHBgjg7sNAfW8LwgEJq5G/vMjM4ltoRQEMCBoREOIEw0xhEeAjgwBDAQJgI4PARwYPavXmWO7RqwJQAhmb6408zr22RLCAUBHBga4QDCRGMc4SGAA6NHkPQoEoCw6BEkPYqEcBDAgaERDiBcNMYRFgI4IKeLRfNAB88JAqG6dnC3mVwo2BJCQAAHhEY4gLDRGEdYCOCAEMBA2AjgsBDAARndstkMb+i1JQAhalvbY1q6V9oSQkAAB4RGOICw0RhHWAjggBxc12OObO+3JQAhmrmsy8xZTy1XKAjggNAIBxA2GuMICwEckIeWd5mTQ0O2BCBEU9vbzTXbqOUKBQEcEBrhAMJHYxzhIIADQgAD4SOAw0EAB+KErXreZ6ugAYRtvq2CnmaropF/BHAgaIQDiAONcYSDAA7E4f5+c+jmHlsCELLZt/SaWV3UdoWAAA4EjXAAcaAxjnAQwIEY7l1vRrfyfCAQupYV3aatZ50tIe8I4EDQCAcQBxrjCAcBHAgCGIgDARwOAjgQezoWmTPFoi0BCNmkQsEsHORkOwQEcCBohAOIB41xhIEADsCpkRGzd2mnLQGIwYIdA2ZKa6stIc8I4ADQCAcQFxrjCAMBHICjAzvNgTU8FwjEYu7GPjOjc4ktIc8I4ADQCAcQFxrjCAMBHAACGIgLARwGAjgA+1evMsd2DdgSgBhMX9xp5vVtsiXkGQEcABrhAOJCYxxhIIADoEeQ9CgSgDjoESQ9ioR8I4ADQCMcQHxojCP/COCcO10smgc6eB4QiM21g7vN5ELBlpBXBHDO0QgHECca48g/AjjnCGAgTgRw/hHAOTe6ZbMZ3tBrSwBi0ra2x7R0r7Ql5BUBnHM0wgHEicY48o8AzrmD63rMke39tgQgJjOXdZk566n9yjMCOOdohAOIE41x5B8BnHMPLe8yJ4eGbAlATKa2t5trtlH7lWcEcM7RCAcQLxrjyDcCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAAADwhgAAA8IIABAPCAAAYAwAMCGAACd/zkM+bKqVfYErKEAEZT3b/vUTO98EJz9ctb7avG0DieOnLM3PC2N9pX2fD4EyPmWPFp84b5r7SvwqJ5O/iLX5p3Xv8G+6r+vnfv/Xa5vcLMeFHBvkKawvWuH/zEXLdgvnn5S19i3zlv9MhR8+BjB83LWl5iXjWnzb6DLCGAm0QHkZaZM8xrXzHHvopXM5aDAuEXo78yb1/0OvsqG3QQ1MGwUSHlk+ZNXfdfvMO+qr8t/3G3ecd1C0vbTR40YxtP+t2zz5p7f7bPzHlZ65gA1n6g9XL96+aXpgfZQwA3SbN3yqyKdTnoQEgATwwBPDG6MqbaOdsI4CZJ7pQ6EN993x5zw1s7zD33P1jaUZ5/+eTSZ+2z20oHs6FDw/bM9rSZYatrr3vdq8dUvx39TdFWsz5mnvr1MfvK2DPfPy5VMd1z/94xB8EnnvyV2fPwY+eGr2GLxp8MguT4tMNqeJoWRwfAha9+RemqUuPUsNx3nn/55fYb5SWHq/lYaKsR9Z5bDqKzd82LqjBF33uN/Sx5Jp+Wnn/N+2tfMfvcMtI46jWPqjJOLkf1+5p5s89VoWs8d9t1+bY3LCj16+bjqhdPt/2erzbV+PXd9DTp+xquG5+mqdIydduQJOdF051cXull6qblrh8MloavTtNy93PTrXlz41a/bro0fK2PcustSZ+pS257ep2eRr2W5DJI0np98LFDpeUomiZN9+3f+f6YANb6+Lkd/lFbpS/ue265aTnJjBe98Nx8uGWg7+hqUetY2me/vDRPet9RP5p+t160fbl+Rcvo3p89fG469fn1dh/V5xq3G7Zo2Or0vqZH06Lhu2Wleda6Uj8al+blqhfPuOi+rHEmp0nbb3IZabjJZan513S4z936Tx6DtJ60PNxxAo1HADeJdkBt/NoJ3MavnUIb+5VTX2B3lMN2hzn7W40xfyh9T/Seds73LnlzaWfTjpXsVzuj+tXBTTu322lV/XTf3odLw3lZy6zSZ/qOhqXfYN1B8Pu795aGqaDRAeLob562B5d9NmB0UDv7e6V27mlXvKA0LH3n+MnfjvtOmoar+dRBwvWj32afPX26NN0alg5kCoXphStL7+kA4A40CoZkqDiaVvWjA4UOVjJ06Am7DH5lDyZvLA1Dy0zjvpR51Hd0YNQ608FJ7yfXkzvYaTxaH1oPmge3rPUd/eZbaZq0LB5/4pd2/OeXj76j4bjvpGkb0jDT6179Xbfg1XZ+zp4U3HXPT+wWdPbgr2nWvOg7J575bek9dZoWTbfmWctZw9N0ahz6vqZLrzUvmtbLLrustLzVb5qGrc5te/p+uXk78cwzdl2f3/aStC3cufNHpc81Djdvv7Dbg4LWLW9tHwonfUfTo/407GPF43ZZd9j+zoegPtd2cnYeHitte8+fPNnMtu+3zJxemq70dqBhPXJw2L4eO+2X2c/ecf3C0vC/v/tnpfcVuqIw1nLWTx7azvRa/Wr8WobqNE1ad5o/va91pe/eZbdlbTNa/ppnhbPmW9ucW56aHk2D5lnrSutHr/V9tyy1/bplpOFq3Sa3Ew1X+4mWkU4K3frX9Gi4mv7RI8dK+15yW0JjEcBNoh1QO4c2drfxp0PmP+2BUzve8qVvtjvN2TNbHWB0BeB2Ch0wtAP+eeoGI72vnczttDqYacd2BxZn244f2p3titKOq3Hpe27HddxB7sZ3v91oOrRz60CWHJYLeDe+pErDde9rGajTgUUnBZoXjcfRAbzSTVSaTw1H05+kZaeDqqZRByctY31H39U409NSzTxqOnTQSvebHJfGo3Wp+VGXpGWt9avvlZum9Pqv9L6jbUjfWb70LfbVeZpOHbR1kubWi8paz46bX02jOk2Lpjs5Lh24FQjp+XXvqz91aZo3ddoWNH2aB7e9Ou59hYKWQZrmQdOY3hY0XHVumnRycdVzyz5Jy1phoxuNyi0nvdb40+tY2+DP9x+028Hi0r6m7+hqPTnten/bjh/Z/s6+r+ErYN1wtHy0/N2y0eeaVvda9J6mITlNCnKdHKSXh97X8LQ85fbv7LLTffak1dH603LR77taz9p+3TKqtI9ouG586j+9/qVSv2gMArhJtANq59BO5DZ+d/B3tEPps/TGrwO+dhL1qwPQy54rJ6k/DVM7rQ4YCm23QyYlx+EO1ulhqf9k8GjnTu+oGoYbX5obbrnPkstBBwRdueiKIEnD1hVMuf51gNRVm4aRpCuly+2ZvuZrovPoyo6GUW4ekwcp9510v5KcjmRZf9VPeriSXD5plT5zw9P2pHnSa40nTfOoftXpO+onOQ2aRgXSX/3ZYvtqLAWcwkf9pqk/dRpWueE6mn4pN236LBlqjhueW76aB9US6btJOvl0J5walqTHo37TJwZu+JpeV9ZyTO6XomEq6BR4OlHQyYxOJjQs/dVnjr6raU0uK72nadb0OeWCVdzwNU0Kd538uPmvRPPmvqN9RPvUhYZbaV61HvVZetmhMQjgJtEOqJ1DO4U2cG382hGSKm38yX6TYZyk/twwFS6XEsCOdmIdWJI7t6NhuPGlueGW+yw5LwpgXc3rIFaOvpOmINA0aRhpCmYNq9HzmBy+/uo76X4l+b1kOXkgTEsun7RKn2m4mgZd9SqI9FrjSdM8ql91+o76SU6DplE1EroaTKt04ifqT52GVW64jqZfyk2bPksHlKQDSPPg1lmaqlO1b2hYkh6P+nXDcZLTmyynaZgapwJYdAKm9ajlrarlZLDruxpHclmVe+/f/mtX6Yo9+Z4kp8OV09Odlpw37SOalvRwNb1uu3PDVTlJ61GfpZcdGoMAbpLkDqgNvJaNP9mvrr6O2dBKV8+qCk9XP26YlXZCHUjdlaI7uOnArYOLo/dVBeb6Te7cjqaz3DyI+tdw0/3ooKWzcw1Xna62Hv2fJ0rjT9KBQicRmv40hbbO2N2B0FFw6ACs8SWXo5sWjaNe85gcvv7qOxqOuiTNq7sqS/bjlkN6fJpnnTilaxscbQfP2irE9LrXsHWioepN/dUJR/rKRuNOTqd7nZw3LRMtK/c7oeOmV/2pS9P41WlY7rvpedC86X2tIy2DNG2/Wh9aT0karjq3rHQC6qr/k/QdLWtNt5aTpMdzsXWsadTyT4ap6H1Nu6uaVj/altSJtlcXbKLxaxzJZVXuPW3Lrko4Sfu4gt0NT0Htqr8dLWd9R1XqWs/JebvQcHXCq2p+zYOb7yQtR32W7heNQQA3SXIH1AZey8af7NcdJHUVoNfuBou9jx4s3WTihqlw0w0V2nFVzaUdVsPXwUJXGm4c2llPnPxt6U5XjUPDv+9nD4/5nS25czuaznLz4Gi4qkbWgVj9ueE+bafDnfXrwKbf1nSg1nTqQKJ50YFC/en9NA1H86/+dfAR9aP514FFB0XNp6avUfOYHL7+6juXT55sFrxS0zR2WV9omsotH+2M6qccbQc6gGq5aP41XJ146AYjhYOWqyikdNOQu3te49UyLXcTVnreNA6FvFtW+t4eO/xTdl0pANRvmuZNnRuWm7frF8wvXTW7edO6T257SVpmmm6NU9uCmzctQw3LrRu9VtjpBEz7gLYhzb/ed/dOaB4kPZ5q1rFOBLQ9paf9D/azdz53E5Yb/tsXLSi91rxrf3NV95p/e2g9Nx+ifjTe5PJz49Z27N7XuLUtJ/dlDV/Lwk2TltU9u/eeO5GW5Lxpmu9K7SM6Oddw3HfcuN04HH1Hn7nhorEI4CZJ7oDawGvZ+JP9ir7jDqii36B04NeBKTlMHRQ0TO3MCgjd7akDhvp349ABTN/RDurowKYDnJPcuR0No9w8OBquDow6oIiqhzX9eq3hqCw6WOh7OsiKplMHLh3sK9G4k/OvYetgqLARzY++c6F51IHJha/UMo8alj7T8PVX39FVk+bNzYeu9HSXbKVpEh3sdbew1o9ouWvetY7KcduB5sf1p+WlZenCV/S57vx20+KWz13PHZTVaVo03el5U79aH5oXUb9aTgoAjVv9pmne1LlhaRh67Za3plHz5YaZXAZJ2hZ0B7GqdEXbtfrTdCfXja7yNXy3/t333LLWcpL0eKpdxxq29h0tX9GVtfYHt140nVpGyeWrz91w9bmWv6ZPy0udpkmfq5ykEwdtB/quaFxqUCO9L6enKb2tpOdN86VpdMtS06j1qJM30efp+RaNR5+llx0agwCOTAw7WDPnUePRgSx58GuUSgfxC1EYuoO0D40cfyOHLY0e/kRkcZowcQRwoHS2rLNfnZkn6bcsXTGk3w8JAQwgDwjgQKka7Hv37ikdsK+21VXyiK1G1G+I+o3R/TYVGlVzDtmTj2lTVe3a+LagCWAAE0UAB0w3a+hqUH91V6RugNHBO9TwFYWU5q9Z86kTHf3Wpt/j3G+QjaLfCvXb8oV+HweQHwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACABwQwAAAeEMAAAHhAAAMA4AEBDACAB/8PfVU3Ftim0ZYAAAAASUVORK5CYII="
+          },
+          "cuerpo": "Encontré estos productos para ti 👇",
+          "boton": "Ver Detalles",
+          "webview": "f1_f2__q4_wv",
+          "nota": "Etapa: Ecommerce WebView. Componente Jelou: Ecommerce WebView. Integración INT-3: botwa_modelos/:id_marca (WS#3). Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "✅ ¡Pedido confirmado!\n💰 Total a pagar: $3,50",
+          "botones": [
+            {
+              "titulo": "💳 Ir al pago"
+            },
+            {
+              "titulo": "🔍 Agregar más"
+            },
+            {
+              "titulo": "🛒 Ver mi carrito"
+            }
+          ],
+          "nota": "Mensaje de pedido confirmado que sugiere la documentación de Jelou Shop tras el checkout (el agente usa «Enviar mensaje con opciones»)."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Con gusto preparamos su cotización. ¿Me ayuda con su número de cédula?",
+          "nota": "Etapa: Invitación a cotizar. RN-06 · Cédula solo al cotizar."
+        },
+        {
+          "tipo": "usuario",
+          "texto": "0102030405",
+          "nota": "Etapa: Cédula."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¿En qué ciudad le gustaría ser atendido?",
+          "nota": "Etapa: Ciudad."
+        },
+        {
+          "tipo": "lista",
+          "cuerpo": "Estas son nuestras agencias en Quito. ¿En cuál desea ser atendido?",
+          "boton": "Ver opciones",
+          "secciones": [
+            {
+              "titulo": "Opciones",
+              "filas": [
+                {
+                  "titulo": "Agencia Norte",
+                  "id": "r0"
+                },
+                {
+                  "titulo": "Agencia Centro",
+                  "id": "r1"
+                },
+                {
+                  "titulo": "Agencia Sur",
+                  "id": "r2"
+                }
+              ]
+            }
+          ],
+          "nota": "Etapa: Elegir agencia. Detrás de escena: Jelou Consulta las agencias de la marca y filtra por ciudad (INT-4: botwa_agencias/:id_marca (WS#4))."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Listo. Le atenderá Asesor Demo de la agencia Agencia Norte. En breve continuará con usted por este chat.",
+          "nota": "Etapa: Quién lo atiende. Detrás de escena: Jelou Envía el prospecto al sistema de Vehicentro, que devuelve el correo del teleasesor (INT-5: Servicio de prospectos y asignación de teleasesor (WS#5); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Asigna la conversación en PMA al teleasesor devuelto",
+          "nota": "Etapa: Asignación en PMA."
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "f1_alt3",
+      "nombre": "Flujo_1 · Tiene asesor asignado: Repuestos o Talleres",
+      "canal": "whatsapp",
+      "tech": "webview",
+      "resumen": "Camino alterno decidido por el sistema: Repuestos o Talleres.",
+      "puntos": [],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "Hola, quiero información del modelo del anuncio",
+          "nota": "Etapa: Entrada."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¡Hola! Soy el asistente virtual de Vehicentro. Al continuar con esta conversación usted acepta nuestros términos y la política de tratamiento de datos personales: https://vehicentro.example/terminos",
+          "nota": "Etapa: Bienvenida y términos. RN-02 · Aceptación de términos y tratamiento de datos. Detrás de escena: Jelou Registra el origen: página, campaña, grupo, anuncio y formulario (INT-6: botwa/:id (WS#6, POST); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Deriva a PMA según la regla definida con Vehicentro",
+          "nota": "Etapa: Derivación a PMA. Decisión: ¿Meta entregó el número de celular? → Repuestos o Talleres. Detrás de escena: Jelou Consulta si ya tiene asesor asignado (por celular) (INT-1: botwa_existe_asesor (WS#1)). Decisión: ¿Tiene asesor asignado? → Repuestos o Talleres. El agente identifica la intención y enruta."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "El modelo Modelo A 4x2 tiene un precio de USD 28.990. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            {
+              "titulo": "Ver catálogo"
+            },
+            {
+              "titulo": "Cotizar"
+            },
+            {
+              "titulo": "Agencias"
+            }
+          ],
+          "nota": "Etapa: Respuesta del agente IA. El agente identifica la intención y enruta. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3)).",
+          "principal": 0
+        },
+        {
+          "tipo": "cta_url",
+          "header": {
+            "tipo": "imagen",
+            "src": "data:image/png;base64,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"
+          },
+          "cuerpo": "Encontré estos productos para ti 👇",
+          "boton": "Ver Detalles",
+          "webview": "f1_f2__q4_wv",
+          "nota": "Etapa: Ecommerce WebView. Componente Jelou: Ecommerce WebView. Integración INT-3: botwa_modelos/:id_marca (WS#3). Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "✅ ¡Pedido confirmado!\n💰 Total a pagar: $3,50",
+          "botones": [
+            {
+              "titulo": "💳 Ir al pago"
+            },
+            {
+              "titulo": "🔍 Agregar más"
+            },
+            {
+              "titulo": "🛒 Ver mi carrito"
+            }
+          ],
+          "nota": "Mensaje de pedido confirmado que sugiere la documentación de Jelou Shop tras el checkout (el agente usa «Enviar mensaje con opciones»)."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Con gusto preparamos su cotización. ¿Me ayuda con su número de cédula?",
+          "nota": "Etapa: Invitación a cotizar. RN-06 · Cédula solo al cotizar."
+        },
+        {
+          "tipo": "usuario",
+          "texto": "0102030405",
+          "nota": "Etapa: Cédula."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¿En qué ciudad le gustaría ser atendido?",
+          "nota": "Etapa: Ciudad."
+        },
+        {
+          "tipo": "lista",
+          "cuerpo": "Estas son nuestras agencias en Quito. ¿En cuál desea ser atendido?",
+          "boton": "Ver opciones",
+          "secciones": [
+            {
+              "titulo": "Opciones",
+              "filas": [
+                {
+                  "titulo": "Agencia Norte",
+                  "id": "r0"
+                },
+                {
+                  "titulo": "Agencia Centro",
+                  "id": "r1"
+                },
+                {
+                  "titulo": "Agencia Sur",
+                  "id": "r2"
+                }
+              ]
+            }
+          ],
+          "nota": "Etapa: Elegir agencia. Detrás de escena: Jelou Consulta las agencias de la marca y filtra por ciudad (INT-4: botwa_agencias/:id_marca (WS#4))."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Listo. Le atenderá Asesor Demo de la agencia Agencia Norte. En breve continuará con usted por este chat.",
+          "nota": "Etapa: Quién lo atiende. Detrás de escena: Jelou Envía el prospecto al sistema de Vehicentro, que devuelve el correo del teleasesor (INT-5: Servicio de prospectos y asignación de teleasesor (WS#5); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Asigna la conversación en PMA al teleasesor devuelto",
+          "nota": "Etapa: Asignación en PMA."
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "f1_alt4",
+      "nombre": "Flujo_1 · Tiene asesor asignado: sin interés",
+      "canal": "whatsapp",
+      "tech": "webview",
+      "resumen": "Camino alterno decidido por el sistema: sin interés.",
+      "puntos": [],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "Hola, quiero información del modelo del anuncio",
+          "nota": "Etapa: Entrada."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¡Hola! Soy el asistente virtual de Vehicentro. Al continuar con esta conversación usted acepta nuestros términos y la política de tratamiento de datos personales: https://vehicentro.example/terminos",
+          "nota": "Etapa: Bienvenida y términos. RN-02 · Aceptación de términos y tratamiento de datos. Detrás de escena: Jelou Registra el origen: página, campaña, grupo, anuncio y formulario (INT-6: botwa/:id (WS#6, POST); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Entendido, gracias por su tiempo. Si más adelante desea información, aquí estaremos.",
+          "nota": "Etapa: Sin interés. RN-07 · Cierre ante falta de interés o interacción negativa. Decisión: ¿Meta entregó el número de celular? → sin interés. Detrás de escena: Jelou Consulta si ya tiene asesor asignado (por celular) (INT-1: botwa_existe_asesor (WS#1)). Decisión: ¿Tiene asesor asignado? → sin interés. El agente identifica la intención y enruta."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "El modelo Modelo A 4x2 tiene un precio de USD 28.990. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            {
+              "titulo": "Ver catálogo"
+            },
+            {
+              "titulo": "Cotizar"
+            },
+            {
+              "titulo": "Agencias"
+            }
+          ],
+          "nota": "Etapa: Respuesta del agente IA. El agente identifica la intención y enruta. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3)).",
+          "principal": 0
+        },
+        {
+          "tipo": "cta_url",
+          "header": {
+            "tipo": "imagen",
+            "src": "data:image/png;base64,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"
+          },
+          "cuerpo": "Encontré estos productos para ti 👇",
+          "boton": "Ver Detalles",
+          "webview": "f1_f2__q4_wv",
+          "nota": "Etapa: Ecommerce WebView. Componente Jelou: Ecommerce WebView. Integración INT-3: botwa_modelos/:id_marca (WS#3). Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "✅ ¡Pedido confirmado!\n💰 Total a pagar: $3,50",
+          "botones": [
+            {
+              "titulo": "💳 Ir al pago"
+            },
+            {
+              "titulo": "🔍 Agregar más"
+            },
+            {
+              "titulo": "🛒 Ver mi carrito"
+            }
+          ],
+          "nota": "Mensaje de pedido confirmado que sugiere la documentación de Jelou Shop tras el checkout (el agente usa «Enviar mensaje con opciones»)."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Con gusto preparamos su cotización. ¿Me ayuda con su número de cédula?",
+          "nota": "Etapa: Invitación a cotizar. RN-06 · Cédula solo al cotizar."
+        },
+        {
+          "tipo": "usuario",
+          "texto": "0102030405",
+          "nota": "Etapa: Cédula."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¿En qué ciudad le gustaría ser atendido?",
+          "nota": "Etapa: Ciudad."
+        },
+        {
+          "tipo": "lista",
+          "cuerpo": "Estas son nuestras agencias en Quito. ¿En cuál desea ser atendido?",
+          "boton": "Ver opciones",
+          "secciones": [
+            {
+              "titulo": "Opciones",
+              "filas": [
+                {
+                  "titulo": "Agencia Norte",
+                  "id": "r0"
+                },
+                {
+                  "titulo": "Agencia Centro",
+                  "id": "r1"
+                },
+                {
+                  "titulo": "Agencia Sur",
+                  "id": "r2"
+                }
+              ]
+            }
+          ],
+          "nota": "Etapa: Elegir agencia. Detrás de escena: Jelou Consulta las agencias de la marca y filtra por ciudad (INT-4: botwa_agencias/:id_marca (WS#4))."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Listo. Le atenderá Asesor Demo de la agencia Agencia Norte. En breve continuará con usted por este chat.",
+          "nota": "Etapa: Quién lo atiende. Detrás de escena: Jelou Envía el prospecto al sistema de Vehicentro, que devuelve el correo del teleasesor (INT-5: Servicio de prospectos y asignación de teleasesor (WS#5); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Asigna la conversación en PMA al teleasesor devuelto",
+          "nota": "Etapa: Asignación en PMA."
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "f1_alt5",
+      "nombre": "Flujo_1 · Meta entregó el número de celular: no (BSUID)",
+      "canal": "whatsapp",
+      "tech": "webview",
+      "resumen": "Camino alterno decidido por el sistema: no (BSUID).",
+      "puntos": [],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "Hola, quiero información del modelo del anuncio",
+          "nota": "Etapa: Entrada."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¡Hola! Soy el asistente virtual de Vehicentro. Al continuar con esta conversación usted acepta nuestros términos y la política de tratamiento de datos personales: https://vehicentro.example/terminos",
+          "nota": "Etapa: Bienvenida y términos. RN-02 · Aceptación de términos y tratamiento de datos. Detrás de escena: Jelou Registra el origen: página, campaña, grupo, anuncio y formulario (INT-6: botwa/:id (WS#6, POST); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Para ayudarle mejor, ¿me comparte su número de celular?",
+          "nota": "Etapa: Pedir celular. RN-03 · Validación de asesor por celular. Decisión: ¿Meta entregó el número de celular? → no (BSUID)."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Usted ya tiene un asesor asignado: Asesor Demo. Puede escribirle al +593 99 111 1111.",
+          "nota": "Etapa: Asesor asignado. Decisión: ¿Meta entregó el número de celular? → sí. Detrás de escena: Jelou Consulta si ya tiene asesor asignado (por celular) (INT-1: botwa_existe_asesor (WS#1)). Decisión: ¿Tiene asesor asignado? → sí."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "El modelo Modelo A 4x2 tiene un precio de USD 28.990. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            {
+              "titulo": "Ver catálogo"
+            },
+            {
+              "titulo": "Cotizar"
+            },
+            {
+              "titulo": "Agencias"
+            }
+          ],
+          "nota": "Etapa: Respuesta del agente IA. El agente identifica la intención y enruta. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3)).",
+          "principal": 0
+        },
+        {
+          "tipo": "cta_url",
+          "header": {
+            "tipo": "imagen",
+            "src": "data:image/png;base64,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"
+          },
+          "cuerpo": "Encontré estos productos para ti 👇",
+          "boton": "Ver Detalles",
+          "webview": "f1_f2__q4_wv",
+          "nota": "Etapa: Ecommerce WebView. Componente Jelou: Ecommerce WebView. Integración INT-3: botwa_modelos/:id_marca (WS#3). Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "✅ ¡Pedido confirmado!\n💰 Total a pagar: $3,50",
+          "botones": [
+            {
+              "titulo": "💳 Ir al pago"
+            },
+            {
+              "titulo": "🔍 Agregar más"
+            },
+            {
+              "titulo": "🛒 Ver mi carrito"
+            }
+          ],
+          "nota": "Mensaje de pedido confirmado que sugiere la documentación de Jelou Shop tras el checkout (el agente usa «Enviar mensaje con opciones»)."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Con gusto preparamos su cotización. ¿Me ayuda con su número de cédula?",
+          "nota": "Etapa: Invitación a cotizar. RN-06 · Cédula solo al cotizar."
+        },
+        {
+          "tipo": "usuario",
+          "texto": "0102030405",
+          "nota": "Etapa: Cédula."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¿En qué ciudad le gustaría ser atendido?",
+          "nota": "Etapa: Ciudad."
+        },
+        {
+          "tipo": "lista",
+          "cuerpo": "Estas son nuestras agencias en Quito. ¿En cuál desea ser atendido?",
+          "boton": "Ver opciones",
+          "secciones": [
+            {
+              "titulo": "Opciones",
+              "filas": [
+                {
+                  "titulo": "Agencia Norte",
+                  "id": "r0"
+                },
+                {
+                  "titulo": "Agencia Centro",
+                  "id": "r1"
+                },
+                {
+                  "titulo": "Agencia Sur",
+                  "id": "r2"
+                }
+              ]
+            }
+          ],
+          "nota": "Etapa: Elegir agencia. Detrás de escena: Jelou Consulta las agencias de la marca y filtra por ciudad (INT-4: botwa_agencias/:id_marca (WS#4))."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Listo. Le atenderá Asesor Demo de la agencia Agencia Norte. En breve continuará con usted por este chat.",
+          "nota": "Etapa: Quién lo atiende. Detrás de escena: Jelou Envía el prospecto al sistema de Vehicentro, que devuelve el correo del teleasesor (INT-5: Servicio de prospectos y asignación de teleasesor (WS#5); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Asigna la conversación en PMA al teleasesor devuelto",
+          "nota": "Etapa: Asignación en PMA."
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "f1_alt6",
+      "nombre": "Flujo_1 · Envía nombre y contacto del aseso…: servicio no r…",
+      "canal": "whatsapp",
+      "tech": "chat",
+      "resumen": "Camino alterno decidido por el sistema: servicio no responde.",
+      "puntos": [],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "Hola, quiero información del modelo del anuncio",
+          "nota": "Etapa: Entrada."
+        },
+        {
+          "tipo": "texto",
+          "texto": "¡Hola! Soy el asistente virtual de Vehicentro. Al continuar con esta conversación usted acepta nuestros términos y la política de tratamiento de datos personales: https://vehicentro.example/terminos",
+          "nota": "Etapa: Bienvenida y términos. RN-02 · Aceptación de términos y tratamiento de datos. Detrás de escena: Jelou Registra el origen: página, campaña, grupo, anuncio y formulario (INT-6: botwa/:id (WS#6, POST); documentación pendiente, respuesta simulada)."
+        },
+        {
+          "tipo": "texto",
+          "texto": "Usted ya tiene un asesor asignado: Asesor Demo. Puede escribirle al +593 99 111 1111.",
+          "nota": "Etapa: Asesor asignado. Decisión: ¿Meta entregó el número de celular? → sí. Detrás de escena: Jelou Consulta si ya tiene asesor asignado (por celular) (INT-1: botwa_existe_asesor (WS#1)). Decisión: ¿Tiene asesor asignado? → sí."
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Mensaje de contingencia y derivación a PMA",
+          "nota": "Etapa: Contingencia. RN-09 · Contingencia de servicios. El agente identifica la intención y enruta. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3))."
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "f2",
+      "nombre": "Flujo_2: Consulta de Catálogo y Agencias",
+      "canal": "whatsapp",
+      "tech": "webview",
+      "resumen": "Consulta el catálogo y compara modelos → Cotiza: cédula, ciudad y agencia → El teleasesor asignado continúa la atención",
+      "puntos": [
+        "Catálogo",
+        "Catálogo de la marca",
+        "Respuesta del agente IA",
+        "Ecommerce WebView",
+        "Cotización",
+        "Cédula"
+      ],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "¿Qué precio tiene el modelo del anuncio y qué motor trae?",
+          "nota": "Etapa: Pregunta libre.",
+          "id": "q1",
+          "ir": "q3"
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "El modelo Modelo A 4x2 tiene un precio de USD 28.990. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            {
+              "titulo": "Ver catálogo",
+              "ir": "q4"
+            },
+            {
+              "titulo": "Cotizar",
+              "ir": "q5"
+            },
+            {
+              "titulo": "Agencias",
+              "ir": "q7"
+            }
+          ],
+          "nota": "Etapa: Respuesta del agente IA. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3)).",
+          "id": "q3",
+          "principal": 0
+        },
+        {
+          "tipo": "cta_url",
+          "header": {
+            "tipo": "imagen",
+            "src": "data:image/png;base64,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"
+          },
+          "cuerpo": "Encontré estos productos para ti 👇",
+          "boton": "Ver Detalles",
+          "webview": "f2_q4_wv",
+          "nota": "Etapa: Ecommerce WebView. Componente Jelou: Ecommerce WebView. Integración INT-3: botwa_modelos/:id_marca (WS#3). Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural.",
+          "id": "q4"
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "✅ ¡Pedido confirmado!\n💰 Total a pagar: $3,50",
+          "botones": [
+            {
+              "titulo": "💳 Ir al pago",
+              "ir": "q5"
+            },
+            {
+              "titulo": "🔍 Agregar más",
+              "ir": "q4"
+            },
+            {
+              "titulo": "🛒 Ver mi carrito",
+              "ir": "q4"
+            }
+          ],
+          "nota": "Mensaje de pedido confirmado que sugiere la documentación de Jelou Shop tras el checkout (el agente usa «Enviar mensaje con opciones»).",
+          "principal": 0
+        },
+        {
+          "tipo": "texto",
+          "texto": "Con gusto preparamos su cotización. ¿Me ayuda con su número de cédula?",
+          "nota": "Etapa: Invitación a cotizar. RN-06 · Cédula solo al cotizar.",
+          "id": "q5",
+          "ir": "q6"
+        },
+        {
+          "tipo": "usuario",
+          "texto": "0102030405",
+          "nota": "Etapa: Cédula.",
+          "id": "q6",
+          "ir": "q7"
+        },
+        {
+          "tipo": "texto",
+          "texto": "¿En qué ciudad le gustaría ser atendido?",
+          "nota": "Etapa: Ciudad.",
+          "id": "q7",
+          "ir": "q9"
+        },
+        {
+          "tipo": "lista",
+          "cuerpo": "Estas son nuestras agencias en Quito. ¿En cuál desea ser atendido?",
+          "boton": "Ver opciones",
+          "secciones": [
+            {
+              "titulo": "Opciones",
+              "filas": [
+                {
+                  "titulo": "Agencia Norte",
+                  "id": "r0",
+                  "ir": "q11"
+                },
+                {
+                  "titulo": "Agencia Centro",
+                  "id": "r1",
+                  "ir": "q11"
+                },
+                {
+                  "titulo": "Agencia Sur",
+                  "id": "r2",
+                  "ir": "q11"
+                }
+              ]
+            }
+          ],
+          "nota": "Etapa: Elegir agencia. Detrás de escena: Jelou Consulta las agencias de la marca y filtra por ciudad (INT-4: botwa_agencias/:id_marca (WS#4)).",
+          "id": "q9"
+        },
+        {
+          "tipo": "texto",
+          "texto": "Listo. Le atenderá Asesor Demo de la agencia Agencia Norte. En breve continuará con usted por este chat.",
+          "nota": "Etapa: Quién lo atiende. Detrás de escena: Jelou Envía el prospecto al sistema de Vehicentro, que devuelve el correo del teleasesor (INT-5: Servicio de prospectos y asignación de teleasesor (WS#5); documentación pendiente, respuesta simulada).",
+          "id": "q11",
+          "ir": "q12"
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Asigna la conversación en PMA al teleasesor devuelto",
+          "nota": "Etapa: Asignación en PMA.",
+          "id": "q12",
+          "ir": "q21"
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin",
+          "id": "q21"
+        }
+      ]
+    },
+    {
+      "id": "f2_alt1",
+      "nombre": "Flujo_2 · Pregunta por modelos, precios o c…: servicio no r…",
+      "canal": "whatsapp",
+      "tech": "chat",
+      "resumen": "Camino alterno decidido por el sistema: servicio no responde.",
+      "puntos": [],
+      "pasos": [
+        {
+          "tipo": "botones",
+          "cuerpo": "El modelo Modelo A 4x2 tiene un precio de USD 28.990. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            {
+              "titulo": "Ver catálogo"
+            },
+            {
+              "titulo": "Cotizar"
+            },
+            {
+              "titulo": "Agencias"
+            }
+          ],
+          "nota": "Etapa: Respuesta del agente IA. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3))."
+        },
+        {
+          "tipo": "usuario",
+          "texto": "¿Qué precio tiene el modelo del anuncio y qué motor trae?",
+          "nota": "Etapa: Pregunta libre."
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Mensaje de contingencia y derivación a PMA",
+          "nota": "Etapa: Contingencia. RN-09 · Contingencia de servicios. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3))."
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "f2_alt2",
+      "nombre": "Flujo_2 · Pregunta la ciudad: servicio no responde",
+      "canal": "whatsapp",
+      "tech": "chat",
+      "resumen": "Camino alterno decidido por el sistema: servicio no responde.",
+      "puntos": [],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "¿Qué precio tiene el modelo del anuncio y qué motor trae?",
+          "nota": "Etapa: Pregunta libre."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "El modelo Modelo A 4x2 tiene un precio de USD 28.990. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            {
+              "titulo": "Ver catálogo"
+            },
+            {
+              "titulo": "Cotizar"
+            },
+            {
+              "titulo": "Agencias"
+            }
+          ],
+          "nota": "Etapa: Respuesta del agente IA. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3)).",
+          "principal": 2
+        },
+        {
+          "tipo": "texto",
+          "texto": "¿En qué ciudad le gustaría ser atendido?",
+          "nota": "Etapa: Ciudad."
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Mensaje de contingencia y derivación a PMA",
+          "nota": "Etapa: Contingencia. RN-09 · Contingencia de servicios. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3))."
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "f2_alt3",
+      "nombre": "Flujo_2 · Muestra las agencias de la ciudad…: servicio no r…",
+      "canal": "whatsapp",
+      "tech": "chat",
+      "resumen": "Camino alterno decidido por el sistema: servicio no responde.",
+      "puntos": [],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "¿Qué precio tiene el modelo del anuncio y qué motor trae?",
+          "nota": "Etapa: Pregunta libre."
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "El modelo Modelo A 4x2 tiene un precio de USD 28.990. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            {
+              "titulo": "Ver catálogo"
+            },
+            {
+              "titulo": "Cotizar"
+            },
+            {
+              "titulo": "Agencias"
+            }
+          ],
+          "nota": "Etapa: Respuesta del agente IA. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3)).",
+          "principal": 2
+        },
+        {
+          "tipo": "texto",
+          "texto": "¿En qué ciudad le gustaría ser atendido?",
+          "nota": "Etapa: Ciudad."
+        },
+        {
+          "tipo": "lista",
+          "cuerpo": "Estas son nuestras agencias en Quito. ¿En cuál desea ser atendido?",
+          "boton": "Ver opciones",
+          "secciones": [
+            {
+              "titulo": "Opciones",
+              "filas": [
+                {
+                  "titulo": "Agencia Norte",
+                  "id": "r0"
+                },
+                {
+                  "titulo": "Agencia Centro",
+                  "id": "r1"
+                },
+                {
+                  "titulo": "Agencia Sur",
+                  "id": "r2"
+                }
+              ]
+            }
+          ],
+          "nota": "Etapa: Elegir agencia. Detrás de escena: Jelou Consulta las agencias de la marca y filtra por ciudad (INT-4: botwa_agencias/:id_marca (WS#4))."
+        },
+        {
+          "tipo": "sistema",
+          "estilo": "asesor",
+          "texto": "Mensaje de contingencia y derivación a PMA",
+          "nota": "Etapa: Contingencia. RN-09 · Contingencia de servicios. Detrás de escena: Jelou Consulta el catálogo de la marca (INT-3: botwa_modelos/:id_marca (WS#3))."
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "t1",
+      "nombre": "Lógica transversal: abandono, trazabilidad y manejo de la c…",
+      "canal": "whatsapp",
+      "tech": "chat",
+      "resumen": "Si deja de responder: hasta 4 recordatorios",
+      "puntos": [
+        "Inactividad",
+        "Horario permitido",
+        "Recordatorio",
+        "¿Respondió?",
+        "Retoma",
+        "No gestionado"
+      ],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "(sin respuesta)",
+          "nota": "Etapa: Inactividad.",
+          "id": "r1",
+          "ir": "r3"
+        },
+        {
+          "tipo": "botones",
+          "cuerpo": "¿Sigue interesado en el Modelo A 4x2? Puedo ayudarle a cotizarlo cuando guste.",
+          "botones": [
+            {
+              "titulo": "Continuar",
+              "ir": "r5"
+            },
+            {
+              "titulo": "No me interesa",
+              "ir": "r7"
+            }
+          ],
+          "nota": "Etapa: Recordatorio. Decisión: ¿Está dentro de 24 h y fuera de la franja nocturna? → sí.",
+          "id": "r3",
+          "principal": 0
+        },
+        {
+          "tipo": "texto",
+          "texto": "¡Perfecto! Continuemos.",
+          "nota": "Etapa: Retoma. Decisión: ¿Respondió? → Continuar.",
+          "id": "r5",
+          "ir": "r8"
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin",
+          "id": "r8"
+        },
+        {
+          "tipo": "texto",
+          "texto": "Entendido, gracias por su tiempo.",
+          "nota": "Etapa: Cierre. RN-07 · Cierre ante falta de interés o interacción negativa. Decisión: ¿Respondió? → No me interesa.",
+          "id": "r7",
+          "ir": "r8"
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin de la conversación"
+        }
+      ]
+    },
+    {
+      "id": "t1_alt1",
+      "nombre": "Lógica transversal · Está dentro de 24 h y fuera de la…: ve…",
+      "canal": "whatsapp",
+      "tech": "chat",
+      "resumen": "Camino alterno decidido por el sistema: ventana de 24 h vencida.",
+      "puntos": [],
+      "pasos": [
+        {
+          "tipo": "usuario",
+          "texto": "(sin respuesta)",
+          "nota": "Etapa: Inactividad."
+        },
+        {
+          "tipo": "fin",
+          "texto": "Fin"
+        }
+      ]
+    }
+  ],
+  "flows": {},
+  "webviews": {
+    "f1_f2__q4_wv": {
+      "titulo": "Vehicentro",
+      "dominio": "shop.jelou.ai",
+      "pantallas": [
+        {
+          "bloques": [
+            {
+              "tipo": "cabecera",
+              "izquierda": "Cancelar",
+              "titulo": "Catálogo",
+              "carrito": 1
+            },
+            {
+              "tipo": "buscador",
+              "texto": "productos"
+            },
+            {
+              "tipo": "producto_fila"
+            },
+            {
+              "tipo": "producto_fila"
+            },
+            {
+              "tipo": "chips",
+              "titulo": "COLOR",
+              "opciones": [
+                {
+                  "t": "Blanco",
+                  "color": "#ffffff"
+                },
+                {
+                  "t": "Azul",
+                  "color": "#2563eb"
+                },
+                {
+                  "t": "Negro",
+                  "color": "#111827"
+                }
+              ],
+              "seleccion": 1
+            },
+            {
+              "tipo": "chips",
+              "titulo": "TALLA",
+              "opciones": [
+                "S",
+                "M",
+                "L",
+                "XL"
+              ],
+              "seleccion": 1
+            },
+            {
+              "tipo": "boton_oscuro",
+              "texto": "+ Agregar al carrito"
+            }
+          ],
+          "boton": "Agregar al carrito",
+          "nota": "Etapa: Ecommerce WebView. Componente Jelou: Ecommerce WebView. Integración INT-3: botwa_modelos/:id_marca (WS#3). Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural."
+        },
+        {
+          "bloques": [
+            {
+              "tipo": "cabecera",
+              "izquierda": "‹",
+              "titulo": "",
+              "carrito": 1
+            },
+            {
+              "tipo": "imagen",
+              "src": "data:image/png;base64,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"
+            },
+            {
+              "tipo": "titulo_precio",
+              "titulo": "Producto",
+              "precio": 28990,
+              "texto": ""
+            },
+            {
+              "tipo": "boton_oscuro",
+              "texto": "+ Agregar al carrito"
+            }
+          ],
+          "boton": "Ver carrito",
+          "nota": "Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural. Pantalla 2 de 3."
+        },
+        {
+          "bloques": [
+            {
+              "tipo": "cabecera",
+              "izquierda": "‹",
+              "titulo": "Mi carrito",
+              "carrito": 1
+            },
+            {
+              "tipo": "producto_fila",
+              "descripcion": 28990,
+              "cantidad": "2"
+            },
+            {
+              "tipo": "producto_fila",
+              "descripcion": 34990,
+              "cantidad": "1"
+            },
+            {
+              "tipo": "resumen",
+              "filas": [
+                [
+                  "Subtotal",
+                  "$3.04"
+                ],
+                [
+                  "IVA 15%",
+                  "$0.46"
+                ]
+              ],
+              "total": [
+                "Total",
+                "$3,50"
+              ]
+            },
+            {
+              "tipo": "boton_oscuro",
+              "texto": "Finalizar compra"
+            }
+          ],
+          "boton": "Finalizar compra",
+          "cargando": "Creando tu pedido…",
+          "nota": "Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural. Pantalla 3 de 3."
+        }
+      ],
+      "exito": {
+        "titulo": "¡Pedido realizado!",
+        "texto": "Tu pedido ha sido realizado con éxito.",
+        "boton": "Volver a WhatsApp"
+      },
+      "color": "#B71C1C"
+    },
+    "f2_q4_wv": {
+      "titulo": "Vehicentro",
+      "dominio": "shop.jelou.ai",
+      "pantallas": [
+        {
+          "bloques": [
+            {
+              "tipo": "cabecera",
+              "izquierda": "Cancelar",
+              "titulo": "Catálogo",
+              "carrito": 1
+            },
+            {
+              "tipo": "buscador",
+              "texto": "productos"
+            },
+            {
+              "tipo": "producto_fila"
+            },
+            {
+              "tipo": "producto_fila"
+            },
+            {
+              "tipo": "chips",
+              "titulo": "COLOR",
+              "opciones": [
+                {
+                  "t": "Blanco",
+                  "color": "#ffffff"
+                },
+                {
+                  "t": "Azul",
+                  "color": "#2563eb"
+                },
+                {
+                  "t": "Negro",
+                  "color": "#111827"
+                }
+              ],
+              "seleccion": 1
+            },
+            {
+              "tipo": "chips",
+              "titulo": "TALLA",
+              "opciones": [
+                "S",
+                "M",
+                "L",
+                "XL"
+              ],
+              "seleccion": 1
+            },
+            {
+              "tipo": "boton_oscuro",
+              "texto": "+ Agregar al carrito"
+            }
+          ],
+          "boton": "Agregar al carrito",
+          "nota": "Etapa: Ecommerce WebView. Componente Jelou: Ecommerce WebView. Integración INT-3: botwa_modelos/:id_marca (WS#3). Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural."
+        },
+        {
+          "bloques": [
+            {
+              "tipo": "cabecera",
+              "izquierda": "‹",
+              "titulo": "",
+              "carrito": 1
+            },
+            {
+              "tipo": "imagen",
+              "src": "data:image/png;base64,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"
+            },
+            {
+              "tipo": "titulo_precio",
+              "titulo": "Producto",
+              "precio": 28990,
+              "texto": ""
+            },
+            {
+              "tipo": "boton_oscuro",
+              "texto": "+ Agregar al carrito"
+            }
+          ],
+          "boton": "Ver carrito",
+          "nota": "Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural. Pantalla 2 de 3."
+        },
+        {
+          "bloques": [
+            {
+              "tipo": "cabecera",
+              "izquierda": "‹",
+              "titulo": "Mi carrito",
+              "carrito": 1
+            },
+            {
+              "tipo": "producto_fila",
+              "descripcion": 28990,
+              "cantidad": "2"
+            },
+            {
+              "tipo": "producto_fila",
+              "descripcion": 34990,
+              "cantidad": "1"
+            },
+            {
+              "tipo": "resumen",
+              "filas": [
+                [
+                  "Subtotal",
+                  "$3.04"
+                ],
+                [
+                  "IVA 15%",
+                  "$0.46"
+                ]
+              ],
+              "total": [
+                "Total",
+                "$3,50"
+              ]
+            },
+            {
+              "tipo": "boton_oscuro",
+              "texto": "Finalizar compra"
+            }
+          ],
+          "boton": "Finalizar compra",
+          "cargando": "Creando tu pedido…",
+          "nota": "Tienda de Vehicentro con Jelou Shop dentro de un WebView de WhatsApp: el agente envía el catálogo o los resultados de búsqueda como webview; la persona busca, elige color y talla y agrega al carrito. Mismo webview con Shopify, VTEX, WooCommerce o carga por API (se sincronizan en Jelou Shop). Catálogo y detalle siguen la documentación de Jelou; el carrito es estructural. Pantalla 3 de 3."
+        }
+      ],
+      "exito": {
+        "titulo": "¡Pedido realizado!",
+        "texto": "Tu pedido ha sido realizado con éxito.",
+        "boton": "Volver a WhatsApp"
+      },
+      "color": "#B71C1C"
+    }
+  }
+}

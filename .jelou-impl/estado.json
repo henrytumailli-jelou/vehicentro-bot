@@ -1,0 +1,313 @@
+{
+  "spec_version": "0.2.0",
+  "recorrido": "completo",
+  "cliente": "Vehicentro",
+  "slug": "vehicentro",
+  "segmento": "enterprise",
+  "perfil_cli": "dev-vehicentro",
+  "company_id": "13744",
+  "company_name": "EC-02-113-01 Vehicentro",
+  "brains": {
+    "consultado": "2026-11-16",
+    "objetivo": "01KYX1WCS2GBQXT355BK6ZHVMD",
+    "produccion": "01KYQZ99V5PPM2JSMQF4EMH55X",
+    "nota": "Decisión del implementador (2026-11-16): se construye en DEV Vehicentro y luego se promueve a producción (EC-02-113-01 Vehicentro). La forma de promover se define en F3/F8.",
+    "proyectos": [
+      {
+        "id": "01KYX1WCS2GBQXT355BK6ZHVMD",
+        "nombre": "DEV Vehicentro",
+        "uso": "desarrollo",
+        "canal": "DEV Vehicentro (WhatsApp Cloud)",
+        "skills": [
+          "Bienvenida y Enrutamiento (default)",
+          "Ventas",
+          "Repuestos",
+          "Talleres",
+          "Crédito Directo",
+          "Derivar a Asesor",
+          "[Deprecado] DEV Vehicentro"
+        ]
+      },
+      {
+        "id": "01KYQZ99V5PPM2JSMQF4EMH55X",
+        "nombre": "EC-02-113-01 Vehicentro",
+        "uso": "producción EC",
+        "canal": "EC-02-113-01 Vehicentro + respaldo (WhatsApp Cloud)",
+        "skills": [
+          "EC-02-113-01 Vehicentro (default)",
+          "PMA x3",
+          "Agentes Sinotruk - Maquinaria",
+          "Agentes Lynkco",
+          "Ubicación Américas",
+          "Lynk Reportaje",
+          "Campana - Asignacion Directa"
+        ]
+      },
+      {
+        "id": "01M5AFBVA143FSM3D615BQKNEZ",
+        "nombre": "EC Vehicentro Cobranzas",
+        "uso": "cobranzas EC (fuera de alcance)"
+      },
+      {
+        "id": "01M5ADY82334QP8FJ32P79R4PZ",
+        "nombre": "CO Vehicentro",
+        "uso": "Colombia (OOS-9)"
+      }
+    ]
+  },
+  "repo": "henrytumailli-jelou/vehicentro-bot",
+  "repo_estado": "Repo personal privado (2026-11-16), elegido por el implementador; no está en JelouLatam. Clon local: ../vehicentro-bot",
+  "rama_docs": "vehicentro-sow-hu",
+  "clickup": {
+    "workspace": "12931537",
+    "lista": "901713556942",
+    "tarea_madre": "86e2aact9",
+    "tarea_madre_nota": "Account 🟡 'Vehicentro Sinotruk - Implementación HITO 1', elegida por el usuario. Se llenó Company ID Brain = 13744. Subtareas previas (Implementación HITO 1) no se tocan.",
+    "subtareas": {
+      "F0": "1dfg0rkjr5x",
+      "F1": "1dfg0rkjr5y",
+      "F2": "1dfg0rkjr5z",
+      "F3": "1dfg0rkjr60",
+      "F4": "1dfg0rkjr61",
+      "F5": "1dfg0rkjr62",
+      "F6": "1dfg0rkjr63",
+      "F7": "1dfg0rkjr64",
+      "F8": "1dfg0rkjr65",
+      "F9": "1dfg0rkjr66",
+      "F10": "1dfg0rkjr67"
+    }
+  },
+  "slack": {
+    "canal": "C09DRCA3HNY",
+    "auto": false
+  },
+  "aprobadores": {
+    "0": "tech-lead",
+    "1": "pm",
+    "2": "tech-lead",
+    "3": "tech-lead",
+    "4": "pm",
+    "5": "tech-lead",
+    "6": "cliente+tech-lead",
+    "7": "tech-lead",
+    "8": "tech-lead",
+    "9": "tech-lead+pm",
+    "10": "pm"
+  },
+  "fase_actual": 0,
+  "puertas": [],
+  "excepciones": [],
+  "hallazgos": [
+    {
+      "id": "H-01",
+      "fase": 0,
+      "tipo": "decisión del cliente",
+      "descripcion": "Brief v1.2: consentimiento LOPDP implícito sin botones y posterior a pedir cédula; incumple regla 17 — DM al Tech Lead en borrador de Slack (2026-11-04)",
+      "estado": "abierto"
+    },
+    {
+      "id": "H-02",
+      "fase": 0,
+      "tipo": "pendiente de lanzamiento",
+      "descripcion": "botwa_existe_asesor exige celular; con BSUID no hay teléfono",
+      "estado": "abierto"
+    },
+    {
+      "id": "H-03",
+      "fase": 0,
+      "tipo": "errata del SOW",
+      "descripcion": "INT-5 no existe; INT-6 es el ingreso de lead, no el registro de origen; 4.5 exige marca (reordenar F1); el lead exige nombres, id_modelo y notas. Ver docs/04-implementacion/02-apis/revision-apis-bdc.md",
+      "estado": "abierto",
+      "nota": "No se emite SOW v1.3.1 (decisión del implementador 2026-11-16): las erratas se resuelven en la spec funcional (F2)."
+    },
+    {
+      "id": "H-04",
+      "fase": 0,
+      "tipo": "datos personales",
+      "descripcion": "El PDF de APIs del cliente trae datos personales reales en los ejemplos: no se sube al repo (regla 5)",
+      "estado": "cerrado",
+      "cierre": "2026-11-16: el implementador borró el PDF de docs/"
+    }
+  ],
+  "skills": {
+    "verificadas_en": "2026-11-04",
+    "cli_version": "4.24.0",
+    "disponibles": [
+      "jelou",
+      "jelou-project",
+      "jelou-company-migration",
+      "jelou-sow-studio (library, rev b5ac7678)"
+    ],
+    "en_library_sin_cargar": [
+      "jelou-sow-docs",
+      "jelou-it-ticket"
+    ],
+    "faltan": []
+  },
+  "aprobaciones": [
+    {
+      "fase": 0,
+      "tema": "Brief v1.3",
+      "fecha": "2026-11-05",
+      "aprobo": "cliente",
+      "fuente": "correo de A. F. (05/11/2026)"
+    }
+  ],
+  "bloqueos": [],
+  "sow": {
+    "version": "1.3",
+    "estado": "aprobado",
+    "firmado_por": "cliente (aprobación comunicada por A. F. por correo)",
+    "fecha_firma": "2026-11-05",
+    "entrega_comprometida": "2026-11-06",
+    "nota_aprobacion": "Correo del 05/11/2026 de A. F. informando que el cliente aprobó el Brief v1.3.",
+    "nota_version": "Se trabaja con el v1.3 aprobado; no habrá v1.3.1. Las aclaraciones van en docs/00-cliente/decisiones.md D-12..D-22."
+  },
+  "plan": {
+    "sow_version": null
+  },
+  "uat": {
+    "aprobado_por": null,
+    "fecha": null
+  },
+  "decisiones": [
+    {
+      "fecha": "2026-11-04",
+      "fuente": "Diio 47d1154e",
+      "ver": "docs/00-cliente/decisiones.md D-01..D-11",
+      "decidio": "pm-cliente"
+    },
+    {
+      "fecha": "2026-11-04",
+      "tema": "Alcance v1.3: D-07 entra; D-08 max 4 recordatorios, HSM opcional; D-11 fuera",
+      "decidio": "implementador",
+      "nota": "Ampliacion D-07 sin aprobacion formal de Comercial registrada — Cerrado 2026-11-16: no requiere Comercial (D-24)."
+    },
+    {
+      "fecha": "2026-11-16",
+      "ver": "docs/00-cliente/decisiones.md D-12..D-22",
+      "decidio": "implementador",
+      "nota": "Aclaraciones tras la revisión de las APIs; sin Brief nuevo."
+    },
+    {
+      "fecha": "2026-11-16",
+      "ver": "docs/00-cliente/decisiones.md D-23, D-24",
+      "decidio": "implementador",
+      "nota": "D-07: POST del lead y luego 4.5 para obtener el correo del asesor; no requiere Comercial (partner, Brief aprobado)."
+    }
+  ],
+  "insumos_pendientes": [
+    {
+      "id": "C-01",
+      "insumo": "Servicio de envío de prospecto que devuelve correo del teleasesor",
+      "responsable": "Cliente",
+      "estado": "cerrado",
+      "nota": "Reemplazado por diseño: asesor vía 4.5/4.4 (email_usuario) + POST de lead (A-01)."
+    },
+    {
+      "id": "C-02",
+      "insumo": "id_conexion por marca para el ingreso de lead (A-08)",
+      "responsable": "Cliente",
+      "estado": "parcial",
+      "nota": "Se usa TESTCLARO; faltan los id_conexion de producción por marca antes del go-live (D-13)."
+    },
+    {
+      "id": "C-03",
+      "insumo": "Credenciales OAuth (client id/secret) cargadas con jelou secret, nunca por chat",
+      "responsable": "Cliente + implementador",
+      "estado": "entregado",
+      "nota": "El cliente entregó las credenciales (D-20). Falta cargarlas como secreto; hoy la organización no tiene secretos (2026-11-16)."
+    },
+    {
+      "id": "C-04",
+      "insumo": "Confirmar marcas (4 u 8), origen de campaña en el lead, prueba de asignación sin afectar el reparto, límites y disponibilidad, puerto 9443/IP (A-02, A-09, A-10, A-14, A-17)",
+      "responsable": "Cliente",
+      "estado": "cerrado",
+      "nota": "Respondido en D-12, D-14, D-19. Queda abierto solo cómo probar la asignación con asesor sin afectar el reparto (A-09)."
+    }
+  ],
+  "golive": {
+    "fecha": null,
+    "tag": null,
+    "project_id": null,
+    "commit_publicado": null,
+    "commit_previo": null
+  },
+  "estabilizacion": {
+    "duracion_dias": 5,
+    "inicio": null,
+    "fin": null,
+    "dias": []
+  },
+  "historial": [
+    {
+      "fecha": "2026-11-04",
+      "evento": "F0 iniciada (/jelou-impl nuevo vehicentro). Preflight OK: CLI 4.24.0, ClickUp, Slack, Gmail; GitHub sin repo."
+    },
+    {
+      "fecha": "2026-11-04",
+      "evento": "Cargada jelou-sow-studio para el pre-kickoff. Sin diseño de preventa local ni reuniones en Diio para Vehicentro; bot existente en 3 proyectos (EC, EC Cobranzas, CO) => caso upgrade."
+    },
+    {
+      "fecha": "2026-11-04",
+      "evento": "Brief Fase 1 v1.2 y cronograma 10/09 leídos; BRIEF.md actualizado. Fecha objetivo 15/10 vencida."
+    },
+    {
+      "fecha": "2026-11-04",
+      "evento": "Diio de revisión de flujos leído (la reunión fue el 04/11, no el 30/10). Compromiso: Brief v1.3 al 06/11."
+    },
+    {
+      "fecha": "2026-11-04",
+      "evento": "sow.json v1.3 generado con jelou-sow-studio (lint: 0 errores, 14 bloqueantes de aprobación). Paquete en docs/04-implementacion/01-sow/v1.3 (docx, diagramas, simulador). Ruta de la skill: caché skillbox local."
+    },
+    {
+      "fecha": "2026-11-12",
+      "evento": "Brief v1.3 aprobado (reportado por el implementador). Cronograma 05/11 en 01-sow/v1.3."
+    },
+    {
+      "fecha": "2026-11-12",
+      "evento": "Revisión de APIs BDC (doc 11/11 + colección Postman): 17 hallazgos, C-01 cerrado por diseño, nuevos insumos C-02 a C-04."
+    },
+    {
+      "fecha": "2026-11-12",
+      "evento": "Estimación preliminar: 92 SP / 376 h contra 126 h del cronograma (+198 %). Pendiente de revisión del Tech Lead."
+    },
+    {
+      "fecha": "2026-11-12",
+      "evento": "Se registra la evidencia de aprobación del Brief v1.3: correo del 05/11 (A. F.)."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "Aclaraciones del SOW registradas (D-12..D-22). Brain: DEV Vehicentro → promoción a EC-02-113-01. Sin nueva versión del SOW."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "B-01 cerrado: repo henrytumailli-jelou/vehicentro-bot (pasado a privado antes de subir). main con README; docs y estado en vehicentro-sow-hu. Binarios (docx/xlsx/pdf) excluidos por .gitignore."
+    }
+  ],
+  "puntos": {
+    "sow_horas": 126,
+    "estimado_sp": 87,
+    "estimado_horas": 348,
+    "diferencia_pct": 176,
+    "revisado_por": null,
+    "estado": "propuesta preliminar v2 (2026-11-16, webview existente de Shop), sin aprobación del Tech Lead",
+    "archivo": "docs/04-implementacion/04-tareas/estimacion-preliminar.md",
+    "tareas": []
+  },
+  "fricciones": [
+    {
+      "fecha": "2026-11-12",
+      "tipo": "plantilla",
+      "descripcion": "Sin fila en el catálogo: origen de campaña (2+1 SP) y recordatorios con franja sin envíos (3+1 SP). estimacion.py falla en Windows sin PYTHONIOENCODING=utf-8."
+    }
+  ],
+  "por_verificar": [
+    {
+      "id": "V-01",
+      "fase": 5,
+      "que": "El BDC asigna asesor al recibir el POST (con TESTCLARO) y 4.5 lo devuelve de inmediato con email_usuario",
+      "prueba": "POST de un lead de prueba y luego GET 4.5 con la misma marca, cédula y celular"
+    }
+  ]
+}

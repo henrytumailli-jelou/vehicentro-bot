@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1598" height="1044" viewBox="0 0 1598 1044" font-family="Poppins, sans-serif">
+<rect width="1598" height="1044" fill="#ffffff"/>
+<text x="40" y="58" font-size="34" font-family="'Poppins SemiBold', Poppins, sans-serif" fill="#1a1d24">Lógica transversal: recordatorios por abandono</text>
+<path d="M981.89 170 L981.89 217" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="981.89,228 988.39,216 975.39,216" fill="#7a8794"/>
+<path d="M981.89 302 L981.89 342 L847.99 342 L847.99 371" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="847.99,382 854.49,370 841.49,370" fill="#7a8794"/>
+<path d="M981.89 302 L981.89 342 L1129.99 342 L1129.99 668 L1362 668 L1362 697" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="1362,708 1368.5,696 1355.5,696" fill="#7a8794"/>
+<path d="M847.99 478 L847.99 525" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="847.99,536 854.49,524 841.49,524" fill="#7a8794"/>
+<path d="M847.99 610 L847.99 650 L281 650 L281 697" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="281,708 287.5,696 274.5,696" fill="#7a8794"/>
+<path d="M847.99 610 L847.99 650 L799 650 L799 697" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="799,708 805.5,696 792.5,696" fill="#7a8794"/>
+<path d="M847.99 610 L847.99 650 L1272 650 L1272 697" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="1272,708 1278.5,696 1265.5,696" fill="#7a8794"/>
+<path d="M281 834 L281 862 L802.63 862 L802.63 881" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="802.63,892 809.13,880 796.13,880" fill="#7a8794"/>
+<path d="M1317 834 L1317 862 L802.63 862 L802.63 881" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="802.63,892 809.13,880 796.13,880" fill="#7a8794"/>
+<path d="M799 834 L799 862 L802.63 862 L802.63 881" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="802.63,892 809.13,880 796.13,880" fill="#7a8794"/>
+<path d="M606.99 573 L580.99 573 L580.99 265 L643.39 265" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="654.39,265 642.39,271.5 642.39,258.5" fill="#7a8794"/>
+<g data-id="R1"><rect x="689.14" y="105.25" width="585.5" height="63.5" rx="14" fill="#f1fafc" stroke="#00b3c7" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="981.89" y="144.7" font-size="22" text-anchor="middle" fill="#1a1d24">El usuario deja de responder en cualquier punto</text>
+</g>
+<g data-id="R2"><polygon points="685.64,229.25 1278.14,229.25 1308.14,265 1278.14,300.75 685.64,300.75 655.64,265" fill="#ffffff" stroke="#0e7c8a" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="981.89" y="272.7" font-size="22" text-anchor="middle" fill="#1a1d24">¿Está dentro de 24 h y fuera de la franja nocturna?</text>
+</g>
+<g data-id="R3"><rect x="608.24" y="383.25" width="479.5" height="93.5" rx="14" fill="#ffffff" stroke="#1a1d24" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="847.99" y="422.7" font-size="22" text-anchor="middle" fill="#1a1d24">Envía un recordatorio para retomar</text>
+<text x="847.99" y="452.7" font-size="22" text-anchor="middle" fill="#1a1d24">donde quedó (máx. 4)</text>
+</g>
+<g data-id="R4"><polygon points="638.24,537.25 1057.74,537.25 1087.74,573 1057.74,608.75 638.24,608.75 608.24,573" fill="#ffffff" stroke="#0e7c8a" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="847.99" y="580.7" font-size="22" text-anchor="middle" fill="#1a1d24">¿Respondió?</text>
+</g>
+<g data-id="R5"><rect x="41.25" y="709.25" width="479.5" height="123.5" rx="14" fill="#ffffff" stroke="#1a1d24" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="281" y="763.7" font-size="22" text-anchor="middle" fill="#1a1d24">Retoma el flujo en el punto donde</text>
+<text x="281" y="793.7" font-size="22" text-anchor="middle" fill="#1a1d24">quedó</text>
+</g>
+<g data-id="R7"><rect x="559.25" y="709.25" width="479.5" height="123.5" rx="14" fill="#ffffff" stroke="#1a1d24" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="799" y="778.7" font-size="22" text-anchor="middle" fill="#1a1d24">Agradece y cierra sin insistir</text>
+</g>
+<g data-id="R6"><rect x="1077.25" y="709.25" width="479.5" height="123.5" fill="#171e2d" stroke="#171e2d" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="1317" y="748.7" font-size="22" text-anchor="middle" fill="#ffffff">Marca no gestionado y envía los</text>
+<text x="1317" y="778.7" font-size="22" text-anchor="middle" fill="#ffffff">datos disponibles al sistema de</text>
+<text x="1317" y="808.7" font-size="22" text-anchor="middle" fill="#ffffff">Vehicentro</text>
+</g>
+<g data-id="R8"><rect x="718.88" y="893.25" width="167.5" height="63.5" rx="31.75" fill="#ffffff" stroke="#6b7685" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="802.63" y="932.7" font-size="22" text-anchor="middle" fill="#555b66">Fin</text>
+</g>
+<rect x="851.99" y="349" width="22.03" height="25" rx="3" fill="#ffffff"/>
+<text x="855.99" y="366" font-size="18" text-anchor="start" fill="#0e7c8a">sí</text>
+<rect x="1133.99" y="349" width="234.75" height="25" rx="3" fill="#ffffff"/>
+<text x="1137.99" y="366" font-size="18" text-anchor="start" fill="#0e7c8a">ventana de 24 h vencida</text>
+<rect x="285" y="675" width="99.19" height="25" rx="3" fill="#ffffff"/>
+<text x="289" y="692" font-size="18" text-anchor="start" fill="#0e7c8a">Continuar</text>
+<rect x="803" y="675" width="146.63" height="25" rx="3" fill="#ffffff"/>
+<text x="807" y="692" font-size="18" text-anchor="start" fill="#0e7c8a">No me interesa</text>
+<rect x="1276" y="675" width="191.96" height="25" rx="3" fill="#ffffff"/>
+<text x="1280" y="692" font-size="18" text-anchor="start" fill="#0e7c8a">4 intentos agotados</text>
+<rect x="276.38" y="544" width="300.61" height="25" rx="3" fill="#ffffff"/>
+<text x="572.99" y="561" font-size="18" text-anchor="end" fill="#0e7c8a">sin respuesta y quedan intentos</text>
+<rect x="41" y="980" width="34" height="26" rx="6" fill="#f1fafc" stroke="#00b3c7" stroke-width="2"/>
+<text x="86" y="1000" font-size="20" fill="#555b66">Usuario</text>
+<rect x="199.5716" y="980" width="34" height="26" rx="6" fill="#ffffff" stroke="#1a1d24" stroke-width="2"/>
+<text x="244.5716" y="1000" font-size="20" fill="#555b66">Mensaje del agente</text>
+<rect x="481.7093" y="980" width="34" height="26" rx="6" fill="#171e2d" stroke="#171e2d" stroke-width="2"/>
+<text x="526.7093" y="1000" font-size="20" fill="#555b66">API / sistema</text>
+<rect x="695.4359999999999" y="980" width="34" height="26" rx="6" fill="#ffffff" stroke="#0e7c8a" stroke-width="2"/>
+<text x="740.4359999999999" y="1000" font-size="20" fill="#555b66">Decisión</text>
+<rect x="863.2643999999999" y="980" width="34" height="26" rx="6" fill="#ffffff" stroke="#6b7685" stroke-width="2"/>
+<text x="908.2643999999999" y="1000" font-size="20" fill="#555b66">Fin</text>
+</svg>

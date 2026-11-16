@@ -1,0 +1,2019 @@
+{
+  "meta": {
+    "proyecto": "Gestión de pedidos y agendamiento – Fase 1: Consulta de catálogo y agencias",
+    "cliente": "Vehicentro",
+    "proveedor": "Jelou",
+    "pais": "Ecuador",
+    "tipo": "nuevo",
+    "codigo": "EC-02-113-01",
+    "version": "1.3",
+    "estado": "en_revision",
+    "fecha": "2026-11-05",
+    "autor": "[por rol]",
+    "equipo_confirmado": true,
+    "excepcion_plazo": "El cliente y el partner estimaron 21 días hábiles de desarrollo en la reunión del 04/11/2026; el cronograma se reemite tras la aprobación del Brief v1.3.",
+    "tope_horas": 72,
+    "clausula_uat_revisada_legal": false,
+    "observaciones_cliente": "Revisión de flujos 04/11/2026: validar asesor por celular, cédula solo al cotizar, agrupar mensajes, cortar ante interacción negativa, cambio de marca y comparación de modelos, envío del prospecto al sistema de Vehicentro con asignación por correo del teleasesor, recordatorios sin envíos nocturnos."
+  },
+  "brief": [
+    "Vehicentro es una corporación automotriz con 8 marcas de vehículos que recibe aproximadamente 19.000 usuarios mensuales procedentes de pautas digitales (Meta/TikTok). Actualmente opera con un bot de un proveedor externo y se migra la solución a Jelou.",
+    "A solicitud del cliente, esta fase se enfoca en la consulta de catálogo y agencias (Flujo_2), junto con la bienvenida y el enrutamiento multimarca (Flujo_1) y la lógica transversal de recordatorio por abandono y trazabilidad, que son habilitadores de dicho flujo. Los flujos de repuestos y de agendamiento en taller quedan fuera de esta fase y se abordarán en una etapa posterior con propuesta y cronograma independientes.",
+    "La implementación se limita a un único asistente sobre el número de WhatsApp productivo certificado en el Hito 1, exclusivamente para la operación de Ecuador.",
+    "Actualización v1.3: se incorporan los detalles acordados en la revisión de flujos del 04/11/2026 (validación de asesor por celular, cotización con cédula, ciudad y agencia, registro del prospecto en el sistema de Vehicentro con asignación al teleasesor por correo, agrupación de mensajes consecutivos, cierre ante interacciones negativas, cambio de marca durante la conversación, origen detallado de la campaña y hasta 4 recordatorios sin envíos nocturnos)."
+  ],
+  "objetivos": {
+    "general": "Migrar y consolidar en Jelou la atención conversacional comercial de las 8 marcas de Vehicentro por WhatsApp, cualificando los leads de pauta digital y entregándolos al asesor correcto con su contexto.",
+    "especificos": [
+      "Enrutar automáticamente por marca e intención Comercial sobre un único número WABA, reemplazando el bot del proveedor externo.",
+      "Habilitar la consulta de catálogo (modelos, precios, fichas técnicas y multimedia) mediante el Ecommerce WebView y el agente de IA, y la consulta de agencias por ciudad.",
+      "Registrar el prospecto en el sistema de Vehicentro y asignar la conversación en PMA al teleasesor que devuelva el sistema, con marca, modelo y agencia.",
+      "Registrar en Datum el origen detallado de la campaña (página, campaña, grupo de anuncios, anuncio y formulario), el viaje del usuario y los datos del lead, aunque no complete el flujo."
+    ]
+  },
+  "equipo": [
+    {
+      "rol": "PM",
+      "nombre": "[por rol]",
+      "organizacion": "Jelou",
+      "cargo": "Project Manager",
+      "responsabilidad": "Alta"
+    },
+    {
+      "rol": "Implementador",
+      "nombre": "[por rol]",
+      "organizacion": "Jelou",
+      "cargo": "Implementador",
+      "responsabilidad": "Alta"
+    },
+    {
+      "rol": "Tech Lead",
+      "nombre": "[por rol]",
+      "organizacion": "Jelou",
+      "cargo": "Tech Lead",
+      "responsabilidad": "Alta"
+    },
+    {
+      "rol": "CSM",
+      "nombre": "[por rol]",
+      "organizacion": "Jelou",
+      "cargo": "Customer Success Manager",
+      "responsabilidad": "Media"
+    },
+    {
+      "rol": "Referente cliente funcional",
+      "nombre": "[por rol]",
+      "organizacion": "Vehicentro",
+      "cargo": "Project Manager",
+      "responsabilidad": "Alta"
+    },
+    {
+      "rol": "PM del cliente",
+      "nombre": "[por rol]",
+      "organizacion": "Vehicentro",
+      "cargo": "Project Manager",
+      "responsabilidad": "Alta"
+    },
+    {
+      "rol": "Partner",
+      "nombre": "[por rol]",
+      "organizacion": "Claro",
+      "cargo": "Project Manager",
+      "responsabilidad": "Alta"
+    },
+    {
+      "rol": "Contacto cliente técnico",
+      "nombre": "[por rol]",
+      "organizacion": "Vehicentro",
+      "cargo": "POR COMPLETAR",
+      "responsabilidad": "Alta"
+    },
+    {
+      "rol": "AM",
+      "nombre": "[por rol]",
+      "organizacion": "Jelou",
+      "cargo": "Sales Owner",
+      "responsabilidad": "Media"
+    }
+  ],
+  "alcance": {
+    "base": {
+      "fuente": "Brief Vehicentro Fase 1 v1.2",
+      "fecha": "2026-09-10",
+      "congelado": true,
+      "ids": [
+        "F-U1",
+        "F-U2",
+        "F-U3",
+        "F-U4",
+        "F-U5",
+        "F-U6",
+        "F-U7",
+        "F-A1",
+        "F-A2"
+      ]
+    },
+    "fases": [
+      {
+        "fase": "Fase 1",
+        "requerimiento": "Flujo_1 Bienvenida y enrutamiento · Flujo_2 Consulta de catálogo y agencias · Lógica transversal de abandono y trazabilidad",
+        "publico": "Prospectos B2C que llegan desde anuncios de Meta y TikTok",
+        "canal": "WhatsApp"
+      }
+    ],
+    "incluido_admin": [
+      {
+        "id": "F-A1",
+        "texto": "Derivación a PMA/Connect asignando la conversación directamente al teleasesor que indique el sistema de Vehicentro, con el contexto de marca, modelos consultados y agencia."
+      },
+      {
+        "id": "F-A2",
+        "texto": "Registro en Datum de usuarios, viaje del usuario y leads, con métricas por defecto de Jelou."
+      }
+    ],
+    "incluido_usuario": [
+      {
+        "id": "F-U1",
+        "texto": "Registro del origen de la campaña de Meta o TikTok (página, campaña, grupo de anuncios, anuncio y formulario, según lo que entregue cada plataforma).",
+        "agente": "F1"
+      },
+      {
+        "id": "F-U2",
+        "texto": "Validación de asesor asignado por número de celular; si existe, el bot entrega el nombre y contacto del asesor y cierra.",
+        "agente": "F1"
+      },
+      {
+        "id": "F-U3",
+        "texto": "AI Router: identificación de marca e intención; si la marca no se puede inferir, el bot la pregunta antes de avanzar. Repuestos y Talleres se derivan a PMA.",
+        "agente": "F1"
+      },
+      {
+        "id": "F-U4",
+        "texto": "Agente de IA de catálogo: modelos, precios, fichas técnicas y comparación de modelos, con cambio de marca durante la conversación; visualización en el Ecommerce WebView.",
+        "agente": "F2"
+      },
+      {
+        "id": "F-U5",
+        "texto": "Cotización: el bot invita a cotizar, pide la cédula y la ciudad, muestra las agencias de la marca y el usuario elige una; el bot informa quién lo atenderá.",
+        "agente": "F2"
+      },
+      {
+        "id": "F-U6",
+        "texto": "Recordatorio por abandono: hasta 4 recordatorios con intervalos dentro de la ventana de 24 horas y sin envíos nocturnos; agotados, el prospecto se marca como no gestionado y se envía al sistema de Vehicentro con los datos disponibles.",
+        "agente": "T1"
+      },
+      {
+        "id": "F-U7",
+        "texto": "Manejo de la conversación: agrupación de mensajes consecutivos y cierre cordial ante falta de interés o interacción negativa.",
+        "agente": "T1"
+      }
+    ],
+    "fuera_de_alcance": [
+      {
+        "id": "OOS-1",
+        "texto": "Flujo de consulta de repuestos y derivación asistida (etapa posterior).",
+        "terminos": [
+          "búsqueda de repuestos"
+        ]
+      },
+      {
+        "id": "OOS-2",
+        "texto": "Flujo de agendamiento de citas en taller, incluido el OCR de matrícula y la consulta de agenda (etapa posterior).",
+        "terminos": [
+          "agendamiento",
+          "OCR"
+        ]
+      },
+      {
+        "id": "OOS-3",
+        "texto": "Respuesta automática a comentarios en publicaciones de redes sociales (Instagram/Facebook).",
+        "terminos": [
+          "comentarios en publicaciones"
+        ]
+      },
+      {
+        "id": "OOS-4",
+        "texto": "Geo-fencing publicitario.",
+        "terminos": [
+          "geo-fencing"
+        ]
+      },
+      {
+        "id": "OOS-5",
+        "texto": "Precalificación financiera y consulta de score crediticio (Equifax o cualquier buró).",
+        "terminos": [
+          "buró",
+          "score crediticio",
+          "Equifax"
+        ]
+      },
+      {
+        "id": "OOS-6",
+        "texto": "Solicitud de crédito directo, formulario in-chat de crédito, validación biométrica, documento de solicitud y firma electrónica.",
+        "terminos": [
+          "biometría",
+          "firma electrónica",
+          "crédito directo"
+        ]
+      },
+      {
+        "id": "OOS-7",
+        "texto": "Pasarela de pagos, pago in-chat y cualquier medio de pago digital (links o códigos QR).",
+        "terminos": [
+          "pasarela",
+          "link de pago"
+        ]
+      },
+      {
+        "id": "OOS-8",
+        "texto": "Canales distintos de WhatsApp (Messenger, Instagram, webchat u otros) y orígenes de campaña distintos de Meta y TikTok (p. ej. Google Ads).",
+        "terminos": [
+          "Messenger",
+          "webchat",
+          "Google Ads"
+        ]
+      },
+      {
+        "id": "OOS-9",
+        "texto": "Asistentes o números adicionales, y operación fuera de Ecuador (Colombia se gestiona con oferta comercial independiente).",
+        "terminos": [
+          "Colombia"
+        ]
+      },
+      {
+        "id": "OOS-10",
+        "texto": "Campañas masivas salientes (HSM) y sus reglas.",
+        "terminos": [
+          "campaña masiva"
+        ]
+      },
+      {
+        "id": "OOS-11",
+        "texto": "Actualización de registros existentes en el CRM, integración de Jelou dentro del CRM (iframe o SSO) e integración con el BDC del cliente.",
+        "terminos": [
+          "iframe",
+          "SSO",
+          "BDC"
+        ]
+      }
+    ],
+    "supuestos": [
+      "Un solo tipo de usuario (B2C, prospecto).",
+      "Las 8 marcas operan bajo un único número WABA productivo certificado en el Hito 1; el segundo número es solo de desarrollo.",
+      "La marca de origen (campaña) y la marca de interés son atributos independientes.",
+      {
+        "texto": "La aceptación de la política de tratamiento de datos y de los términos es implícita al continuar la conversación, con un mensaje que incluye el link a los términos de Vehicentro.",
+        "confirmado_cliente": true
+      },
+      "Restricciones de Meta no imputables a Jelou: ventana de 24 horas, aprobación previa de plantillas, límite de 25 MB por archivo y escalamiento gradual del volumen de envío.",
+      "El bot responde únicamente lo que cubre el catálogo expuesto por Vehicentro; lo demás se deriva a PMA.",
+      "El cliente no dispone de ambiente QA: las pruebas se ejecutan en producción y la limpieza de registros de prueba es responsabilidad de Vehicentro.",
+      "La espera inicial para agrupar mensajes es de 2 segundos y se ajusta en pruebas."
+    ]
+  },
+  "parametros": {
+    "horario_bot": "24/7",
+    "horario_agentes": "POR DEFINIR (horario del contact center de Vehicentro)",
+    "zona_horaria": "America/Guayaquil",
+    "idioma_tono": "Español de Ecuador; el bot adopta la personalidad de la marca identificada",
+    "agrupacion_mensajes": "Espera de 2 segundos desde el último mensaje; responde una sola vez considerando los mensajes acumulados (ajustable en pruebas)",
+    "recordatorios": "Hasta 4, con intervalos POR DEFINIR, dentro de la ventana de 24 horas y sin envíos en la franja nocturna POR DEFINIR",
+    "identificacion_telefono": "La validación de asesor usa el celular; si Meta no entrega el número (BSUID), el bot lo pide al usuario",
+    "datos_de_prueba": "El cliente entrega los datos de prueba; se prueba en producción",
+    "retencion_datos": "POR DEFINIR (Q-8)",
+    "fuera_de_horario": "POR DEFINIR (Q-7)",
+    "reintentos": "Cédula y celular: un reintento; luego continúa o deriva a PMA"
+  },
+  "agentes": [
+    {
+      "id": "F1",
+      "nombre": "Flujo_1: Bienvenida y Enrutamiento",
+      "fase": "Fase 1",
+      "canal": "WhatsApp",
+      "entrada": "inbound",
+      "continua_en": "F2",
+      "persona": {
+        "nombre": "POR DEFINIR (persona por marca)",
+        "tono": "cercano y comercial",
+        "apelativo": "usted"
+      },
+      "titulo_diagrama": "Flujo_1: Bienvenida y enrutamiento",
+      "resumen_cliente": [
+        {
+          "id": "E1",
+          "texto": "El prospecto llega desde un anuncio de Meta o TikTok",
+          "tipo": "usuario"
+        },
+        {
+          "id": "E3",
+          "texto": "¿Ya tiene asesor asignado?",
+          "tipo": "hito",
+          "salidas": [
+            {
+              "a": "E4",
+              "si": "sí"
+            },
+            {
+              "a": "E5",
+              "si": "no"
+            }
+          ]
+        },
+        {
+          "id": "E4",
+          "texto": "Recibe los datos de su asesor",
+          "tipo": "fin"
+        },
+        {
+          "id": "E5",
+          "texto": "Se identifica la marca y la intención",
+          "tipo": "hito",
+          "salidas": [
+            {
+              "a": "E9",
+              "si": "Comercial"
+            },
+            {
+              "a": "E12",
+              "si": "Repuestos o Talleres"
+            }
+          ]
+        }
+      ],
+      "pasos": [
+        {
+          "id": "P1",
+          "tipo": "usuario",
+          "etapa": "Entrada",
+          "grupo": "Entrada y origen",
+          "diagrama": "El usuario llega desde un anuncio de Meta o TikTok (click to WhatsApp)",
+          "mensaje": "Hola, quiero información del modelo del anuncio",
+          "siguiente": [
+            {
+              "a": "P2"
+            }
+          ]
+        },
+        {
+          "id": "P2",
+          "tipo": "api",
+          "etapa": "Registro del origen",
+          "diagrama": "Registra el origen: página, campaña, grupo, anuncio y formulario",
+          "integracion": "INT-6",
+          "componente": "API (WS#6) / Determinístico",
+          "reglas": [
+            "RN-01"
+          ],
+          "siguiente": [
+            {
+              "a": "P3"
+            }
+          ]
+        },
+        {
+          "id": "P3",
+          "tipo": "mensaje",
+          "etapa": "Bienvenida y términos",
+          "diagrama": "Bienvenida con aviso de términos y política de datos (link)",
+          "mensaje": "¡Hola! Soy el asistente virtual de Vehicentro. Al continuar con esta conversación usted acepta nuestros términos y la política de tratamiento de datos personales: {{link_terminos}}",
+          "reglas": [
+            "RN-02"
+          ],
+          "siguiente": [
+            {
+              "a": "P4"
+            }
+          ]
+        },
+        {
+          "id": "P4",
+          "tipo": "decision",
+          "etapa": "Celular disponible",
+          "grupo": "Validación de asesor",
+          "diagrama": "¿Meta entregó el número de celular?",
+          "siguiente": [
+            {
+              "a": "P6",
+              "si": "sí"
+            },
+            {
+              "a": "P5",
+              "si": "no (BSUID)"
+            }
+          ]
+        },
+        {
+          "id": "P5",
+          "tipo": "mensaje",
+          "etapa": "Pedir celular",
+          "diagrama": "Pide el número de celular",
+          "mensaje": "Para ayudarle mejor, ¿me comparte su número de celular?",
+          "reglas": [
+            "RN-03"
+          ],
+          "siguiente": [
+            {
+              "a": "P6"
+            }
+          ]
+        },
+        {
+          "id": "P6",
+          "tipo": "api",
+          "etapa": "Validación de asesor",
+          "diagrama": "Consulta si ya tiene asesor asignado (por celular)",
+          "integracion": "INT-1",
+          "componente": "API (WS#1) / Determinístico",
+          "reglas": [
+            "RN-03"
+          ],
+          "siguiente": [
+            {
+              "a": "P7"
+            }
+          ]
+        },
+        {
+          "id": "P7",
+          "tipo": "decision",
+          "etapa": "¿Tiene asesor?",
+          "diagrama": "¿Tiene asesor asignado?",
+          "siguiente": [
+            {
+              "a": "P8",
+              "si": "sí"
+            },
+            {
+              "a": "P9",
+              "si": "no"
+            },
+            {
+              "a": "P20",
+              "si": "servicio no responde"
+            }
+          ]
+        },
+        {
+          "id": "P8",
+          "tipo": "mensaje",
+          "etapa": "Asesor asignado",
+          "diagrama": "Envía nombre y contacto del asesor asignado",
+          "mensaje": "Usted ya tiene un asesor asignado: {{nombre_asesor}}. Puede escribirle al {{contacto_asesor}}.",
+          "siguiente": [
+            {
+              "a": "P21"
+            }
+          ]
+        },
+        {
+          "id": "P9",
+          "tipo": "router",
+          "etapa": "Marca e intención",
+          "grupo": "Enrutamiento",
+          "diagrama": "El AI Router identifica marca e intención",
+          "integracion": "INT-2",
+          "componente": "IA conversacional (AI Router)",
+          "reglas": [
+            "RN-04"
+          ],
+          "siguiente": [
+            {
+              "a": "P10",
+              "si": "marca desconocida"
+            },
+            {
+              "a": "P12",
+              "si": "Comercial"
+            },
+            {
+              "a": "P20",
+              "si": "Repuestos o Talleres"
+            },
+            {
+              "a": "P13",
+              "si": "sin interés"
+            }
+          ]
+        },
+        {
+          "id": "P10",
+          "tipo": "mensaje",
+          "etapa": "Pedir marca",
+          "diagrama": "Pregunta la marca de interés (lista de marcas)",
+          "mensaje": "¿Qué marca le interesa?",
+          "lista": [
+            "Marca 1",
+            "Marca 2",
+            "Marca 3",
+            "Marca 4",
+            "Marca 5",
+            "Marca 6",
+            "Marca 7",
+            "Marca 8"
+          ],
+          "siguiente": [
+            {
+              "a": "P11"
+            }
+          ]
+        },
+        {
+          "id": "P11",
+          "tipo": "usuario",
+          "etapa": "Elige marca",
+          "diagrama": "Elige la marca",
+          "mensaje": "Marca 1",
+          "siguiente": [
+            {
+              "a": "P12"
+            }
+          ]
+        },
+        {
+          "id": "P12",
+          "tipo": "mensaje",
+          "etapa": "Persona de la marca",
+          "diagrama": "Adopta la personalidad y el catálogo de la marca y continúa al Flujo_2",
+          "mensaje": "¡Gracias por escribirnos! ¿Qué vehículo le gustaría conocer?",
+          "siguiente": [
+            {
+              "a": "P21"
+            }
+          ]
+        },
+        {
+          "id": "P13",
+          "tipo": "mensaje",
+          "etapa": "Sin interés",
+          "diagrama": "Agradece y cierra la conversación",
+          "mensaje": "Entendido, gracias por su tiempo. Si más adelante desea información, aquí estaremos.",
+          "reglas": [
+            "RN-07"
+          ],
+          "siguiente": [
+            {
+              "a": "P21"
+            }
+          ]
+        },
+        {
+          "id": "P20",
+          "tipo": "asesor",
+          "etapa": "Derivación a PMA",
+          "diagrama": "Deriva a PMA según la regla definida con Vehicentro",
+          "recibe": [
+            "Marca de interés",
+            "Intención",
+            "Origen de la campaña"
+          ],
+          "siguiente": [
+            {
+              "a": "P21"
+            }
+          ]
+        },
+        {
+          "id": "P21",
+          "tipo": "fin",
+          "diagrama": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "nombre": "Flujo_2: Consulta de Catálogo y Agencias",
+      "fase": "Fase 1",
+      "canal": "WhatsApp",
+      "entrada": "inbound",
+      "persona": {
+        "nombre": "POR DEFINIR (persona por marca)",
+        "tono": "cercano y comercial",
+        "apelativo": "usted"
+      },
+      "titulo_diagrama": "Flujo_2: Catálogo, cotización y agencias",
+      "resumen_cliente": [
+        {
+          "id": "E9",
+          "texto": "Consulta el catálogo y compara modelos",
+          "tipo": "hito"
+        },
+        {
+          "id": "E10",
+          "texto": "Cotiza: cédula, ciudad y agencia",
+          "tipo": "hito"
+        },
+        {
+          "id": "E12",
+          "texto": "El teleasesor asignado continúa la atención",
+          "tipo": "asesor"
+        }
+      ],
+      "pasos": [
+        {
+          "id": "Q1",
+          "tipo": "usuario",
+          "etapa": "Pregunta libre",
+          "grupo": "Catálogo",
+          "diagrama": "Pregunta por modelos, precios o características",
+          "mensaje": "¿Qué precio tiene el modelo del anuncio y qué motor trae?",
+          "siguiente": [
+            {
+              "a": "Q2"
+            }
+          ]
+        },
+        {
+          "id": "Q2",
+          "tipo": "api",
+          "etapa": "Catálogo de la marca",
+          "diagrama": "Consulta el catálogo de la marca",
+          "integracion": "INT-3",
+          "componente": "API (WS#3) / IA conversacional",
+          "reglas": [
+            "RN-05"
+          ],
+          "siguiente": [
+            {
+              "a": "Q3"
+            },
+            {
+              "a": "Q20",
+              "si": "servicio no responde"
+            }
+          ]
+        },
+        {
+          "id": "Q3",
+          "tipo": "mensaje",
+          "etapa": "Respuesta del agente IA",
+          "diagrama": "Responde con precios, ficha técnica y multimedia; compara modelos y sigue si cambia de marca",
+          "mensaje": "El modelo {{modelo}} tiene un precio de {{precio}}. Le comparto su ficha técnica y el catálogo para que vea todos los modelos.",
+          "botones": [
+            "Ver catálogo",
+            "Cotizar",
+            "Agencias"
+          ],
+          "siguiente": [
+            {
+              "a": "Q4",
+              "si": "Ver catálogo"
+            },
+            {
+              "a": "Q5",
+              "si": "Cotizar"
+            },
+            {
+              "a": "Q7",
+              "si": "Agencias"
+            },
+            {
+              "a": "Q1",
+              "si": "otra pregunta o cambio de marca"
+            }
+          ]
+        },
+        {
+          "id": "Q4",
+          "tipo": "tercero",
+          "recurso": "ecommerce",
+          "etapa": "Ecommerce WebView",
+          "diagrama": "Muestra el catálogo de la marca en el Ecommerce WebView",
+          "componente": "Ecommerce WebView",
+          "siguiente": [
+            {
+              "a": "Q5"
+            }
+          ],
+          "integracion": "INT-3"
+        },
+        {
+          "id": "Q5",
+          "tipo": "mensaje",
+          "etapa": "Invitación a cotizar",
+          "grupo": "Cotización",
+          "diagrama": "Pide la cédula para cotizar",
+          "mensaje": "Con gusto preparamos su cotización. ¿Me ayuda con su número de cédula?",
+          "reglas": [
+            "RN-06"
+          ],
+          "siguiente": [
+            {
+              "a": "Q6"
+            }
+          ]
+        },
+        {
+          "id": "Q6",
+          "tipo": "usuario",
+          "etapa": "Cédula",
+          "diagrama": "Escribe su cédula",
+          "mensaje": "0102030405",
+          "siguiente": [
+            {
+              "a": "Q7"
+            }
+          ]
+        },
+        {
+          "id": "Q7",
+          "tipo": "mensaje",
+          "etapa": "Ciudad",
+          "diagrama": "Pregunta la ciudad",
+          "mensaje": "¿En qué ciudad le gustaría ser atendido?",
+          "siguiente": [
+            {
+              "a": "Q8"
+            }
+          ]
+        },
+        {
+          "id": "Q8",
+          "tipo": "api",
+          "etapa": "Agencias de la marca",
+          "diagrama": "Consulta las agencias de la marca y filtra por ciudad",
+          "integracion": "INT-4",
+          "componente": "API (WS#4) / Determinístico",
+          "siguiente": [
+            {
+              "a": "Q9"
+            },
+            {
+              "a": "Q20",
+              "si": "servicio no responde"
+            }
+          ]
+        },
+        {
+          "id": "Q9",
+          "tipo": "mensaje",
+          "etapa": "Elegir agencia",
+          "diagrama": "Muestra las agencias de la ciudad con dirección y horario",
+          "mensaje": "Estas son nuestras agencias en {{ciudad}}. ¿En cuál desea ser atendido?",
+          "lista": [
+            "Agencia Norte",
+            "Agencia Centro",
+            "Agencia Sur"
+          ],
+          "siguiente": [
+            {
+              "a": "Q10"
+            }
+          ]
+        },
+        {
+          "id": "Q10",
+          "tipo": "api",
+          "etapa": "Registro del prospecto",
+          "grupo": "Asignación",
+          "diagrama": "Envía el prospecto al sistema de Vehicentro, que devuelve el correo del teleasesor",
+          "integracion": "INT-5",
+          "componente": "API (WS#5) / Determinístico",
+          "reglas": [
+            "RN-08"
+          ],
+          "siguiente": [
+            {
+              "a": "Q11"
+            },
+            {
+              "a": "Q20",
+              "si": "servicio no responde"
+            }
+          ]
+        },
+        {
+          "id": "Q11",
+          "tipo": "mensaje",
+          "etapa": "Quién lo atiende",
+          "diagrama": "Informa el asesor y la agencia que lo atenderán",
+          "mensaje": "Listo. Le atenderá {{nombre_asesor}} de la agencia {{agencia}}. En breve continuará con usted por este chat.",
+          "siguiente": [
+            {
+              "a": "Q12"
+            }
+          ]
+        },
+        {
+          "id": "Q12",
+          "tipo": "asesor",
+          "etapa": "Asignación en PMA",
+          "diagrama": "Asigna la conversación en PMA al teleasesor devuelto",
+          "recibe": [
+            "Marca de interés",
+            "Modelos consultados",
+            "Agencia y ciudad",
+            "Origen de la campaña"
+          ],
+          "siguiente": [
+            {
+              "a": "Q21"
+            }
+          ]
+        },
+        {
+          "id": "Q20",
+          "tipo": "asesor",
+          "etapa": "Contingencia",
+          "diagrama": "Mensaje de contingencia y derivación a PMA",
+          "recibe": [
+            "Marca de interés",
+            "Contexto disponible"
+          ],
+          "reglas": [
+            "RN-09"
+          ],
+          "siguiente": [
+            {
+              "a": "Q21"
+            }
+          ]
+        },
+        {
+          "id": "Q21",
+          "tipo": "fin",
+          "diagrama": "Fin"
+        }
+      ]
+    },
+    {
+      "id": "T1",
+      "nombre": "Lógica transversal: abandono, trazabilidad y manejo de la conversación",
+      "fase": "Fase 1",
+      "canal": "WhatsApp",
+      "entrada": "inbound",
+      "persona": {
+        "nombre": "POR DEFINIR (persona por marca)",
+        "tono": "cercano y comercial",
+        "apelativo": "usted"
+      },
+      "titulo_diagrama": "Lógica transversal: recordatorios por abandono",
+      "resumen_cliente": [
+        {
+          "id": "E14",
+          "texto": "Si deja de responder: hasta 4 recordatorios",
+          "tipo": "hito"
+        }
+      ],
+      "pasos": [
+        {
+          "id": "R1",
+          "tipo": "usuario",
+          "etapa": "Inactividad",
+          "diagrama": "El usuario deja de responder en cualquier punto",
+          "mensaje": "(sin respuesta)",
+          "siguiente": [
+            {
+              "a": "R2"
+            }
+          ]
+        },
+        {
+          "id": "R2",
+          "tipo": "decision",
+          "etapa": "Horario permitido",
+          "diagrama": "¿Está dentro de 24 h y fuera de la franja nocturna?",
+          "reglas": [
+            "RN-10"
+          ],
+          "siguiente": [
+            {
+              "a": "R3",
+              "si": "sí"
+            },
+            {
+              "a": "R2",
+              "si": "esperar al horario permitido"
+            },
+            {
+              "a": "R6",
+              "si": "ventana de 24 h vencida"
+            }
+          ]
+        },
+        {
+          "id": "R3",
+          "tipo": "mensaje",
+          "etapa": "Recordatorio",
+          "diagrama": "Envía un recordatorio para retomar donde quedó (máx. 4)",
+          "mensaje": "¿Sigue interesado en el {{modelo}}? Puedo ayudarle a cotizarlo cuando guste.",
+          "botones": [
+            "Continuar",
+            "No me interesa"
+          ],
+          "siguiente": [
+            {
+              "a": "R4"
+            }
+          ]
+        },
+        {
+          "id": "R4",
+          "tipo": "decision",
+          "etapa": "¿Respondió?",
+          "diagrama": "¿Respondió?",
+          "siguiente": [
+            {
+              "a": "R5",
+              "si": "Continuar"
+            },
+            {
+              "a": "R7",
+              "si": "No me interesa"
+            },
+            {
+              "a": "R2",
+              "si": "sin respuesta y quedan intentos"
+            },
+            {
+              "a": "R6",
+              "si": "4 intentos agotados"
+            }
+          ]
+        },
+        {
+          "id": "R5",
+          "tipo": "mensaje",
+          "etapa": "Retoma",
+          "diagrama": "Retoma el flujo en el punto donde quedó",
+          "mensaje": "¡Perfecto! Continuemos.",
+          "siguiente": [
+            {
+              "a": "R8"
+            }
+          ]
+        },
+        {
+          "id": "R6",
+          "tipo": "api",
+          "etapa": "No gestionado",
+          "diagrama": "Marca no gestionado y envía los datos disponibles al sistema de Vehicentro",
+          "integracion": "INT-5",
+          "componente": "API (WS#5) / Determinístico",
+          "reglas": [
+            "RN-08"
+          ],
+          "siguiente": [
+            {
+              "a": "R8"
+            }
+          ]
+        },
+        {
+          "id": "R7",
+          "tipo": "mensaje",
+          "etapa": "Cierre",
+          "diagrama": "Agradece y cierra sin insistir",
+          "mensaje": "Entendido, gracias por su tiempo.",
+          "reglas": [
+            "RN-07"
+          ],
+          "siguiente": [
+            {
+              "a": "R8"
+            }
+          ]
+        },
+        {
+          "id": "R8",
+          "tipo": "fin",
+          "diagrama": "Fin"
+        }
+      ]
+    }
+  ],
+  "reglas": [
+    {
+      "id": "RN-01",
+      "titulo": "Origen de la campaña",
+      "descripcion": "Al iniciar la conversación desde un anuncio, el bot guarda el origen que entregue la plataforma (Meta o TikTok): página, campaña, grupo de anuncios, anuncio y formulario, y lo asocia al usuario y al lead.",
+      "parametros": {
+        "plataformas": "Meta, TikTok"
+      },
+      "fuente": "cliente",
+      "si_no_cumple": "Si la plataforma no entrega un campo, se guarda vacío y la conversación continúa"
+    },
+    {
+      "id": "RN-02",
+      "titulo": "Aceptación de términos y tratamiento de datos",
+      "descripcion": "Antes de pedir cualquier dato, el bot muestra un mensaje con el link a los términos y la política de datos de Vehicentro; continuar la conversación implica aceptación. Se registra la evidencia (usuario, versión de los términos, fecha).",
+      "fuente": "cliente",
+      "si_no_cumple": "Si el usuario indica que no acepta, el bot no pide datos personales, registra el rechazo y cierra con un mensaje cordial"
+    },
+    {
+      "id": "RN-03",
+      "titulo": "Validación de asesor por celular",
+      "descripcion": "La consulta de asesor asignado usa la marca y el celular. Si Meta no entrega el número (BSUID), el bot lo pide al usuario.",
+      "fuente": "cliente",
+      "si_no_cumple": "Si el celular no es válido, el bot lo vuelve a pedir una vez y luego continúa al enrutamiento"
+    },
+    {
+      "id": "RN-04",
+      "titulo": "Marca obligatoria",
+      "descripcion": "El bot no avanza al catálogo sin conocer la marca: si no se infiere del anuncio o del mensaje (p. ej. el usuario borró el mensaje predeterminado), la pregunta. El usuario puede cambiar de marca durante la conversación.",
+      "fuente": "cliente",
+      "si_no_cumple": "Si tras preguntar no se identifica la marca, deriva a PMA"
+    },
+    {
+      "id": "RN-05",
+      "titulo": "Respuestas solo con el catálogo",
+      "descripcion": "Precios, modelos y fichas provienen de la API de catálogo de la marca; el agente no inventa datos.",
+      "fuente": "cliente",
+      "si_no_cumple": "Una consulta que el catálogo no cubre se deriva a PMA"
+    },
+    {
+      "id": "RN-06",
+      "titulo": "Cédula solo al cotizar",
+      "descripcion": "La cédula se pide únicamente cuando el usuario acepta cotizar (10 dígitos).",
+      "fuente": "cliente",
+      "si_no_cumple": "Si la cédula no es válida, el bot la vuelve a pedir; al segundo error deriva a PMA"
+    },
+    {
+      "id": "RN-07",
+      "titulo": "Cierre ante falta de interés o interacción negativa",
+      "descripcion": "Si el usuario dice que no está interesado o responde de forma agresiva, el bot se disculpa, agradece y termina sin repetir preguntas obligatorias.",
+      "fuente": "cliente",
+      "si_no_cumple": "No aplica: el cierre es inmediato"
+    },
+    {
+      "id": "RN-08",
+      "titulo": "Registro del prospecto y asignación",
+      "descripcion": "Con al menos la marca y el modelo, el bot envía el prospecto al sistema de Vehicentro; el sistema devuelve el correo del teleasesor y Jelou asigna la conversación a ese usuario en PMA. Si el usuario abandona después de elegir modelo, se envían los datos disponibles.",
+      "fuente": "cliente",
+      "si_no_cumple": "Si el servicio no devuelve un correo válido o no existe el usuario en PMA, la conversación va a la cola general definida con Vehicentro"
+    },
+    {
+      "id": "RN-09",
+      "titulo": "Contingencia de servicios",
+      "descripcion": "Si una API del cliente no responde, el bot entrega un mensaje de contingencia y deriva a PMA sin interrumpir la conversación.",
+      "fuente": "supuesto",
+      "si_no_cumple": "Derivación a PMA"
+    },
+    {
+      "id": "RN-10",
+      "titulo": "Recordatorios por abandono",
+      "descripcion": "Hasta 4 recordatorios con intervalos, dentro de la ventana de 24 horas de Meta y fuera de la franja nocturna; agotados, el prospecto queda como no gestionado.",
+      "parametros": {
+        "maximo": 4,
+        "intervalos": "POR DEFINIR",
+        "franja_sin_envios": "POR DEFINIR"
+      },
+      "fuente": "cliente",
+      "si_no_cumple": "Fuera de la ventana de 24 horas no se envían recordatorios (una plantilla de utilidad es opcional y con costo aparte)"
+    }
+  ],
+  "solucion": {
+    "descripcion": "Un asistente en Jelou Brain sobre el número de WhatsApp del Hito 1: AI Router multimarca, agente de IA de catálogo con tools HTTP a las APIs de Vehicentro, Ecommerce WebView para el catálogo, PMA/Connect para la asignación al teleasesor y Datum para la trazabilidad.",
+    "componentes": [
+      {
+        "id": "C-1",
+        "capacidad": "Enrutamiento por marca e intención",
+        "componente": "AI Router de Jelou + tool HTTP botwa_marcas",
+        "detalle": "Identifica marca e intención a partir del anuncio o el mensaje libre; pregunta la marca si no la infiere.",
+        "cubre": [
+          "F-U3"
+        ],
+        "reglas": [
+          "RN-04"
+        ],
+        "ejecucion": "conversacional"
+      },
+      {
+        "id": "C-2",
+        "capacidad": "Origen de la campaña y validación de asesor",
+        "componente": "Nodos HTTP a botwa/:id y botwa_existe_asesor",
+        "detalle": "Registra el origen y consulta el asesor por celular; pide el celular si llega un BSUID.",
+        "cubre": [
+          "F-U1",
+          "F-U2"
+        ],
+        "reglas": [
+          "RN-01",
+          "RN-03"
+        ],
+        "ejecucion": "determinista"
+      },
+      {
+        "id": "C-3",
+        "capacidad": "Catálogo y comparación de modelos",
+        "componente": "AI Agent con tool HTTP botwa_modelos + Ecommerce WebView (Jelou Shop)",
+        "detalle": "Responde precios y fichas desde la API; el catálogo visual se abre en el webview de Jelou Shop alimentado por la API del cliente.",
+        "cubre": [
+          "F-U4"
+        ],
+        "reglas": [
+          "RN-05"
+        ],
+        "ejecucion": "mixto"
+      },
+      {
+        "id": "C-4",
+        "capacidad": "Cotización y agencias",
+        "componente": "Nodos de mensaje interactivo + tool HTTP botwa_agencias",
+        "detalle": "Cédula, ciudad y lista de agencias filtradas por ciudad en el bot.",
+        "cubre": [
+          "F-U5"
+        ],
+        "reglas": [
+          "RN-06",
+          "RN-09"
+        ],
+        "ejecucion": "determinista"
+      },
+      {
+        "id": "C-5",
+        "capacidad": "Registro del prospecto y asignación al teleasesor",
+        "componente": "Nodo HTTP al servicio de prospectos de Vehicentro + CONNECT (PMA) por correo del operador",
+        "detalle": "Envía el prospecto; asigna la conversación al operador cuyo correo devuelve el sistema.",
+        "cubre": [
+          "F-A1"
+        ],
+        "reglas": [
+          "RN-08"
+        ],
+        "ejecucion": "determinista"
+      },
+      {
+        "id": "C-6",
+        "capacidad": "Recordatorios por abandono",
+        "componente": "Tool de recordatorio de Jelou (seguimiento por inactividad)",
+        "detalle": "Hasta 4 envíos con intervalos y franja sin envíos.",
+        "cubre": [
+          "F-U6"
+        ],
+        "reglas": [
+          "RN-10"
+        ],
+        "ejecucion": "determinista"
+      },
+      {
+        "id": "C-7",
+        "capacidad": "Trazabilidad",
+        "componente": "Datum v2: usuarios, viaje del usuario, leads y evidencia de aceptación de términos",
+        "detalle": "Registro en cada paso aunque el usuario no termine.",
+        "cubre": [
+          "F-A2"
+        ],
+        "reglas": [
+          "RN-02"
+        ],
+        "ejecucion": "determinista"
+      },
+      {
+        "id": "C-8",
+        "capacidad": "Agrupación de mensajes y cierre ante interacción negativa",
+        "componente": "Configuración de espera de mensajes del bot + directrices del agente de IA",
+        "detalle": "Espera de 2 s para responder una sola vez; el agente cierra ante falta de interés.",
+        "cubre": [
+          "F-U7"
+        ],
+        "reglas": [
+          "RN-07"
+        ],
+        "ejecucion": "mixto"
+      }
+    ]
+  },
+  "escalamiento": [
+    {
+      "id": "ESC-1",
+      "disparador": "No se identifica la marca o la intención, o la intención es Repuestos o Talleres",
+      "modo": "automatico",
+      "destino": "PMA (regla definida con Vehicentro)",
+      "horario": "POR DEFINIR",
+      "fuera_de_horario": "POR DEFINIR"
+    },
+    {
+      "id": "ESC-2",
+      "disparador": "El usuario completa la cotización",
+      "modo": "automatico",
+      "destino": "PMA, teleasesor devuelto por el sistema de Vehicentro",
+      "horario": "POR DEFINIR",
+      "fuera_de_horario": "POR DEFINIR"
+    },
+    {
+      "id": "ESC-3",
+      "disparador": "Una API del cliente no responde",
+      "modo": "automatico",
+      "destino": "PMA",
+      "horario": "POR DEFINIR",
+      "fuera_de_horario": "POR DEFINIR"
+    }
+  ],
+  "datos": [
+    {
+      "entidad": "Usuarios",
+      "uso": "Identificación del prospecto y aceptación de términos",
+      "campos": [
+        "identificador de WhatsApp",
+        "celular",
+        "cédula",
+        "marca de origen",
+        "marca de interés",
+        "versión de términos",
+        "fecha de aceptación"
+      ],
+      "retencion": "POR DEFINIR"
+    },
+    {
+      "entidad": "Viaje del usuario",
+      "uso": "Trazabilidad del recorrido",
+      "campos": [
+        "flujo iniciado",
+        "pasos completados",
+        "punto de abandono",
+        "derivación a PMA"
+      ],
+      "retencion": "POR DEFINIR"
+    },
+    {
+      "entidad": "Leads",
+      "uso": "Seguimiento comercial",
+      "campos": [
+        "origen (página, campaña, grupo, anuncio, formulario)",
+        "marca y modelo de interés",
+        "agencia y ciudad",
+        "intención",
+        "teleasesor asignado",
+        "estado de la gestión"
+      ],
+      "retencion": "POR DEFINIR"
+    }
+  ],
+  "integraciones": [
+    {
+      "id": "INT-1",
+      "nombre": "botwa_existe_asesor (WS#1)",
+      "sistema": "CRM Vehicentro",
+      "proposito": "Verificar si el usuario ya tiene asesor asignado para la marca",
+      "operaciones": [
+        {
+          "tipo": "lectura",
+          "descripcion": "Consulta por marca y celular"
+        }
+      ],
+      "conexion": "api_cliente",
+      "quien_hospeda": "Vehicentro",
+      "autenticacion": "POR DEFINIR",
+      "documentacion": "si",
+      "ambiente_pruebas": "no",
+      "estado_actual": "Entregada; confirmar que acepta la consulta solo por celular",
+      "responsable_cliente": "Vehicentro · TI",
+      "disponibilidad": "POR DEFINIR (24/7 requerido por el bot)"
+    },
+    {
+      "id": "INT-2",
+      "nombre": "botwa_marcas (WS#2)",
+      "sistema": "Vehicentro",
+      "proposito": "Listado de marcas habilitadas para el enrutamiento",
+      "operaciones": [
+        {
+          "tipo": "lectura",
+          "descripcion": "Lista de marcas"
+        }
+      ],
+      "conexion": "api_cliente",
+      "quien_hospeda": "Vehicentro",
+      "autenticacion": "POR DEFINIR",
+      "documentacion": "si",
+      "ambiente_pruebas": "no",
+      "estado_actual": "Entregada",
+      "responsable_cliente": "Vehicentro · TI",
+      "disponibilidad": "POR DEFINIR (24/7 requerido por el bot)"
+    },
+    {
+      "id": "INT-3",
+      "nombre": "botwa_modelos/:id_marca (WS#3)",
+      "sistema": "Catálogo Vehicentro",
+      "proposito": "Modelos, precio, ficha técnica y multimedia por marca",
+      "operaciones": [
+        {
+          "tipo": "lectura",
+          "descripcion": "Catálogo por marca"
+        }
+      ],
+      "conexion": "api_cliente",
+      "quien_hospeda": "Vehicentro",
+      "autenticacion": "POR DEFINIR",
+      "documentacion": "si",
+      "ambiente_pruebas": "no",
+      "estado_actual": "Entregada",
+      "responsable_cliente": "Vehicentro · TI",
+      "disponibilidad": "POR DEFINIR (24/7 requerido por el bot)"
+    },
+    {
+      "id": "INT-4",
+      "nombre": "botwa_agencias/:id_marca (WS#4)",
+      "sistema": "Vehicentro",
+      "proposito": "Agencias por marca con provincia, ciudad, dirección y horario",
+      "operaciones": [
+        {
+          "tipo": "lectura",
+          "descripcion": "Agencias por marca"
+        }
+      ],
+      "conexion": "api_cliente",
+      "quien_hospeda": "Vehicentro",
+      "autenticacion": "POR DEFINIR",
+      "documentacion": "si",
+      "ambiente_pruebas": "no",
+      "estado_actual": "Entregada",
+      "responsable_cliente": "Vehicentro · TI",
+      "disponibilidad": "POR DEFINIR (24/7 requerido por el bot)"
+    },
+    {
+      "id": "INT-5",
+      "nombre": "Servicio de prospectos y asignación de teleasesor (WS#5)",
+      "sistema": "CRM Vehicentro",
+      "proposito": "Recibir el prospecto (JSON) y devolver el correo del teleasesor asignado; reemplaza a botwa_asesores",
+      "operaciones": [
+        {
+          "tipo": "escritura",
+          "descripcion": "Registro del prospecto"
+        },
+        {
+          "tipo": "lectura",
+          "descripcion": "Correo del teleasesor asignado"
+        }
+      ],
+      "conexion": "api_cliente",
+      "quien_hospeda": "Vehicentro",
+      "autenticacion": "POR DEFINIR",
+      "documentacion": "pendiente",
+      "ambiente_pruebas": "no",
+      "estado_actual": "Por construir por Vehicentro (no existe aún la respuesta con el teleasesor)",
+      "responsable_cliente": "Vehicentro · TI",
+      "disponibilidad": "POR DEFINIR (24/7 requerido por el bot)"
+    },
+    {
+      "id": "INT-6",
+      "nombre": "botwa/:id (WS#6, POST)",
+      "sistema": "Vehicentro",
+      "proposito": "Registrar la conexión con el origen de la campaña",
+      "operaciones": [
+        {
+          "tipo": "escritura",
+          "descripcion": "Registro del identificador de conexión"
+        }
+      ],
+      "conexion": "api_cliente",
+      "quien_hospeda": "Vehicentro",
+      "autenticacion": "POR DEFINIR",
+      "documentacion": "pendiente",
+      "ambiente_pruebas": "no",
+      "estado_actual": "Entregada; la estructura del cuerpo está pendiente (Q-2)",
+      "responsable_cliente": "Vehicentro · TI",
+      "disponibilidad": "POR DEFINIR (24/7 requerido por el bot)"
+    }
+  ],
+  "historias": [
+    {
+      "id": "HU-01",
+      "agente": "F1",
+      "titulo": "Origen de la campaña",
+      "perfil": "Equipo de marketing de Vehicentro",
+      "quiero": "saber de qué página, campaña, grupo, anuncio y formulario viene cada prospecto",
+      "para": "evaluar qué campañas generan clientes",
+      "reglas": [
+        "RN-01"
+      ],
+      "criterios": [
+        {
+          "dado": "que el usuario ingresa desde un anuncio de Meta o TikTok",
+          "cuando": "el bot recibe la metadata",
+          "entonces": "guarda el origen disponible y lo asocia al lead sin intervención humana"
+        }
+      ]
+    },
+    {
+      "id": "HU-02",
+      "agente": "F1",
+      "titulo": "Aviso de términos",
+      "perfil": "Prospecto",
+      "quiero": "conocer los términos y la política de datos",
+      "para": "decidir si continúo",
+      "reglas": [
+        "RN-02"
+      ],
+      "criterios": [
+        {
+          "dado": "que el usuario inicia la conversación",
+          "cuando": "el bot da la bienvenida",
+          "entonces": "muestra el link a los términos antes de pedir cualquier dato y registra la evidencia"
+        },
+        {
+          "dado": "que el usuario indica que no acepta",
+          "cuando": "responde al aviso",
+          "entonces": "el bot no pide datos personales, registra el rechazo y cierra"
+        }
+      ]
+    },
+    {
+      "id": "HU-03",
+      "agente": "F1",
+      "titulo": "Asesor ya asignado",
+      "perfil": "Prospecto con asesor",
+      "quiero": "que me indiquen mi asesor",
+      "para": "no empezar de cero",
+      "reglas": [
+        "RN-03"
+      ],
+      "criterios": [
+        {
+          "dado": "que Meta entrega el celular",
+          "cuando": "el bot consulta el servicio",
+          "entonces": "si existe asesor, envía su nombre y contacto y cierra; si no, continúa al enrutamiento"
+        },
+        {
+          "dado": "que Meta no entrega el celular",
+          "cuando": "el bot necesita validar",
+          "entonces": "pide el celular al usuario y luego consulta"
+        }
+      ]
+    },
+    {
+      "id": "HU-04",
+      "agente": "F1",
+      "titulo": "Marca e intención",
+      "perfil": "Prospecto",
+      "quiero": "que el bot entienda la marca que me interesa",
+      "para": "recibir información de esa marca",
+      "reglas": [
+        "RN-04"
+      ],
+      "criterios": [
+        {
+          "dado": "que no se puede inferir la marca",
+          "cuando": "el usuario escribe su primer mensaje",
+          "entonces": "el bot pregunta la marca con una lista antes de avanzar"
+        },
+        {
+          "dado": "que la intención es Repuestos o Talleres",
+          "cuando": "el router la identifica",
+          "entonces": "el bot informa que lo atenderá un asesor y asigna la conversación en PMA con la marca y la intención identificadas"
+        }
+      ]
+    },
+    {
+      "id": "HU-05",
+      "agente": "F2",
+      "titulo": "Consulta de catálogo y comparación",
+      "perfil": "Prospecto",
+      "quiero": "conocer precios, características y comparar modelos",
+      "para": "elegir un vehículo",
+      "reglas": [
+        "RN-05"
+      ],
+      "criterios": [
+        {
+          "dado": "que el usuario pregunta por un modelo",
+          "cuando": "el bot responde",
+          "entonces": "usa solo datos de la API de catálogo y ofrece el Ecommerce WebView"
+        },
+        {
+          "dado": "que el usuario cambia de marca",
+          "cuando": "pregunta por otro modelo",
+          "entonces": "el bot sigue el nuevo contexto y responde con el catálogo de esa marca"
+        }
+      ]
+    },
+    {
+      "id": "HU-06",
+      "agente": "F2",
+      "titulo": "Cotización con agencia",
+      "perfil": "Prospecto",
+      "quiero": "cotizar y elegir la agencia de mi ciudad",
+      "para": "ser atendido por un asesor",
+      "reglas": [
+        "RN-06",
+        "RN-08"
+      ],
+      "criterios": [
+        {
+          "dado": "que el usuario acepta cotizar",
+          "cuando": "entrega cédula y ciudad",
+          "entonces": "el bot muestra solo las agencias de la marca en esa ciudad con dirección y horario"
+        },
+        {
+          "dado": "que el usuario elige una agencia",
+          "cuando": "el bot registra el prospecto",
+          "entonces": "el sistema devuelve el teleasesor, el bot informa quién lo atenderá y asigna la conversación a ese usuario en PMA con marca, modelos y agencia"
+        }
+      ]
+    },
+    {
+      "id": "HU-07",
+      "agente": "T1",
+      "titulo": "Recordatorios por abandono",
+      "perfil": "Equipo comercial de Vehicentro",
+      "quiero": "recuperar los prospectos que dejan de responder",
+      "para": "no perder oportunidades",
+      "reglas": [
+        "RN-10",
+        "RN-08"
+      ],
+      "criterios": [
+        {
+          "dado": "que el usuario deja de responder",
+          "cuando": "se cumple el intervalo definido",
+          "entonces": "el bot envía hasta 4 recordatorios dentro de 24 horas y fuera de la franja nocturna"
+        },
+        {
+          "dado": "que se agotan los recordatorios",
+          "cuando": "termina el ciclo",
+          "entonces": "el prospecto queda como no gestionado y sus datos disponibles se envían al sistema de Vehicentro"
+        }
+      ]
+    },
+    {
+      "id": "HU-08",
+      "agente": "T1",
+      "titulo": "Conversación natural",
+      "perfil": "Prospecto",
+      "quiero": "que el bot entienda varios mensajes seguidos y no insista si no me interesa",
+      "para": "tener una conversación fluida",
+      "reglas": [
+        "RN-07"
+      ],
+      "criterios": [
+        {
+          "dado": "que el usuario envía varios mensajes seguidos",
+          "cuando": "pasan 2 segundos sin nuevos mensajes",
+          "entonces": "el bot responde una sola vez considerando todos"
+        },
+        {
+          "dado": "que el usuario dice que no le interesa o responde de forma agresiva",
+          "cuando": "el bot lo detecta",
+          "entonces": "se disculpa, agradece y cierra sin repetir preguntas"
+        }
+      ]
+    },
+    {
+      "id": "HU-09",
+      "agente": "F2",
+      "titulo": "Contingencia de servicios",
+      "perfil": "Prospecto",
+      "quiero": "ser atendido aunque falle un sistema",
+      "para": "no quedar sin respuesta",
+      "reglas": [
+        "RN-09"
+      ],
+      "criterios": [
+        {
+          "dado": "que una API del cliente no responde",
+          "cuando": "el bot la consulta",
+          "entonces": "envía un mensaje de contingencia y deriva a PMA sin interrumpir la conversación"
+        }
+      ]
+    }
+  ],
+  "pruebas": [
+    {
+      "id": "PR-1",
+      "tipo": "Conectividad",
+      "descripcion": "Autenticación y respuesta de las 6 APIs de Vehicentro en producción con datos de prueba.",
+      "cubre": [
+        "HU-01",
+        "HU-03",
+        "HU-06"
+      ]
+    },
+    {
+      "id": "PR-2",
+      "tipo": "Funcional",
+      "descripcion": "Términos, validación de asesor, marca e intención, catálogo, cotización, recordatorios y cierre ante interacción negativa.",
+      "cubre": [
+        "HU-02",
+        "HU-03",
+        "HU-04",
+        "HU-05",
+        "HU-06",
+        "HU-07",
+        "HU-08"
+      ]
+    },
+    {
+      "id": "PR-3",
+      "tipo": "Extremo a extremo",
+      "descripcion": "Desde un anuncio de prueba hasta la asignación al teleasesor en PMA y el registro en Datum.",
+      "cubre": [
+        "HU-01",
+        "HU-06",
+        "HU-09"
+      ]
+    }
+  ],
+  "esfuerzo": {
+    "personas": 1,
+    "horas_dia": 6,
+    "gestion_pct": 15,
+    "items": [
+      {
+        "entregable": "Workflow de bienvenida, términos, validación de asesor y AI Router multimarca",
+        "tipo": "workflow_complejo",
+        "cantidad": 1,
+        "agente": "F1"
+      },
+      {
+        "entregable": "Agente de IA de catálogo, cotización y agencias",
+        "tipo": "workflow_complejo",
+        "cantidad": 1,
+        "agente": "F2"
+      },
+      {
+        "entregable": "Integraciones HTTP con las APIs de Vehicentro (6 servicios)",
+        "tipo": "integracion_api",
+        "cantidad": 3,
+        "nota": "Se agrupan por complejidad"
+      },
+      {
+        "entregable": "Ecommerce WebView alimentado por la API de catálogo",
+        "tipo": "webview_backend",
+        "cantidad": 1,
+        "agente": "F2"
+      },
+      {
+        "entregable": "Asignación al teleasesor en PMA por correo",
+        "tipo": "handoff_asesor",
+        "cantidad": 1,
+        "agente": "F2"
+      },
+      {
+        "entregable": "Recordatorios por abandono y agrupación de mensajes",
+        "tipo": "workflow_medio",
+        "cantidad": 1,
+        "agente": "T1"
+      },
+      {
+        "entregable": "Datum: usuarios, viaje del usuario, leads y términos",
+        "tipo": "datum",
+        "cantidad": 2,
+        "agente": "T1"
+      },
+      {
+        "entregable": "Pruebas internas sobre los criterios de aceptación",
+        "tipo": "pruebas_qa",
+        "cantidad": 1,
+        "nota": "Hito: Pruebas internas"
+      },
+      {
+        "entregable": "Acompañamiento de las pruebas con Vehicentro y corrección de observaciones",
+        "tipo": "uat_acompanamiento",
+        "cantidad": 1,
+        "nota": "Hito: UAT del cliente"
+      }
+    ]
+  },
+  "dependencias_cliente": [
+    {
+      "item": "Esquema de autenticación, datos de prueba y URL de conexión de las APIs (INT-1 a INT-6)",
+      "responsable": "Vehicentro · TI",
+      "fecha_limite": "POR DEFINIR",
+      "integracion": [
+        "INT-1",
+        "INT-2",
+        "INT-3",
+        "INT-4",
+        "INT-5",
+        "INT-6"
+      ],
+      "hito": "Construcción del bot e integración"
+    },
+    {
+      "item": "Estructura del cuerpo del servicio botwa/:id (INT-6)",
+      "responsable": "Vehicentro · TI",
+      "fecha_limite": "POR DEFINIR",
+      "integracion": "INT-6",
+      "hito": "Construcción del bot e integración"
+    },
+    {
+      "item": "Servicio de prospectos que devuelve el correo del teleasesor (INT-5) y usuarios de los teleasesores creados en PMA con ese correo",
+      "responsable": "Vehicentro · TI",
+      "fecha_limite": "POR DEFINIR",
+      "integracion": "INT-5",
+      "hito": "Construcción del bot e integración"
+    },
+    {
+      "item": "Link a los términos y a la política de datos de Vehicentro",
+      "responsable": "Vehicentro",
+      "fecha_limite": "POR DEFINIR",
+      "hito": "Construcción del bot e integración"
+    },
+    {
+      "item": "Ejecución de la UAT y reporte escrito de observaciones dentro de las fechas del cronograma",
+      "responsable": "Vehicentro",
+      "fecha_limite": "POR DEFINIR",
+      "hito": "UAT del cliente",
+      "tipo": "uat"
+    }
+  ],
+  "cronograma": {
+    "hitos": [
+      {
+        "id": "H0",
+        "fase": "1",
+        "nombre": "Planificación y definición de alcance",
+        "descripcion": "Aprobación del Brief v1.3 y entrega de los insumos técnicos del cliente",
+        "dias_habiles": 2,
+        "entregable": "Brief v1.3 aprobado"
+      },
+      {
+        "id": "H1",
+        "fase": "2",
+        "nombre": "Construcción del bot e integración",
+        "descripcion": "Flujo_1, Flujo_2 con Ecommerce WebView, lógica transversal y Datum",
+        "dias_habiles": 12,
+        "entregable": "Asistente en ambiente de desarrollo"
+      },
+      {
+        "id": "H2",
+        "fase": "3",
+        "nombre": "Pruebas internas",
+        "tipo": "pruebas_internas",
+        "descripcion": "Matriz de validación sobre los criterios de aceptación",
+        "dias_habiles": 3,
+        "entregable": "Matriz de validación"
+      },
+      {
+        "id": "H3",
+        "fase": "3",
+        "nombre": "UAT del cliente",
+        "tipo": "uat",
+        "descripcion": "Pruebas asistidas con Vehicentro y corrección de observaciones",
+        "dias_habiles": 3,
+        "entregable": "Aprobación funcional",
+        "responsable": "Cliente"
+      },
+      {
+        "id": "H4",
+        "fase": "4",
+        "nombre": "Pase a producción",
+        "descripcion": "Despliegue en el número productivo y monitoreo asistido",
+        "dias_habiles": 1,
+        "entregable": "Acta de entrega en producción"
+      }
+    ]
+  },
+  "responsabilidades": {
+    "jelou": [
+      "Diseño conversacional y construcción del asistente",
+      "Integración con las APIs de Vehicentro",
+      "Configuración del Ecommerce WebView, PMA y Datum",
+      "Pruebas internas, acompañamiento de la UAT y pase a producción"
+    ],
+    "cliente": [
+      "APIs documentadas con autenticación, datos de prueba y URL de conexión",
+      "Servicio de prospectos con devolución del teleasesor",
+      "Usuarios de los teleasesores en PMA",
+      "Términos y política de datos publicados",
+      "Ejecución y aprobación de la UAT en las fechas acordadas",
+      "Limpieza de registros de prueba en producción"
+    ]
+  },
+  "revision_seguridad": [
+    {
+      "aspecto": "Robo de información (confidencialidad)",
+      "revisado": "Sí",
+      "mitigacion": "Credenciales como secretos de la plataforma; se entregan por canal seguro."
+    },
+    {
+      "aspecto": "Indisponibilidad de servicios a integrar",
+      "revisado": "Sí",
+      "mitigacion": "Mensaje de contingencia y derivación a PMA."
+    },
+    {
+      "aspecto": "Retrasos en el cronograma",
+      "revisado": "Sí",
+      "mitigacion": "Los insumos del cliente son dependencias con fecha; su demora desplaza el inicio de la construcción."
+    }
+  ],
+  "riesgos": [
+    {
+      "riesgo": "El servicio de prospectos con devolución del teleasesor no está construido por Vehicentro",
+      "probabilidad": "Alta",
+      "impacto": "Alto",
+      "mitigacion": "Construir con un contrato provisional y probar al llegar el servicio; la UAT depende de su entrega."
+    },
+    {
+      "riesgo": "Sin ambiente QA: las pruebas generan registros en producción",
+      "probabilidad": "Alta",
+      "impacto": "Medio",
+      "mitigacion": "Marcar los datos de prueba; la limpieza es responsabilidad de Vehicentro."
+    },
+    {
+      "riesgo": "TikTok entrega una estructura de origen distinta a Meta",
+      "probabilidad": "Media",
+      "impacto": "Medio",
+      "mitigacion": "Jelou confirma la estructura de ambas plataformas antes de construir."
+    }
+  ],
+  "cambios": [
+    {
+      "id": "CC-01",
+      "fecha": "2026-11-04",
+      "area": "Flujo_1",
+      "descripcion": "La validación de asesor se hace por celular; la cédula se pide solo al cotizar.",
+      "evidencia": "Revisión de flujos 04/11/2026",
+      "impacto": "Incorporado v1.3"
+    },
+    {
+      "id": "CC-02",
+      "fecha": "2026-11-04",
+      "area": "Flujo_2",
+      "descripcion": "Cotización con cédula, ciudad y elección de agencia; registro del prospecto en el sistema de Vehicentro con asignación por correo del teleasesor (reemplaza botwa_asesores).",
+      "evidencia": "Revisión de flujos 04/11/2026",
+      "impacto": "Incorporado v1.3"
+    },
+    {
+      "id": "CC-03",
+      "fecha": "2026-11-04",
+      "area": "Lógica transversal",
+      "descripcion": "Hasta 4 recordatorios sin envíos nocturnos; agrupación de mensajes; cierre ante interacción negativa; origen detallado de la campaña.",
+      "evidencia": "Revisión de flujos 04/11/2026",
+      "impacto": "Incorporado v1.3"
+    }
+  ],
+  "versiones": [
+    {
+      "fecha": "2026-07-15",
+      "version": "1.0",
+      "descripcion": "SOW preliminar",
+      "autor": "[por rol]"
+    },
+    {
+      "fecha": "2026-09-07",
+      "version": "1.1",
+      "descripcion": "Versión alineada con el diagrama de flujo aprobado; ajuste de alcance y tabla de integraciones.",
+      "autor": "[por rol]"
+    },
+    {
+      "fecha": "2026-09-10",
+      "version": "1.2",
+      "descripcion": "Acotación a Flujo_2 con Flujo_1 y lógica transversal como habilitadores.",
+      "autor": "[por rol]"
+    },
+    {
+      "fecha": "2026-11-05",
+      "version": "1.3",
+      "descripcion": "Incorpora los acuerdos de la revisión de flujos del 04/11/2026: asesor por celular, cotización con cédula, ciudad y agencia, registro del prospecto y asignación al teleasesor por correo, hasta 4 recordatorios sin envíos nocturnos, agrupación de mensajes, cierre ante interacción negativa, cambio de marca y origen detallado de la campaña.",
+      "autor": "[por rol]"
+    }
+  ],
+  "preguntas_abiertas": [
+    {
+      "id": "Q-1",
+      "pregunta": "¿Cuál es el esquema de autenticación, los datos de prueba y la URL de conexión de las APIs?",
+      "bloquea": true,
+      "responsable": "Vehicentro · TI",
+      "tipo": "tecnica"
+    },
+    {
+      "id": "Q-2",
+      "pregunta": "¿Cuál es la estructura del cuerpo del servicio botwa/:id?",
+      "bloquea": true,
+      "responsable": "Vehicentro · TI",
+      "tipo": "tecnica"
+    },
+    {
+      "id": "Q-3",
+      "pregunta": "¿Cuándo estará disponible el servicio de prospectos que devuelve el correo del teleasesor, y cuál es su contrato?",
+      "bloquea": true,
+      "responsable": "Vehicentro · TI",
+      "tipo": "tecnica"
+    },
+    {
+      "id": "Q-4",
+      "pregunta": "¿Cuál es la regla de derivación a PMA cuando no se identifica la marca o la intención (cola general o asesor)?",
+      "bloquea": false,
+      "responsable": "Vehicentro",
+      "tipo": "negocio"
+    },
+    {
+      "id": "Q-5",
+      "pregunta": "¿Cuáles son los intervalos entre recordatorios y la franja horaria sin envíos?",
+      "bloquea": false,
+      "responsable": "Vehicentro",
+      "tipo": "negocio"
+    },
+    {
+      "id": "Q-6",
+      "pregunta": "¿Desea recordatorios fuera de la ventana de 24 horas mediante una plantilla de utilidad (opcional, con costo de Meta aparte)?",
+      "bloquea": false,
+      "responsable": "Vehicentro",
+      "tipo": "negocio"
+    },
+    {
+      "id": "Q-7",
+      "pregunta": "¿Cuál es el horario del contact center para la atención en PMA y qué responde el bot fuera de horario?",
+      "bloquea": false,
+      "responsable": "Vehicentro",
+      "tipo": "negocio"
+    },
+    {
+      "id": "Q-8",
+      "pregunta": "¿Cuál es el tiempo de retención de los datos de usuarios, viaje y leads en Datum?",
+      "bloquea": false,
+      "responsable": "Vehicentro",
+      "tipo": "negocio"
+    },
+    {
+      "id": "Q-9",
+      "pregunta": "Jelou confirma qué campos de origen entrega TikTok (Meta ya entrega página, campaña, anuncio y formulario).",
+      "bloquea": false,
+      "responsable": "Jelou · Implementador",
+      "audiencia": "interna",
+      "tipo": "capacidad"
+    },
+    {
+      "id": "Q-CP-1",
+      "pregunta": "El registro del prospecto en el sistema de Vehicentro es una escritura en el CRM que el Brief v1.2 excluía. ¿Comercial ratifica que entra en la Fase 1 sin cobro adicional?",
+      "bloquea": false,
+      "responsable": "Comercial",
+      "audiencia": "interna",
+      "tipo": "cambio_preventa"
+    },
+    {
+      "id": "Q-CP-2",
+      "pregunta": "El consentimiento implícito (sin botones Acepto / No acepto) no cumple la regla 17 de la constitución de implementaciones. ¿El Tech Lead lo acepta o se propone al cliente un mensaje interactivo?",
+      "bloquea": false,
+      "responsable": "Tech Lead",
+      "audiencia": "interna",
+      "tipo": "cambio_preventa"
+    }
+  ],
+  "ampliaciones_solicitadas": [],
+  "cambios_respecto_preventa": [
+    {
+      "id": "CP-1",
+      "tema": "Registro del prospecto en el CRM",
+      "preventa": "No se contempla creación ni actualización de registros en el CRM; botwa_asesores devuelve los asesores disponibles.",
+      "diio": "El bot envía el prospecto al sistema de Vehicentro, que devuelve el correo del teleasesor asignado.",
+      "origen": "Revisión de flujos 04/11/2026",
+      "pregunta": "Q-CP-1"
+    },
+    {
+      "id": "CP-2",
+      "tema": "Recordatorios",
+      "preventa": "Hasta 3 recordatorios.",
+      "diio": "Hasta 4 recordatorios con intervalos y sin envíos nocturnos.",
+      "origen": "Revisión de flujos 04/11/2026 y decisión del implementador",
+      "pregunta": "Q-5"
+    },
+    {
+      "id": "CP-3",
+      "tema": "Consentimiento",
+      "preventa": "Aceptación implícita al continuar, sin botones.",
+      "diio": "El cliente lo ratifica.",
+      "origen": "Revisión de flujos 04/11/2026",
+      "pregunta": "Q-CP-2"
+    }
+  ],
+  "alertas_internas": [
+    "H-01: el consentimiento implícito incumple la regla 17 de la constitución de implementaciones; bloquea la puerta de QA hasta que el Tech Lead decida.",
+    "D-07 (registro del prospecto) entra en v1.3 por decisión del implementador; falta la ratificación formal de Comercial.",
+    "El cronograma del 10/09 (producción el 15/10) venció; el partner pedirá uno nuevo tras la aprobación (estimado de 21 días hábiles de desarrollo)."
+  ],
+  "firmas": {
+    "jelou": {
+      "nombre": "[por rol]",
+      "cargo": "Project Manager"
+    },
+    "cliente": {
+      "nombre": "[por rol]",
+      "cargo": "POR COMPLETAR"
+    }
+  },
+  "demo": {
+    "modo": "mixto",
+    "marca": {
+      "nombre": "Vehicentro",
+      "color": "#B71C1C"
+    },
+    "usuario": {
+      "nombre": "Carlos Ejemplo",
+      "telefono": "+593 9X XXX XXXX"
+    },
+    "variables": {
+      "modelo": "Modelo A 4x2",
+      "precio": "USD 28.990",
+      "nombre_asesor": "Asesor Demo",
+      "contacto_asesor": "+593 99 111 1111",
+      "ciudad": "Quito",
+      "agencia": "Agencia Norte",
+      "link_terminos": "https://vehicentro.example/terminos"
+    },
+    "productos": [
+      {
+        "nombre": "Modelo A 4x2",
+        "precio": 28990
+      },
+      {
+        "nombre": "Modelo B 4x4",
+        "precio": 34990
+      },
+      {
+        "nombre": "Modelo C Furgón",
+        "precio": 31500
+      }
+    ]
+  }
+}

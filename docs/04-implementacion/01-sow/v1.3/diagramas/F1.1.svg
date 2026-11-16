@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1821" height="1840" viewBox="0 0 1821 1840" font-family="Poppins, sans-serif">
+<rect width="1821" height="1840" fill="#ffffff"/>
+<text x="40" y="58" font-size="34" font-family="'Poppins SemiBold', Poppins, sans-serif" fill="#1a1d24">Flujo_1: Bienvenida y enrutamiento</text>
+<path d="M819.01 170 L819.01 217" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="819.01,228 825.51,216 812.51,216" fill="#7a8794"/>
+<path d="M819.01 294 L819.01 341" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="819.01,352 825.51,340 812.51,340" fill="#7a8794"/>
+<path d="M819.01 418 L819.01 465" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="819.01,476 825.51,464 812.51,464" fill="#7a8794"/>
+<path d="M819.01 550 L819.01 590 L680.51 590 L680.51 724 L761.75 724 L761.75 743" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="761.75,754 768.25,742 755.25,742" fill="#7a8794"/>
+<path d="M819.01 550 L819.01 590 L947.51 590 L947.51 619" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="947.51,630 954.01,618 941.01,618" fill="#7a8794"/>
+<path d="M947.51 696 L947.51 724 L851.75 724 L851.75 743" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="851.75,754 858.25,742 845.25,742" fill="#7a8794"/>
+<path d="M806.75 820 L806.75 867" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="806.75,878 813.25,866 800.25,866" fill="#7a8794"/>
+<path d="M806.75 952 L806.75 992 L266 992 L266 1021" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="266,1032 272.5,1020 259.5,1020" fill="#7a8794"/>
+<path d="M806.75 952 L806.75 1021" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="806.75,1032 813.25,1020 800.25,1020" fill="#7a8794"/>
+<path d="M806.75 952 L806.75 992 L1192.89 992 L1192.89 1186 L1600 1186 L1600 1215" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="1600,1226 1606.5,1214 1593.5,1214" fill="#7a8794"/>
+<path d="M266 1128 L266 1658 L900.2 1658 L900.2 1677" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="900.2,1688 906.7,1676 893.7,1676" fill="#7a8794"/>
+<path d="M806.75 1128 L806.75 1168 L533 1168 L533 1215" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="533,1226 539.5,1214 526.5,1214" fill="#7a8794"/>
+<path d="M806.75 1128 L806.75 1168 L800 1168 L800 1474 L781.56 1474 L781.56 1493" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="781.56,1504 788.06,1492 775.06,1492" fill="#7a8794"/>
+<path d="M806.75 1128 L806.75 1168 L1510 1168 L1510 1215" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="1510,1226 1516.5,1214 1503.5,1214" fill="#7a8794"/>
+<path d="M806.75 1128 L806.75 1168 L1067 1168 L1067 1215" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="1067,1226 1073.5,1214 1060.5,1214" fill="#7a8794"/>
+<path d="M533 1322 L533 1369" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="533,1380 539.5,1368 526.5,1368" fill="#7a8794"/>
+<path d="M533 1446 L533 1474 L691.56 1474 L691.56 1493" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="691.56,1504 698.06,1492 685.06,1492" fill="#7a8794"/>
+<path d="M736.56 1630 L736.56 1658 L900.2 1658 L900.2 1677" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="900.2,1688 906.7,1676 893.7,1676" fill="#7a8794"/>
+<path d="M1067 1322 L1067 1658 L900.2 1658 L900.2 1677" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="900.2,1688 906.7,1676 893.7,1676" fill="#7a8794"/>
+<path d="M1555 1322 L1555 1658 L900.2 1658 L900.2 1677" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="900.2,1688 906.7,1676 893.7,1676" fill="#7a8794"/>
+<g data-id="P1"><rect x="398.26" y="105.25" width="841.5" height="63.5" rx="14" fill="#f1fafc" stroke="#00b3c7" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="819.01" y="144.7" font-size="22" text-anchor="middle" fill="#1a1d24">El usuario llega desde un anuncio de Meta o TikTok (click to WhatsApp)</text>
+</g>
+<g data-id="P2"><rect x="431.26" y="229.25" width="775.5" height="63.5" fill="#171e2d" stroke="#171e2d" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="819.01" y="268.7" font-size="22" text-anchor="middle" fill="#ffffff">Registra el origen: página, campaña, grupo, anuncio y formulario</text>
+</g>
+<g data-id="P3"><rect x="468.26" y="353.25" width="701.5" height="63.5" rx="14" fill="#ffffff" stroke="#1a1d24" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="819.01" y="392.7" font-size="22" text-anchor="middle" fill="#1a1d24">Bienvenida con aviso de términos y política de datos (link)</text>
+</g>
+<g data-id="P4"><polygon points="599.26,477.25 1038.76,477.25 1068.76,513 1038.76,548.75 599.26,548.75 569.26,513" fill="#ffffff" stroke="#0e7c8a" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="819.01" y="520.7" font-size="22" text-anchor="middle" fill="#1a1d24">¿Meta entregó el número de celular?</text>
+</g>
+<g data-id="P5"><rect x="722.76" y="631.25" width="449.5" height="63.5" rx="14" fill="#ffffff" stroke="#1a1d24" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="947.51" y="670.7" font-size="22" text-anchor="middle" fill="#1a1d24">Pide el número de celular</text>
+</g>
+<g data-id="P6"><rect x="503" y="755.25" width="607.5" height="63.5" fill="#171e2d" stroke="#171e2d" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="806.75" y="794.7" font-size="22" text-anchor="middle" fill="#ffffff">Consulta si ya tiene asesor asignado (por celular)</text>
+</g>
+<g data-id="P7"><polygon points="654,879.25 959.5,879.25 989.5,915 959.5,950.75 654,950.75 624,915" fill="#ffffff" stroke="#0e7c8a" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="806.75" y="922.7" font-size="22" text-anchor="middle" fill="#1a1d24">¿Tiene asesor asignado?</text>
+</g>
+<g data-id="P8"><rect x="41.25" y="1033.25" width="449.5" height="93.5" rx="14" fill="#ffffff" stroke="#1a1d24" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="266" y="1072.7" font-size="22" text-anchor="middle" fill="#1a1d24">Envía nombre y contacto del</text>
+<text x="266" y="1102.7" font-size="22" text-anchor="middle" fill="#1a1d24">asesor asignado</text>
+</g>
+<g data-id="P9"><rect x="582" y="1033.25" width="449.5" height="93.5" rx="14" fill="#00b3c7" stroke="#00b3c7" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="806.75" y="1072.7" font-size="22" text-anchor="middle" fill="#ffffff">El AI Router identifica marca e</text>
+<text x="806.75" y="1102.7" font-size="22" text-anchor="middle" fill="#ffffff">intención</text>
+</g>
+<g data-id="P10"><rect x="308.25" y="1227.25" width="449.5" height="93.5" rx="14" fill="#ffffff" stroke="#1a1d24" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="533" y="1266.7" font-size="22" text-anchor="middle" fill="#1a1d24">Pregunta la marca de interés (lista</text>
+<text x="533" y="1296.7" font-size="22" text-anchor="middle" fill="#1a1d24">de marcas)</text>
+</g>
+<g data-id="P13"><rect x="842.25" y="1227.25" width="449.5" height="93.5" rx="14" fill="#ffffff" stroke="#1a1d24" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="1067" y="1281.7" font-size="22" text-anchor="middle" fill="#1a1d24">Agradece y cierra la conversación</text>
+</g>
+<g data-id="P20"><rect x="1330.25" y="1227.25" width="449.5" height="93.5" rx="14" fill="#eceff3" stroke="#6b7685" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="1555" y="1266.7" font-size="22" text-anchor="middle" fill="#1a1d24">Deriva a PMA según la regla</text>
+<text x="1555" y="1296.7" font-size="22" text-anchor="middle" fill="#1a1d24">definida con Vehicentro</text>
+</g>
+<g data-id="P11"><rect x="308.25" y="1381.25" width="449.5" height="63.5" rx="14" fill="#f1fafc" stroke="#00b3c7" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="533" y="1420.7" font-size="22" text-anchor="middle" fill="#1a1d24">Elige la marca</text>
+</g>
+<g data-id="P12"><rect x="511.81" y="1505.25" width="449.5" height="123.5" rx="14" fill="#ffffff" stroke="#1a1d24" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="736.56" y="1544.7" font-size="22" text-anchor="middle" fill="#1a1d24">Adopta la personalidad y el</text>
+<text x="736.56" y="1574.7" font-size="22" text-anchor="middle" fill="#1a1d24">catálogo de la marca y continúa al</text>
+<text x="736.56" y="1604.7" font-size="22" text-anchor="middle" fill="#1a1d24">Flujo_2</text>
+</g>
+<g data-id="P21"><rect x="816.45" y="1689.25" width="167.5" height="63.5" rx="31.75" fill="#ffffff" stroke="#6b7685" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="900.2" y="1728.7" font-size="22" text-anchor="middle" fill="#555b66">Fin</text>
+</g>
+<rect x="684.51" y="597" width="22.03" height="25" rx="3" fill="#ffffff"/>
+<text x="688.51" y="614" font-size="18" text-anchor="start" fill="#0e7c8a">sí</text>
+<rect x="951.51" y="597" width="104.52" height="25" rx="3" fill="#ffffff"/>
+<text x="955.51" y="614" font-size="18" text-anchor="start" fill="#0e7c8a">no (BSUID)</text>
+<rect x="270" y="999" width="22.03" height="25" rx="3" fill="#ffffff"/>
+<text x="274" y="1016" font-size="18" text-anchor="start" fill="#0e7c8a">sí</text>
+<rect x="810.75" y="999" width="31.39" height="25" rx="3" fill="#ffffff"/>
+<text x="814.75" y="1016" font-size="18" text-anchor="start" fill="#0e7c8a">no</text>
+<rect x="1196.89" y="999" width="197.93" height="25" rx="3" fill="#ffffff"/>
+<text x="1200.89" y="1016" font-size="18" text-anchor="start" fill="#0e7c8a">servicio no responde</text>
+<rect x="537" y="1193" width="193.97" height="25" rx="3" fill="#ffffff"/>
+<text x="541" y="1210" font-size="18" text-anchor="start" fill="#0e7c8a">marca desconocida</text>
+<rect x="804" y="1193" width="103.19" height="25" rx="3" fill="#ffffff"/>
+<text x="808" y="1210" font-size="18" text-anchor="start" fill="#0e7c8a">Comercial</text>
+<rect x="1514" y="1193" width="194.9" height="25" rx="3" fill="#ffffff"/>
+<text x="1518" y="1210" font-size="18" text-anchor="start" fill="#0e7c8a">Repuestos o Talleres</text>
+<rect x="1071" y="1193" width="100.45" height="25" rx="3" fill="#ffffff"/>
+<text x="1075" y="1210" font-size="18" text-anchor="start" fill="#0e7c8a">sin interés</text>
+<rect x="41" y="1776" width="34" height="26" rx="6" fill="#f1fafc" stroke="#00b3c7" stroke-width="2"/>
+<text x="86" y="1796" font-size="20" fill="#555b66">Usuario</text>
+<rect x="199.5716" y="1776" width="34" height="26" rx="6" fill="#ffffff" stroke="#1a1d24" stroke-width="2"/>
+<text x="244.5716" y="1796" font-size="20" fill="#555b66">Mensaje del agente</text>
+<rect x="481.7093" y="1776" width="34" height="26" rx="6" fill="#00b3c7" stroke="#00b3c7" stroke-width="2"/>
+<text x="526.7093" y="1796" font-size="20" fill="#555b66">Orquestación / router</text>
+<rect x="783.1523" y="1776" width="34" height="26" rx="6" fill="#171e2d" stroke="#171e2d" stroke-width="2"/>
+<text x="828.1523" y="1796" font-size="20" fill="#555b66">API / sistema</text>
+<rect x="996.8789999999999" y="1776" width="34" height="26" rx="6" fill="#ffffff" stroke="#0e7c8a" stroke-width="2"/>
+<text x="1041.879" y="1796" font-size="20" fill="#555b66">Decisión</text>
+<rect x="1164.7073999999998" y="1776" width="34" height="26" rx="6" fill="#eceff3" stroke="#6b7685" stroke-width="2"/>
+<text x="1209.7073999999998" y="1796" font-size="20" fill="#555b66">Asesor humano</text>
+<rect x="1406.7525999999998" y="1776" width="34" height="26" rx="6" fill="#ffffff" stroke="#6b7685" stroke-width="2"/>
+<text x="1451.7525999999998" y="1796" font-size="20" fill="#555b66">Fin</text>
+</svg>

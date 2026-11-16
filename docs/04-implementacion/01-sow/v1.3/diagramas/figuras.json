@@ -1,0 +1,95 @@
+[
+  {
+    "id": "FE",
+    "archivo": "FE",
+    "agente": null,
+    "tipo": "e2e",
+    "titulo": "Diagrama end-to-end",
+    "caption": "Figura FE. Diagrama end-to-end.",
+    "nodos": 8,
+    "pasos": [
+      "E1",
+      "E3",
+      "E4",
+      "E5",
+      "E9",
+      "E10",
+      "E12",
+      "E14"
+    ],
+    "dividido": false
+  },
+  {
+    "id": "F1.1",
+    "archivo": "F1.1",
+    "agente": "F1",
+    "tipo": "unica",
+    "titulo": "Flujo_1: Bienvenida y enrutamiento",
+    "caption": "Figura F1.1. Flujo_1: Bienvenida y Enrutamiento — Fase 1.",
+    "nodos": 15,
+    "pasos": [
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P5",
+      "P6",
+      "P7",
+      "P8",
+      "P9",
+      "P10",
+      "P11",
+      "P12",
+      "P13",
+      "P20",
+      "P21"
+    ],
+    "dividido": false
+  },
+  {
+    "id": "F2.1",
+    "archivo": "F2.1",
+    "agente": "F2",
+    "tipo": "unica",
+    "titulo": "Flujo_2: Catálogo, cotización y agencias",
+    "caption": "Figura F2.1. Flujo_2: Consulta de Catálogo y Agencias — Fase 1.",
+    "nodos": 14,
+    "pasos": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "Q5",
+      "Q6",
+      "Q7",
+      "Q8",
+      "Q9",
+      "Q10",
+      "Q11",
+      "Q12",
+      "Q20",
+      "Q21"
+    ],
+    "dividido": false
+  },
+  {
+    "id": "F3.1",
+    "archivo": "F3.1",
+    "agente": "T1",
+    "tipo": "unica",
+    "titulo": "Lógica transversal: recordatorios por abandono",
+    "caption": "Figura F3.1. Lógica transversal: abandono, trazabilidad y manejo de la conversación — Fase 1.",
+    "nodos": 8,
+    "pasos": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8"
+    ],
+    "dividido": false
+  }
+]

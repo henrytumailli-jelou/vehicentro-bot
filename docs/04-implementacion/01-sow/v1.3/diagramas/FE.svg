@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1412" height="950" viewBox="0 0 1412 950" font-family="Poppins, sans-serif">
+<rect width="1412" height="950" fill="#ffffff"/>
+<text x="40" y="58" font-size="34" font-family="'Poppins SemiBold', Poppins, sans-serif" fill="#1a1d24">Diagrama end-to-end</text>
+<path d="M324.66 200 L324.66 247" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="324.66,258 331.16,246 318.16,246" fill="#7a8794"/>
+<path d="M324.66 324 L324.66 364 L311.07 364 L311.07 393" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="311.07,404 317.57,392 304.57,392" fill="#7a8794"/>
+<path d="M324.66 324 L324.66 364 L889.07 364 L889.07 393" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="889.07,404 895.57,392 882.57,392" fill="#7a8794"/>
+<path d="M889.07 470 L889.07 510 L879.9 510 L879.9 539" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="879.9,550 886.4,538 873.4,538" fill="#7a8794"/>
+<path d="M889.07 470 L889.07 510 L1192.6 510 L1192.6 768 L1068.43 768 L1068.43 787" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="1068.43,798 1074.93,786 1061.93,786" fill="#7a8794"/>
+<path d="M879.9 616 L879.9 663" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="879.9,674 886.4,662 873.4,662" fill="#7a8794"/>
+<path d="M879.9 740 L879.9 768 L978.43 768 L978.43 787" fill="none" stroke="#7a8794" stroke-width="2.2" stroke-linejoin="miter"/>
+<polygon points="978.43,798 984.93,786 971.93,786" fill="#7a8794"/>
+<g data-id="E1"><rect x="54.91" y="105.25" width="539.5" height="93.5" rx="14" fill="#f1fafc" stroke="#00b3c7" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="324.66" y="144.7" font-size="22" text-anchor="middle" fill="#1a1d24">El prospecto llega desde un anuncio de</text>
+<text x="324.66" y="174.7" font-size="22" text-anchor="middle" fill="#1a1d24">Meta o TikTok</text>
+</g>
+<g data-id="E14"><rect x="632.91" y="105.25" width="539.5" height="93.5" rx="46.75" fill="#ffffff" stroke="#6b7685" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="902.66" y="159.7" font-size="22" text-anchor="middle" fill="#555b66">Si deja de responder: hasta 4 recordatorios</text>
+</g>
+<g data-id="E3"><rect x="146.91" y="259.25" width="355.5" height="63.5" rx="14" fill="#e6f6f8" stroke="#007582" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="324.66" y="298.7" font-size="22" text-anchor="middle" fill="#1a1d24">¿Ya tiene asesor asignado?</text>
+</g>
+<g data-id="E4"><rect x="41.32" y="405.25" width="539.5" height="63.5" rx="31.75" fill="#ffffff" stroke="#6b7685" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="311.07" y="444.7" font-size="22" text-anchor="middle" fill="#555b66">Recibe los datos de su asesor</text>
+</g>
+<g data-id="E5"><rect x="619.32" y="405.25" width="539.5" height="63.5" rx="14" fill="#e6f6f8" stroke="#007582" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="889.07" y="444.7" font-size="22" text-anchor="middle" fill="#1a1d24">Se identifica la marca y la intención</text>
+</g>
+<g data-id="E9"><rect x="610.15" y="551.25" width="539.5" height="63.5" rx="14" fill="#e6f6f8" stroke="#007582" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="879.9" y="590.7" font-size="22" text-anchor="middle" fill="#1a1d24">Consulta el catálogo y compara modelos</text>
+</g>
+<g data-id="E10"><rect x="610.15" y="675.25" width="539.5" height="63.5" rx="14" fill="#e6f6f8" stroke="#007582" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="879.9" y="714.7" font-size="22" text-anchor="middle" fill="#1a1d24">Cotiza: cédula, ciudad y agencia</text>
+</g>
+<g data-id="E12"><rect x="754.18" y="799.25" width="538.5" height="63.5" rx="14" fill="#eceff3" stroke="#6b7685" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="1023.43" y="838.7" font-size="22" text-anchor="middle" fill="#1a1d24">El teleasesor asignado continúa la atención</text>
+</g>
+<rect x="315.07" y="371" width="22.03" height="25" rx="3" fill="#ffffff"/>
+<text x="319.07" y="388" font-size="18" text-anchor="start" fill="#0e7c8a">sí</text>
+<rect x="893.07" y="371" width="31.39" height="25" rx="3" fill="#ffffff"/>
+<text x="897.07" y="388" font-size="18" text-anchor="start" fill="#0e7c8a">no</text>
+<rect x="883.9" y="517" width="103.19" height="25" rx="3" fill="#ffffff"/>
+<text x="887.9" y="534" font-size="18" text-anchor="start" fill="#0e7c8a">Comercial</text>
+<rect x="1196.6" y="517" width="194.9" height="25" rx="3" fill="#ffffff"/>
+<text x="1200.6" y="534" font-size="18" text-anchor="start" fill="#0e7c8a">Repuestos o Talleres</text>
+<rect x="41" y="886" width="34" height="26" rx="6" fill="#f1fafc" stroke="#00b3c7" stroke-width="2"/>
+<text x="86" y="906" font-size="20" fill="#555b66">Usuario</text>
+<rect x="199.5716" y="886" width="34" height="26" rx="6" fill="#eceff3" stroke="#6b7685" stroke-width="2"/>
+<text x="244.5716" y="906" font-size="20" fill="#555b66">Asesor humano</text>
+<rect x="441.61679999999996" y="886" width="34" height="26" rx="6" fill="#ffffff" stroke="#6b7685" stroke-width="2"/>
+<text x="486.61679999999996" y="906" font-size="20" fill="#555b66">Fin</text>
+<rect x="551.8338" y="886" width="34" height="26" rx="6" fill="#e6f6f8" stroke="#007582" stroke-width="2"/>
+<text x="596.8338" y="906" font-size="20" fill="#555b66">Hito del proceso</text>
+</svg>
