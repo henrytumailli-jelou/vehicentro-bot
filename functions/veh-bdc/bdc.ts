@@ -84,6 +84,7 @@ export class Bdc {
       const j = await r.json();
       const segs = Number(j.expires_in ?? 3600);
       cache = { token: j.access_token, vence: Date.now() + Math.min(segs - 300, 3300) * 1000 };
+      this.cfg.log?.("bdc_token_ok", { expira_en: segs });
       return cache.token;
     } catch (e) {
       this.cfg.log?.("bdc_token_error", { error: String(e) });
@@ -105,6 +106,7 @@ export class Bdc {
         this.cfg.log?.("bdc_get_red", { ruta: ruta.split("/")[0], intento, error: String(e) });
         continue;
       }
+      this.cfg.log?.("bdc_get", { ruta: ruta.split("/")[0], status: r.status, intento });
       if (r.status === 401) {
         _resetToken();
         if (intento === 0) continue;
@@ -123,6 +125,7 @@ export class Bdc {
       }
       if (j.status === "error") return res("negocio", null, j.message ?? "error del BDC");
       const data = Array.isArray(j.data) ? j.data : [];
+      this.cfg.log?.("bdc_get_resultado", { ruta: ruta.split("/")[0], n: data.length });
       return data.length ? res("ok", data) : res("vacio", []);
     }
     return res("indisponible", null, "sin respuesta");

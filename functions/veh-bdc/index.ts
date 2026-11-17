@@ -26,6 +26,7 @@ export default app({
       description: "Comprueba que el BDC entrega token",
       input: z.object({}),
       handler: async (_i, ctx) => {
+        ctx.log("veh_bdc_estado", ctx.env.get("BDC_CLIENT_ID") ? "con credenciales" : "sin credenciales");
         const t = await bdc(ctx).token(true);
         return { ok: !!t, tipo: t ? "ok" : "indisponible", data: null };
       },
