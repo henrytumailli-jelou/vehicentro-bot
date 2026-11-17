@@ -488,6 +488,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "Flujo 1 construido (T003 consentimiento, T004 origen, T005 celular y 4.5) y probado en el tester; H-05 cerrado; espejo de DEV en main."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "T004 corregida: origen desde $memory._referral."
     }
   ],
   "puntos": {
@@ -664,6 +668,11 @@
       "fecha": "2026-11-16",
       "tipo": "regla",
       "descripcion": "Un `jelou functions deploy` sin --profile tomó el perfil global de otra company; lo bloqueó la protección de jelou.json, sin cambios. Regla 3: --profile siempre."
+    },
+    {
+      "fecha": "2026-11-16",
+      "tipo": "plantilla",
+      "descripcion": "El origen de anuncios CTWA está documentado como $memory._referral en docs.jelou.ai, pero no aparece en las skills locales (jelou-build-workflows, jelou-expert) y el MCP de docs pedía autenticación; se construyó primero leyendo el room. Proponer el dato a capacidades-jelou.md §1.7 y a jelou-expert."
     }
   ],
   "por_verificar": [
@@ -702,7 +711,7 @@
       "fase": 5,
       "que": "Origen del anuncio que entregan Meta y TikTok",
       "estado": "pendiente",
-      "resultado": "2026-11-16: el origen se lee de metadata.referral del room con {{$user.roomId}}; en el tester el room no existe (404). Falta probar desde un anuncio real."
+      "resultado": "2026-11-16: el origen se lee de $memory._referral (Meta CTWA, documentado: source_url, source_id, source_type, body, media_type, ctwa_clid, welcome_message). Meta no entrega nombre de campaña, grupo ni formulario. Falta probar con un anuncio real; TikTok sin documentación."
     },
     {
       "id": "V-07",
