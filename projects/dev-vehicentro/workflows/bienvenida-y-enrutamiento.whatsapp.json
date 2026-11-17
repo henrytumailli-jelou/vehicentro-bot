@@ -94,44 +94,6 @@
       ]
     },
     {
-      "id": "49l799Hauy_c6GTHs9Ift",
-      "title": "Leer origen del anuncio",
-      "configuration": {
-        "url": "https://api.jelou.ai/v1/rooms/{{$user.roomId}}",
-        "body": {
-          "type": "no-content",
-          "content": null,
-          "enabled": false
-        },
-        "title": "Leer origen del anuncio",
-        "method": "GET",
-        "output": "roomResp",
-        "headers": [
-          {
-            "id": "h_ct_room",
-            "key": "Content-Type",
-            "value": "application/json",
-            "enabled": true
-          }
-        ],
-        "settings": {
-          "timeout": 10000,
-          "sslCertificate": true
-        },
-        "authentication": {
-          "type": "basic",
-          "enabled": true,
-          "password": "{{$company.clientSecret}}",
-          "username": "{{$company.clientId}}"
-        }
-      },
-      "type": "HTTP",
-      "position": [
-        594,
-        1156
-      ]
-    },
-    {
       "id": "579NWbU8F9R_Z7DHGGDpV",
       "title": "Guardar mensaje inicial",
       "configuration": {
@@ -1216,7 +1178,7 @@
       "title": "Guardar origen",
       "configuration": {
         "title": "Guardar origen",
-        "content": "let ref = null;\ntry {\n  const r = $context.getHttpResponse('roomResp');\n  let data = r ? r.json() : {};\n  data = (data && data.data && data.data.data) || (data && data.data) || {};\n  if (typeof data === 'string') data = JSON.parse(data);\n  const msgs = data.messages || [];\n  for (const m of msgs) { if (m && m.metadata && m.metadata.referral) { ref = m.metadata.referral; break; } }\n} catch (e) { ref = null; }\nconst o = ref || {};\n$memory.set('origen_plataforma', ref ? String(o.source_type || o.sourceType || 'meta') : 'directo');\n$memory.set('origen_pagina', String(o.source_url || o.sourceUrl || ''));\n$memory.set('origen_campana', String(o.campaign_name || o.campaign_id || ''));\n$memory.set('origen_grupo', String(o.adset_name || o.adset_id || ''));\n$memory.set('origen_anuncio', String(o.headline || o.source_id || o.ad_id || ''));\n$memory.set('origen_formulario', String(o.form_name || o.form_id || ''));\n$memory.set('origen_texto', ref ? ('anuncio: ' + String(o.headline || '') + ' ' + String(o.source_url || '')).trim() : 'directo');",
+        "content": "// Meta inyecta $memory._referral cuando la conversación viene de un anuncio click-to-WhatsApp\n// (docs.jelou.ai › Integraciones › Meta Ads). Si no existe, la conversación llegó directo.\nlet ref = null;\ntry { ref = $memory.getJson('_referral', null); } catch (e) { ref = null; }\nconst o = ref || {};\nconst desdeAnuncio = !!(ref && (o.source_id || o.source_url || o.ctwa_clid));\n$memory.set('origen_plataforma', desdeAnuncio ? 'meta_' + String(o.source_type || 'ad') : 'directo');\n$memory.set('origen_pagina', String(o.source_url || ''));\n$memory.set('origen_anuncio', String(o.source_id || ''));\n$memory.set('origen_campana', '');\n$memory.set('origen_grupo', '');\n$memory.set('origen_formulario', '');\n$memory.set('origen_ctwa_clid', String(o.ctwa_clid || ''));\n$memory.set('origen_texto', desdeAnuncio\n  ? ('Anuncio Meta ' + String(o.source_id || '') + ' ' + String(o.source_url || '') + ' (ctwa ' + String(o.ctwa_clid || '') + '): ' + String(o.body || '').slice(0, 300)).trim()\n  : 'directo');",
         "memoryVersion": "v2"
       },
       "type": "CODE",
@@ -1333,6 +1295,12 @@
       "branch": "failed"
     },
     {
+      "id": "9dzbtsluSYi9rht8r5rLC",
+      "sourceId": "579NWbU8F9R_Z7DHGGDpV",
+      "targetId": "tWiDeFW22Cmq5QqyuG5l0",
+      "branch": "default"
+    },
+    {
       "id": "blF2PvWslhu2FTESJJGCP",
       "sourceId": "vEPGtnRONN6b6jnrO4liR",
       "targetId": "hHNfhlW3vVTomlw6mxAyc",
@@ -1447,12 +1415,6 @@
       "branch": "else"
     },
     {
-      "id": "LoNU-MQi9y0R06PU6MHc6",
-      "sourceId": "579NWbU8F9R_Z7DHGGDpV",
-      "targetId": "49l799Hauy_c6GTHs9Ift",
-      "branch": "default"
-    },
-    {
       "id": "mffG_PIDCfbAOo_8_RSas",
       "sourceId": "Qg6iIjBzIMWmDoj6yokBK",
       "targetId": "iTtcmT90FDUQcSdraqU7r",
@@ -1531,12 +1493,6 @@
       "branch": "failed"
     },
     {
-      "id": "syza7hfhA1mJqczDLnVVL",
-      "sourceId": "49l799Hauy_c6GTHs9Ift",
-      "targetId": "tWiDeFW22Cmq5QqyuG5l0",
-      "branch": "success"
-    },
-    {
       "id": "UQn17WdPWU143uFimiBXU",
       "sourceId": "Afh12YPqclwO9ScxnpMbY",
       "targetId": "MMWPo9jatpxGpkIOMTe_I",
@@ -1571,12 +1527,6 @@
       "sourceId": "MMWPo9jatpxGpkIOMTe_I",
       "targetId": "Qg6iIjBzIMWmDoj6yokBK",
       "branch": "success"
-    },
-    {
-      "id": "Wz24IVqIFp6DWsORsDi3Z",
-      "sourceId": "49l799Hauy_c6GTHs9Ift",
-      "targetId": "tWiDeFW22Cmq5QqyuG5l0",
-      "branch": "failed"
     },
     {
       "id": "XbPmgw8y4ORVugedLNnkU",
