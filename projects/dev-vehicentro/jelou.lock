@@ -71,9 +71,9 @@ workflows:
   workflows/ventas.whatsapp.json:
     channel: WHATSAPP
     default: false
-    description: "Consulta de catálogo de vehículos, precios, especificaciones técnicas, agencias disponibles y asesoría comercial para compra de autos."
-    hash: "sha256:72be0202e795c6344ce71bf3cb8c70b7bcafd6bdec17dabea2f59f31b7862510"
-    lastPulledAt: "2026-11-17T00:12:06.081Z"
+    description: "Atiende el catálogo de la marca: modelos, precios, fichas, comparación y carrusel; deriva a cotización o a un asesor"
+    hash: "sha256:a344628a05a8fbc85e5dead0112da01233fa6b98f1bc808cf43412da1c8bde29"
+    lastPulledAt: "2026-11-17T04:31:37.860Z"
     name: Ventas
     skillId: 46694
     workflowId: 64837
@@ -90,6 +90,30 @@ tools:
     toolId: 8417
     versionIndex: 3
     workflowId: 64886
+  consultar-modelos-vehicentro:
+    contractHash: "sha256:a66de246dc3be67b892958f83a27d1a4292e50de06bb40181d647abf2c6822a1"
+    envelopeHash: "sha256:8d27eef4e2db53fc2eb359afe1a23373c1e2f6152b4fb73e7c399a69f4008b6c"
+    hash: "sha256:973a022c79cb3cd150456a6824cbf5d7bf30caea9a7ab152ca14d9dd6bdc50cf"
+    lastPulledAt: "2026-11-17T04:19:38.382Z"
+    latestVersion: 1.0.1
+    metaHash: "sha256:43e9d2b81c219302a03123164c6d488e4217c65ab2912a4b40437a12a802b6ff"
+    name: "Consultar modelos Vehicentro"
+    ownership: OWNED
+    toolId: 8424
+    versionIndex: 2
+    workflowId: 65072
+  enviar-carrusel-modelos:
+    contractHash: "sha256:f4a549c9afa0a73583c22b1bf86d521ef3f1c6dcae1a5991f033427dbfb53238"
+    envelopeHash: "sha256:7ec8fcfb142cd7a00c7b5cf4fd01b7b2c49d7554fe128ee6e2737bb050bbdf99"
+    hash: "sha256:f2a67dafdeda324e3430c99bc4537984d3436d5fb086e36258bf96c221293aef"
+    lastPulledAt: "2026-11-17T04:30:58.174Z"
+    latestVersion: 1.0.2
+    metaHash: "sha256:75ceb733f408fa2ce6493992c8d04ee12b7999bf1b613671b752912c11fdc77c"
+    name: "Enviar carrusel modelos"
+    ownership: OWNED
+    toolId: 8425
+    versionIndex: 3
+    workflowId: 65073
   verificador-campanas:
     contractHash: "sha256:6eea885af8c9d063a5a7b1bf834be92dda9e445ef13fbc0864d9391edd98785f"
     envelopeHash: "sha256:8ae56ae430d558412f7a2973e521760a1c1519f6489cf5b4191f374420afba3c"
