@@ -496,6 +496,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "T007/T008: Ventas reconstruida (agente de catálogo, tools vía veh-bdc, carrusel corregido a $user.botId). Falta ver el carrusel por WhatsApp."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "Resumen de avance (docs/04-implementacion/05-construccion/avance-2026-11-17.md) enviado por DM de Slack al Tech Lead (D. B.) para su reunión con el cliente del 17/11. Enviado desde la sesión de Slack de J. S., «de parte de Henry», con confirmación del implementador."
     }
   ],
   "puntos": {
