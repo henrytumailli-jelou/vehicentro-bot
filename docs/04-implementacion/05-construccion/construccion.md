@@ -215,3 +215,14 @@ Filas: **40**.
 | 2026-11-16 | Carril A: base `veh-fase1` (4 colecciones, API key en secreto) y `veh-bdc` desplegada; 12 pruebas unitarias OK | main `veh-bdc` | — | despliegue de Function | T014 (falta cerrar con V-01/V-02) | Secretos del BDC pendientes |
 
 | 2026-11-16 | D-28 en `veh-bdc` (4.4 antes del lead) | main `0aef523` | — | despliegue de Function | — | Spec v0.3 (HU-06 c5–c6, RF-007) |
+
+### Prueba manual del implementador sobre la versión anterior de DEV (2026-11-16, 20:51–20:53 hora de Ecuador)
+Conversación por WhatsApp en el canal DEV (número de prueba del implementador, enmascarado). Ejecución de Bienvenida `GwHgZm1CpjVi0480hpVfG`.
+| Hallazgo | Evidencia (ids) | Se corrige en |
+|---|---|---|
+| La tool «Consultar marcas Vehicentro» llama al BDC sin OAuth → **401 Unauthorized** las 4 veces | nodo `b7Km2nQxR1vN3wL5jTfYa`; ejecuciones `kqnVgHNilIA_LWq9IRTTQ`, `U69IVRA4bTkVSW54ak4fp`, `A5hS4qcmU9RbM4xQgU7pQ`, `TIBoI0lPoGjwCpk9RZPCZ` | T006 (la tool pasa a `veh-bdc /marcas`) |
+| Ante la falla, el agente dice «intente más tarde» y no deriva a un asesor: la persona queda sin salida (RN-09 pide contingencia y PMA) | mensajes del bot 20:52–20:53 | T006 + T011 |
+| «Verificador Campañas» falla al leer el historial del room (**404 ROOM_NOT_FOUND**); el origen no se guarda (la falla está manejada) | nodo `a1HtRm9kLp2vNw3xQf7Yb`; ejecución `2GAvsZWOgqdvyt2XPHLZA` | T004 (V-06) |
+| No se piden términos antes de conversar; el bot tutea | bienvenida 20:51 | T003 (P0) y paso a «usted» |
+| Corrió el nodo «Código» con el teléfono fijo (H-05) | ejecución de Bienvenida, nodo «Código» | T005 |
+| Cada turno del agente tarda 4 a 7 s | `executionTime` del `AI_TASK` | T015 (costos y modelo) |
