@@ -532,6 +532,10 @@
     {
       "fecha": "2026-11-17",
       "evento": "Push de Ventas (D-30) corrido por la persona; chequeo posterior al push 0 hallazgos. Tester: search_products → «No hay una tienda registrada» (V-08 abierto). Publicación en DEV bloqueada por el permiso del agente: la corre la persona."
+    },
+    {
+      "fecha": "2026-11-17",
+      "evento": "DEV publicado por la persona (id de publicación 01M7MWRDNCTEWSFFQJD5E89V94, «D-30 carrusel del Shop en Ventas»). Falta la prueba por WhatsApp de V-08."
     }
   ],
   "puntos": {
