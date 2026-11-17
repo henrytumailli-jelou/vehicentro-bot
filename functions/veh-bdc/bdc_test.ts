@@ -78,16 +78,42 @@ Deno.test("agencias: ciudades únicas y filtro sin acentos", async () => {
   assertEquals(d.agencias[0].horario, "L\nS");
 });
 
-Deno.test("lead 201 + 4.5 devuelve el asesor con correo en minúsculas", async () => {
+Deno.test("lead con agencia: asesor de 4.4; en pruebas no envía id_asesor", async () => {
+  let enviado = "";
   const { f, llamadas } = bdcFalso({
     "oauth/token": token,
+    botwa_asesores: { status: 200, body: { status: "success", data: [asesorRow] } },
     "botwa/TESTCLARO": { status: 201 },
-    botwa_existe_asesor: { status: 200, body: { status: "success", data: [asesorRow] } },
   });
-  const r = await nuevo(f).lead({ id_marca: 3, celular: "0991234567", id_modelo: 82, id_agencia: 2, notas: "x".repeat(2000) });
+  const espia: typeof fetch = (u, i) => {
+    if (String(u).includes("botwa/TESTCLARO")) enviado = String(i?.body ?? "");
+    return f(u, i);
+  };
+  const r = await nuevo(espia).lead({ id_marca: 3, celular: "0991234567", id_modelo: 82, id_agencia: 2, notas: "x".repeat(2000) });
   assertEquals(r.tipo, "ok");
   assertEquals(r.data?.asesor?.correo, "asesor@vehicentro.com");
+  assertEquals(enviado.includes("id_asesor"), false);
+  assertEquals(JSON.parse(enviado).notas.length, 1000);
   assertEquals(llamadas.filter((l) => l === "botwa/TESTCLARO").length, 1);
+});
+
+Deno.test("lead en producción: envía id_agencias e id_asesor de 4.4", async () => {
+  let enviado = "";
+  const { f } = bdcFalso({
+    "oauth/token": token,
+    botwa_asesores: { status: 200, body: { status: "success", data: [asesorRow] } },
+    "botwa/TESTCLARO": { status: 201 },
+  });
+  const espia: typeof fetch = (u, i) => {
+    if (String(u).includes("botwa/TESTCLARO")) enviado = String(i?.body ?? "");
+    return f(u, i);
+  };
+  _resetToken();
+  const b = new Bdc({ baseUrl: "https://x", clientId: "a", clientSecret: "b", idConexion: "TESTCLARO", enviarAsesor: true, fetch: espia, timeoutMs: 1000 });
+  await b.lead({ id_marca: 3, celular: "0991234567", id_modelo: 82, id_agencia: 2 });
+  const j = JSON.parse(enviado);
+  assertEquals(j.id_asesor, "1");
+  assertEquals(j.id_agencias, "2");
 });
 
 Deno.test("lead sin respuesta: NO reenvía; 4.5 vacío → incierto", async () => {

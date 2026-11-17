@@ -15,6 +15,7 @@ export interface Config {
   clientId: string;
   clientSecret: string;
   idConexion: string;
+  enviarAsesor?: boolean;
   fetch?: typeof fetch;
   timeoutMs?: number;
   log?: (msg: string, extra?: Record<string, unknown>) => void;
@@ -188,11 +189,19 @@ export class Bdc {
     return r.tipo === "ok" ? res("ok", asesor(r.data![0])) : { ...r, data: null };
   }
 
-  // Escritura: nunca se reintenta salvo un 401 (no llegó a registrarse).
-  // Con resultado incierto se verifica con 4.5 en vez de reenviar.
+  // Escritura (D-28): el asesor sale de 4.4 con la agencia elegida, ANTES del registro.
+  // En producción (enviarAsesor) el lead lleva id_agencias e id_asesor; en pruebas
+  // (TESTCLARO) no, como pide la documentación del cliente. El POST nunca se reintenta
+  // salvo un 401 (no llegó a registrarse); con resultado incierto se verifica con 4.5.
   async lead(l: LeadEntrada): Promise<Resultado<{ asesor: Asesor | null }>> {
     const cel = normalizarCelular(l.celular);
     if (!cel) return res("negocio", null, "celular inválido");
+    let asesorAgencia: Asesor | null = null;
+    if (l.id_agencia != null) {
+      const a = await this.asesorDeAgencia(Number(l.id_agencia), l.id_marca);
+      asesorAgencia = a.tipo === "ok" ? (a.data as Asesor) : null;
+    }
+    const conAsesor = !!(this.cfg.enviarAsesor && asesorAgencia);
     const body = JSON.stringify({
       nombres: (l.nombres || "Cliente WhatsApp").slice(0, 120),
       celular: cel,
@@ -200,7 +209,7 @@ export class Bdc {
       id_modelo: String(l.id_modelo),
       notas: (l.notas ?? "").slice(0, 1000),
       direccion: l.ciudad ?? null,
-      ...(l.id_agencia != null ? { id_agencias: String(l.id_agencia) } : {}),
+      ...(conAsesor ? { id_agencias: String(asesorAgencia!.id_agencia), id_asesor: asesorAgencia!.id } : {}),
     });
     let estado: "registrado" | "incierto" | "negocio" = "incierto";
     for (let intento = 0; intento < 2; intento++) {
@@ -225,15 +234,14 @@ export class Bdc {
       if (r.status === 201 || r.status === 200) estado = "registrado";
       else if (r.status === 400 || r.status === 404 || r.status === 401) estado = "negocio";
       else estado = "incierto";
-      this.cfg.log?.("bdc_lead", { status: r.status, estado, celular: enmascarar(cel) });
+      this.cfg.log?.("bdc_lead", { status: r.status, estado, con_asesor: conAsesor, asesor_4_4: !!asesorAgencia, celular: enmascarar(cel) });
       break;
     }
     if (estado === "negocio") return res("negocio", null, "el BDC rechazó el lead");
-    const a = await this.existeAsesor(l.id_marca, cel, l.cedula);
-    const asesorAsignado = a.tipo === "ok" ? (a.data as Asesor) : null;
-    if (estado === "registrado") return res("ok", { asesor: asesorAsignado });
-    // Incierto: si 4.5 ya devuelve asesor, el lead entró.
-    return asesorAsignado ? res("ok", { asesor: asesorAsignado }) : res("incierto", { asesor: null });
+    if (estado === "registrado") return res("ok", { asesor: asesorAgencia });
+    // Incierto: no se reenvía. Si 4.5 ya devuelve asesor, el lead entró.
+    const v = await this.existeAsesor(l.id_marca, cel, l.cedula);
+    return v.tipo === "ok" ? res("ok", { asesor: v.data as Asesor }) : res("incierto", { asesor: asesorAgencia });
   }
 }
 
