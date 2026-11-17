@@ -233,6 +233,20 @@ Ejecución `13695051-d1c5-47cc-af6d-b00c71c96467`: «Hola, quiero información d
 | Chequeo del push | 0 | 3 botones con destino roto tras el primer push (AP-33) → `--fix` → 0 |
 **Pendiente para la ronda manual por WhatsApp:** consentimiento vigente (no se vuelve a pedir), «No acepto», texto en vez de botón (QA-C08), asesor ya asignado con un celular real del cliente (UAT), origen desde un anuncio real (V-06), lista de marcas.
 
+### Ronda manual por WhatsApp del implementador — Flujo 1 publicado (2026-11-16, 23:13–23:14 hora de Ecuador)
+Número del implementador (enmascarado). Ejecución de Bienvenida `kqcDZo-9u2lpiIfsz-j5l`.
+| Caso | Esperado | Obtenido |
+|---|---|---|
+| Términos antes de cualquier dato (QA-C01) | Mensaje con botones antes de preguntar | ✅ Salió primero, con los 3 botones |
+| «Acepto» (QA-C02) | Registro con versión y fecha | ✅ `Guardar aceptación` OK |
+| Lista de marcas si no se infiere (HU-04 c2) | Lista interactiva con las 4 marcas de 4.1 | ✅ `send_interactive_message` con KEYTON, LYNK & CO, SINOTRUK AUTOS, SINOTRUK CAMIONETAS; la tool de marcas respondió vía `veh-bdc` |
+| «kyton» escrito (HU-04 c1) | KEYTON por coincidencia obvia | ✅ `marca=3`, `ventas` |
+| Celular con número real del canal (HU-03 c1) | No se pide; se usa el del canal | ✅ No se pidió; `Registrar usuario` OK |
+| 4.5 tras la marca | Sin asesor → Ventas | ✅ `tipo=vacio` → «Ir a Ventas» |
+| Origen sin anuncio | «directo» | ✅ |
+| **Ventas (Flujo 2, aún sin construir)** | — | ❌ El `HTTP` viejo de Ventas llama al BDC sin OAuth → **401**, y el `SKILL` sin destino falla: **la persona no recibe respuesta** después de elegir la marca. Se corrige con T007–T010 |
+| Historial del agente | — | ⚠️ El agente conserva en su historial los mensajes de conversaciones anteriores (versión vieja, en «tú»). No cambió el resultado; se revisa al cerrar F5 |
+
 ## 12. Pre-auditoría
 (se llena antes de la puerta)
 
