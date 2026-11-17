@@ -1,6 +1,6 @@
 # Spec funcional — Vehicentro · Fase 1
 
-Archivo: `docs/04-implementacion/02-spec/spec.md` · Fase 2 · **v0.2 (sin marcas abiertas; lista para la puerta)**
+Archivo: `docs/04-implementacion/02-spec/spec.md` · Fase 2 · **v0.3 (D-28 aplicado en F5)**
 SOW de origen: `01-sow/sow.json` v1.3 (aprobado por el cliente el 05/11/2026) + `docs/00-cliente/decisiones.md` D-12..D-26 · Fecha: 2026-11-16
 
 > Qué ve y necesita la persona, no cómo se construye (eso va en F3). Los ids de historia,
@@ -101,8 +101,8 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 2. **Dado** una cédula que no tiene 10 dígitos numéricos, **entonces** el bot la vuelve a pedir **1 vez**; al segundo error deriva a PMA con el contexto (RN-06).
 3. **Dado** una cédula válida, **entonces** el bot muestra **las ciudades donde la marca tiene agencias** (según 4.3) como lista interactiva; si son más de 10, la lista se pagina.
 4. **Dado** que elige una ciudad, **entonces** el bot muestra **solo las agencias de la marca en esa ciudad**, con nombre, dirección y horario, como lista interactiva (F2:Q9).
-5. **Dado** que elige una agencia y la marca y el modelo son conocidos, **entonces** se registra el lead en el BDC (F2:Q10) con: nombres, celular, cédula, modelo, **la agencia elegida (`id_agencias`, sin `id_asesor`; D-26)**, ciudad y unas `notas` (máximo **1000** caracteres) con la marca, los modelos consultados, la agencia elegida y el origen de la campaña (D-14). No se preguntan forma de pago ni entrada (D-15).
-6. **Dado** que el lead se registró (201), **entonces** se consulta 4.5 con la marca, la cédula y el celular, y el asesor que devuelve (de la agencia elegida) es el que atiende.
+5. **Dado** que elige una agencia y la marca y el modelo son conocidos, **entonces** se obtiene el asesor de esa agencia (4.4) y se registra el lead en el BDC (F2:Q10) con: nombres, celular, cédula, modelo, ciudad, unas `notas` y, en producción, la agencia y el asesor (`id_agencias`, `id_asesor`; D-28) (máximo **1000** caracteres) con la marca, los modelos consultados, la agencia elegida y el origen de la campaña (D-14). No se preguntan forma de pago ni entrada (D-15).
+6. **Dado** que el lead se registró (201), **entonces** el asesor que atiende es el que devolvió 4.4 para la agencia elegida (D-28). Si 4.4 no devolvió asesor, el lead entra sin asesor y la conversación va a la cola general de PMA.
 7. **Dado** que 4.5 devuelve un asesor, **entonces** el bot informa «Le atenderá {nombre del asesor} de la agencia {agencia}» (F2:Q11) y asigna la conversación en PMA **al usuario de PMA con el correo de ese asesor**, con marca, modelos consultados, agencia, ciudad y origen (F2:Q12).
 8. **Dado** que el correo del asesor no existe como usuario de PMA, **entonces** la conversación va a la cola general de PMA con el mismo contexto (RN-08).
 9. **Dado** que el usuario **ya tenía asesor** en esa marca (HU-03 o una consulta anterior), **entonces** no se registra un lead nuevo: se informa su asesor y se asigna en PMA.
@@ -201,7 +201,7 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 - **RF-004**: El agente DEBE responder precios, modelos y fichas solo con datos de la API 4.2; lo que el catálogo no cubre se deriva a un asesor. *(RN-05)*
 - **RF-005**: El agente DEBE pedir la cédula solo al cotizar y validar que tenga 10 dígitos (1 reintento; al segundo error, PMA). *(RN-06)*
 - **RF-006**: El agente DEBE mostrar solo las agencias de la marca en la ciudad elegida, con nombre, dirección y horario.
-- **RF-007**: El agente DEBE registrar el lead en el BDC con marca, modelo y la agencia elegida (sin asesor), y después obtener el asesor asignado con 4.5 para asignar la conversación en PMA por su correo; sin usuario de PMA con ese correo, cola general. *(RN-08, D-07, D-23)*
+- **RF-007**: El agente DEBE obtener el asesor de la agencia elegida (4.4), registrar el lead en el BDC con marca y modelo (y, en producción, con agencia y asesor) y asignar la conversación en PMA por el correo de ese asesor; sin asesor o sin usuario de PMA con ese correo, cola general. *(RN-08, D-07, D-28)*
 - **RF-008**: Dos registros con el mismo **celular + marca** son el mismo lead: el agente DEBE registrar como máximo 1 lead por marca y conversación. Ante un resultado incierto, DEBE verificar con 4.5 y, si no hay asesor, informar que está confirmando el registro y derivar a PMA; nunca pedir que lo reintente. *(AP-35)*
 - **RF-009**: El agente DEBE cerrar sin insistir ante falta de interés o interacción negativa. *(RN-07)*
 - **RF-010**: El agente DEBE agrupar los mensajes que lleguen con menos de 2 s de diferencia y responder una vez. *(D-05)*
@@ -253,8 +253,8 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 - **CE-006**: Leads registrados por día y tasa de cotización (cotizaciones / conversaciones Comerciales), como línea base para el cliente.
 
 ## Supuestos
-- **S-01 (tercero):** al recibir el lead con `id_agencias` y **sin** `id_asesor`, el BDC lo acepta (201), asigna un asesor **de esa agencia** al momento, y 4.5 lo devuelve en la consulta siguiente, también con la conexión `TESTCLARO`. Se verifica en F5 (**V-01**). Si el BDC rechaza `id_agencias` sin asesor o asigna otra agencia, el respaldo es pedir el asesor con 4.4 antes del registro (D-26).
-- **S-02:** se envía `id_agencias` de la agencia elegida sin `id_asesor` (D-26). La documentación dice «No enviar en pruebas»; con `TESTCLARO` se prueba igual en V-01 y, si el cliente lo objeta, solo en las pruebas con el cliente.
+- **S-01 (tercero) — resuelto en F5:** V-01 mostró que el BDC no asigna asesor al momento del registro (con TESTCLARO). Se usa 4.4 antes del registro (D-28).
+- **S-02:** en pruebas no se envían `id_agencias` ni `id_asesor` (documentación del cliente); la asignación con asesor real y el efecto de 4.4 en el reparto se prueban en la UAT con el cliente (A-09).
 - **S-03:** franja sin recordatorios 21:00–07:59 (el SOW dice «sin envíos nocturnos» sin horas). Se confirma en la UAT.
 - **S-04:** el catálogo del webview de Jelou Shop tiene los mismos modelos y precios que la API 4.2 (RN-05). Si difieren, el usuario vería dos precios. Responsable: implementador + cliente; se verifica en F3.
 - **S-05:** el nombre para el lead se toma del **nombre del perfil de WhatsApp**; si viene vacío, se registra «Cliente WhatsApp». No se pregunta (D-15: no se agregan preguntas fuera de alcance).

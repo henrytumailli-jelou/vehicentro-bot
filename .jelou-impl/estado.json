@@ -306,6 +306,12 @@
       "ver": "docs/00-cliente/decisiones.md D-27; plan.md «Decisiones confirmadas»",
       "decidio": "implementador",
       "nota": "Carrusel en vez de webview de Shop; reutilizar DEV; canal DEV solo pruebas; pruebas manuales."
+    },
+    {
+      "fecha": "2026-11-16",
+      "ver": "docs/00-cliente/decisiones.md D-28",
+      "decidio": "implementador",
+      "nota": "Asesor por 4.4 antes del lead; reemplaza D-23/D-26."
     }
   ],
   "insumos_pendientes": [
@@ -459,6 +465,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "V-02 confirmado (token y puerto 9443). V-01: lead TESTCLARO 201, pero 4.5 no devuelve asesor después del registro. 1 lead de prueba en el BDC (TESTCLARO, celular ficticio)."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "D-28 aplicado: veh-bdc pide el asesor a 4.4 antes del lead; id_asesor solo en producción (BDC_ENVIAR_ASESOR). Spec v0.3."
     }
   ],
   "puntos": {
@@ -643,8 +653,8 @@
       "fase": 5,
       "que": "El BDC acepta el lead con id_agencias y sin id_asesor (TESTCLARO), asigna un asesor de esa agencia y 4.5 lo devuelve de inmediato con email_usuario",
       "prueba": "POST de un lead de prueba con id_agencias y luego GET 4.5 con la misma marca, cédula y celular; si falla, respaldo con 4.4 (D-26)",
-      "estado": "falla parcial",
-      "resultado": "2026-11-16: POST con TESTCLARO sin id_agencias ni id_asesor → 201; 4.5 inmediatamente después → 0 resultados. El BDC no asigna asesor al momento (al menos con TESTCLARO). Respaldo D-26: asesor por 4.4 antes del POST. Pendiente decisión del implementador."
+      "estado": "resuelto con D-28",
+      "resultado": "2026-11-16: POST con TESTCLARO sin id_agencias ni id_asesor → 201; 4.5 inmediatamente después → 0 resultados. El BDC no asigna asesor al momento (al menos con TESTCLARO). Respaldo D-26: asesor por 4.4 antes del POST. Pendiente decisión del implementador. Decisión: 4.4 antes del lead (D-28), implementado y desplegado."
     },
     {
       "id": "V-02",

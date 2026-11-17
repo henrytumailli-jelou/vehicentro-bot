@@ -27,7 +27,7 @@ Sin mock: todos los servicios del BDC existen y tienen contrato confirmado.
 ### Supuestos de plataforma (se prueban antes de construir encima)
 | Id | Supuesto | Prueba | Resultado | ¿Cambia el diseño? |
 |---|---|---|---|---|
-| V-01 | Lead con `id_agencias` sin `id_asesor` + 4.5 devuelve el asesor de esa agencia | POST TESTCLARO **sin** `id_agencias` (la doc del cliente prohíbe enviarlo en pruebas) + 4.5 | **Falla parcial**: POST → 201; 4.5 inmediatamente después → 0 resultados. El BDC no asigna asesor al momento | **Sí**: D-23 no se puede cumplir tal cual; decisión pendiente (respaldo D-26: 4.4 antes del POST) |
+| V-01 | Lead con `id_agencias` sin `id_asesor` + 4.5 devuelve el asesor de esa agencia | POST TESTCLARO **sin** `id_agencias` (la doc del cliente prohíbe enviarlo en pruebas) + 4.5 | **Falla parcial**: POST → 201; 4.5 inmediatamente después → 0 resultados. El BDC no asigna asesor al momento | **Sí → D-28**: asesor por 4.4 antes del POST; `id_asesor` solo en producción. Desplegado (13 pruebas OK). 4.4 en vivo queda para la UAT (A-09) |
 | V-02 | Puerto 9443 + token OAuth desde la Function | workflow `veh-prueba-bdc` → `veh-bdc /estado`, `/marcas`, `/modelos` + logs de la Function | **Confirmado**: token OK (3600 s), marcas 200 (4), modelos 200 | no |
 | V-03 | `CONNECT` a un operador por correo | workflow de 2 nodos | pendiente | |
 | V-04 | Recordatorio por inactividad nativo (4 envíos, franja) | configuración en DEV con 1 min | pendiente | |
@@ -213,3 +213,5 @@ Filas: **40**.
 | 2026-11-16 | Arranque F5: CLI 4.29.0, diseño de construcción | — | — | — | — | Espejo de DEV sin subir hasta corregir H-05 |
 | 2026-11-16 | V-02 confirmado; V-01 falla parcial; 1 lead de prueba TESTCLARO (celular ficticio) | main `veh-bdc` logs | 0 hallazgos | draft (workflow de prueba) | — | El tester del CLI no ve los HTTP: evidencia por logs de la Function |
 | 2026-11-16 | Carril A: base `veh-fase1` (4 colecciones, API key en secreto) y `veh-bdc` desplegada; 12 pruebas unitarias OK | main `veh-bdc` | — | despliegue de Function | T014 (falta cerrar con V-01/V-02) | Secretos del BDC pendientes |
+
+| 2026-11-16 | D-28 en `veh-bdc` (4.4 antes del lead) | main `0aef523` | — | despliegue de Function | — | Spec v0.3 (HU-06 c5–c6, RF-007) |
