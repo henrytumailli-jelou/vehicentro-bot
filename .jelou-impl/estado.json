@@ -479,6 +479,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "D-29: «Derivar a Asesor» responde «Aquí va la asignación a PMA.» (draft de DEV). T011 sigue abierta hasta V-03."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "T006 construida y probada en el tester (7 casos). Consentimiento P0 aún no construido (T003): la bienvenida de DEV hoy no pide términos."
     }
   ],
   "puntos": {
@@ -696,7 +700,9 @@
     {
       "id": "V-07",
       "fase": 5,
-      "que": "Interior de las 5 tools de la organización (jelou tool pull) para pasar sus llamadas a veh-bdc"
+      "que": "Interior de las 5 tools de la organización (jelou tool pull) para pasar sus llamadas a veh-bdc",
+      "estado": "parcial",
+      "resultado": "2026-11-16: «Consultar marcas» y «Verificar cliente» traídas con jelou tool pull; «Consultar marcas» pasada a veh-bdc (v1.0.2). Faltan las otras 3 tools."
     }
   ],
   "equipo": {
