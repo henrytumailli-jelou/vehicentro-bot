@@ -197,7 +197,9 @@ Filas: **40**.
 | Tono | Usted (spec) | Los textos existentes en DEV tutean («tu asistente», «te conecto») | Se pasan a usted (spec, SOW). Sin cambio de alcance |
 | Consentimiento | Nodo determinista P0 | DEV lo resolvía dentro del agente (`acepta_lopdp` en memoria) | Se saca del agente a nodos deterministas (reglas 12 y 17). Ya estaba en el plan |
 | Teléfono | `$user` del canal | Nodo «Código» con un número fijo (H-05) | Se reemplaza (T005) |
-| Reglas de calidad | — | `qualityRules` en off | Propuesta al TL (§3) |
+| Reglas de calidad | — | `qualityRules` en off | Encendido `basico` con aprobación del TL (2026-11-16) |
+| Acceso a Datum desde los workflows | Nodos `DATUM` | Las bases v2 no se leen con el nodo `DATUM`: se usan nodos `HTTP` a `https://<slug>.jelou.cloud/api` con `x-api-key` = `{{$secret.DATUM_APIKEY_VEH_FASE1}}` | Mismo recurso aprobado; cambia el nodo. Sin cambio de alcance |
+| Rutas de `veh-bdc` | `GET /modelos/:id_marca`, etc. | `app()` genera rutas por herramienta: `/estado`, `/marcas`, `/modelos`, `/agencias`, `/asesor`, `/existe-asesor`, `/lead` con los parámetros en el cuerpo | Ajuste de forma, mismo contrato |
 
 ## 11. Pruebas por carril
 (se llena al cerrar cada carril)
@@ -209,3 +211,4 @@ Filas: **40**.
 | Fecha | Hito | Commit | Chequeo del push | Publicación | Tareas | Notas |
 |---|---|---|---|---|---|---|
 | 2026-11-16 | Arranque F5: CLI 4.29.0, diseño de construcción | — | — | — | — | Espejo de DEV sin subir hasta corregir H-05 |
+| 2026-11-16 | Carril A: base `veh-fase1` (4 colecciones, API key en secreto) y `veh-bdc` desplegada; 12 pruebas unitarias OK | main `veh-bdc` | — | despliegue de Function | T014 (falta cerrar con V-01/V-02) | Secretos del BDC pendientes |

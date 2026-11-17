@@ -245,6 +245,12 @@
       "fecha": "2026-11-16",
       "aprobo": "tech-lead",
       "fuente": "comunicada por el implementador"
+    },
+    {
+      "fase": 5,
+      "tema": "Inventario de recursos de construcción y qualityRules basico",
+      "fecha": "2026-11-16",
+      "aprobo": "tech-lead (D. B.)"
     }
   ],
   "bloqueos": [],
@@ -445,6 +451,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "F4 aprobada por la PM (J. C.). F5 iniciada: CLI 4.24.0 → 4.29.0, diseño de construcción (construccion.md) con inventario para aprobar, qualityRules en off (propuesta: basico)."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "Inventario y qualityRules aprobados por el TL. qualityRules=basico en la company. T014: base veh-fase1 + 4 colecciones + API key en secreto. T002: veh-bdc desplegada (12 pruebas unitarias en verde); faltan los secretos del BDC."
     }
   ],
   "puntos": {
@@ -616,6 +626,11 @@
       "fecha": "2026-11-16",
       "tipo": "cli",
       "descripcion": "scripts/novedades_cli.py no pudo leer `jelou --version` en Windows (Git Bash); no se revisaron las notas de 4.25–4.29 con el script."
+    },
+    {
+      "fecha": "2026-11-16",
+      "tipo": "regla",
+      "descripcion": "Un `jelou functions deploy` sin --profile tomó el perfil global de otra company; lo bloqueó la protección de jelou.json, sin cambios. Regla 3: --profile siempre."
     }
   ],
   "por_verificar": [
@@ -686,5 +701,46 @@
   "pruebas": {
     "whatsapp_automatizado": false,
     "ruta": "manual, una ronda por carril con guion"
-  }
+  },
+  "recursos": [
+    {
+      "recurso": "veh-fase1",
+      "tipo": "Databases v2",
+      "id": "01m7kg6p28j110cck0hy58qjee",
+      "alcance": "organización",
+      "creado": "2026-11-16",
+      "colecciones": [
+        "consentimientos",
+        "usuarios",
+        "viajes",
+        "leads"
+      ]
+    },
+    {
+      "recurso": "veh-bot",
+      "tipo": "API key de la base (records read/write)",
+      "alcance": "base",
+      "creado": "2026-11-16"
+    },
+    {
+      "recurso": "DATUM_APIKEY_VEH_FASE1",
+      "tipo": "secreto de company (JELOU_SECRET)",
+      "alcance": "company",
+      "creado": "2026-11-16"
+    },
+    {
+      "recurso": "veh-bdc",
+      "tipo": "Function",
+      "id": "func_01m7kg9fyreeb8e285xcgg5tz8",
+      "alcance": "organización",
+      "creado": "2026-11-16",
+      "nota": "secretos BDC_CLIENT_ID/SECRET pendientes de carga por una persona"
+    },
+    {
+      "recurso": "qualityRules=basico",
+      "tipo": "ajuste de company",
+      "alcance": "company (todos los proyectos)",
+      "creado": "2026-11-16"
+    }
+  ]
 }
