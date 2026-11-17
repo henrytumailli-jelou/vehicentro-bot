@@ -455,6 +455,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "Inventario y qualityRules aprobados por el TL. qualityRules=basico en la company. T014: base veh-fase1 + 4 colecciones + API key en secreto. T002: veh-bdc desplegada (12 pruebas unitarias en verde); faltan los secretos del BDC."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "V-02 confirmado (token y puerto 9443). V-01: lead TESTCLARO 201, pero 4.5 no devuelve asesor después del registro. 1 lead de prueba en el BDC (TESTCLARO, celular ficticio)."
     }
   ],
   "puntos": {
@@ -638,12 +642,16 @@
       "id": "V-01",
       "fase": 5,
       "que": "El BDC acepta el lead con id_agencias y sin id_asesor (TESTCLARO), asigna un asesor de esa agencia y 4.5 lo devuelve de inmediato con email_usuario",
-      "prueba": "POST de un lead de prueba con id_agencias y luego GET 4.5 con la misma marca, cédula y celular; si falla, respaldo con 4.4 (D-26)"
+      "prueba": "POST de un lead de prueba con id_agencias y luego GET 4.5 con la misma marca, cédula y celular; si falla, respaldo con 4.4 (D-26)",
+      "estado": "falla parcial",
+      "resultado": "2026-11-16: POST con TESTCLARO sin id_agencias ni id_asesor → 201; 4.5 inmediatamente después → 0 resultados. El BDC no asigna asesor al momento (al menos con TESTCLARO). Respaldo D-26: asesor por 4.4 antes del POST. Pendiente decisión del implementador."
     },
     {
       "id": "V-02",
       "fase": 5,
-      "que": "Salida al puerto 9443 y token OAuth desde la Function veh-bdc"
+      "que": "Salida al puerto 9443 y token OAuth desde la Function veh-bdc",
+      "estado": "confirmado",
+      "resultado": "2026-11-16: token OAuth OK (expira 3600 s) y puerto 9443 alcanzable desde veh-bdc; marcas 200 (n=4), modelos 200"
     },
     {
       "id": "V-03",
@@ -740,6 +748,19 @@
       "recurso": "qualityRules=basico",
       "tipo": "ajuste de company",
       "alcance": "company (todos los proyectos)",
+      "creado": "2026-11-16"
+    },
+    {
+      "recurso": "JELOU_FN_INVOKE_KEY",
+      "tipo": "secreto de organización (invoke key de Functions)",
+      "alcance": "organización",
+      "creado": "2026-11-16",
+      "autorizo": "implementador"
+    },
+    {
+      "recurso": "veh-prueba-bdc",
+      "tipo": "workflow de prueba (se borra al terminar F5)",
+      "alcance": "proyecto DEV",
       "creado": "2026-11-16"
     }
   ]
