@@ -156,10 +156,10 @@ Base Datum `veh-fase1`. Retención indefinida (D-18). Los booleanos se crean com
 
 > **Enmienda 2026-11-17 — D-30 (F3 reabierta desde F5).** El catálogo vuelve a **Jelou Shop**, como pide el SOW (Ecommerce WebView / catálogo de Shop). Cambia lo que este plan decía con D-27:
 > - **Catálogo:** los 10 modelos de la API 4.2 se cargan en el Shop de la company con `scripts/shop-catalogo/` (rama `main`): SKU `VEH-<id_modelo>`, categoría = marca, precio USD, descripción y fotos del BDC. Upsert por SKU: repetirlo actualiza, no duplica.
-> - **Ventas (`F2:Q4`):** la tool «Enviar carrusel modelos» se reemplaza por la tool nativa del agente **`search_products`** (carrusel del Shop). `F2:Q1–Q3` no cambian: precio y ficha escritos siguen saliendo de `veh-bdc` en vivo (RN-05).
+> - **Ventas (`F2:Q4`):** la tool «Enviar carrusel modelos» se reemplaza por el **carrusel del Shop**: tool `search_and_send_products_webview` de la app Jelou Shop (MCP) con `presentation: "carousel"` (corregido el 17/11: la nativa `search_products` solo devuelve datos). `F2:Q1–Q3` no cambian: precio y ficha escritos siguen saliendo de `veh-bdc` en vivo (RN-05).
 > - **Sincronización:** Function con un job cada hora que repite la carga (tarea nueva, después). Hasta entonces, el script se corre a mano cuando el cliente cambie su catálogo. Riesgo mientras tanto: el carrusel puede mostrar un precio viejo; la respuesta escrita usa el BDC.
 > - **Recurso de toda la company:** el catálogo del Shop lo comparte con el brain de producción, que hoy no lo usa (16/11). El «Sample Product» se desactivó (reversible).
-> - **Por verificar (V-08):** que `search_products` envía el carrusel por WhatsApp, también con una sola tarjeta (KEYTON tiene un solo modelo; la API de mensajes rechaza carruseles de 1 tarjeta, `jelou-conversational-ui` §7c).
+> - **Por verificar (V-08):** que el carrusel del Shop llega por WhatsApp, también con una sola tarjeta (KEYTON tiene un solo modelo; la API de mensajes rechaza carruseles de 1 tarjeta, `jelou-conversational-ui` §7c).
 > - Pide la ratificación del Tech Lead en la puerta de F5.
 
 | Familia | Opciones presentadas | Elegida | Quién | Fecha |

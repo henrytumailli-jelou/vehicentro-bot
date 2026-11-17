@@ -214,7 +214,13 @@ Filas: **40**.
 3. Resultado del 17/11: 10 productos (KEYTON 1, LYNK & CO 5, SINOTRUK AUTOS 2, SINOTRUK CAMIONETAS 2), 43 fotos, portada = foto 1 en los 10. Segunda corrida: 10 «updated», 0 fotos duplicadas.
 4. Búsqueda del Shop comprobada: «keyton» → 1, «lynk & co» → 5, «sinotruk camionetas» → 2 (sin mezclar marcas), «pick up 4x4» → 1. «furgoneta eléctrica» → 0: el BDC no trae características del modelo KEYTON (pedirlas al cliente o dejar que el agente busque por marca).
 
-**Ventas — cambio nodo por nodo** (solo el nodo `AI_TASK` «Agente Ventas»):
+**Corrección del 17/11 (V-08 falló):** la tool nativa `search_products` **no envía carrusel**: en el canal real solo devuelve datos al agente (sin imágenes ni mensaje), y el agente decía «Catálogo enviado» sin haber enviado nada (H-06). El carrusel del Shop es la tool **`search_and_send_products_webview` de la app Jelou Shop (MCP) con `presentation: "carousel"`** (anuncio en #product-updates del 19/06/2026: hasta 10 productos, WhatsApp Cloud API y Gupshup CAPI; confirmado en el contrato vivo de `jelou marketplace inspect jelou-shop`). Cambio aplicado:
+- `connections.tools`: sale la nativa `search_products`.
+- `connections.mcp`: entra la instalación de Jelou Shop (`01M0ZMHJ82E2H4GYSFX6V6GFZC`). La conexión MCP no permite elegir tools: el agente ve las 12 del Shop; el prompt limita el uso a `search_and_send_products_webview` (nada de carrito ni pago).
+- Prompt: siempre `presentation="carousel"` y `queries` = marca activa (+ modelo o segmento); la tool envía el carrusel sola; el agente no repite la lista ni dice «enviado» si la tool no lo confirmó.
+- Por verificar en WhatsApp: carrusel de LYNK & CO (5 tarjetas) y de KEYTON (1 tarjeta).
+
+**Ventas — primer cambio (reemplazado por la corrección de arriba)** (solo el nodo `AI_TASK` «Agente Ventas»):
 - `connections.tools`: sale «Enviar carrusel modelos» (8425); entra la nativa `{name: "search_products", external: false}`. Se quedan `send_interactive_message`, «Consultar modelos Vehicentro» y «Consultar marcas Vehicentro».
 - Prompt, sección Herramientas: `search_products` con `product` = marca activa (+ modelo o segmento si lo pidió) y `top_k` 10; cada producto trae SKU `VEH-<id_modelo>`, de ahí sale el `id_modelo` del `end_function`. Si no devuelve productos: respuesta con «Consultar modelos» y botones. El resto del prompt (guardrails, botones Ver catálogo / Cotizar / Agencias, `end_function`) no cambia.
 - La tool 8425 queda en la organización sin usar (producción no la usa); se retira al cerrar F5.
