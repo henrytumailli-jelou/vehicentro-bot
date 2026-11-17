@@ -275,6 +275,13 @@ El tester no sigue el paso de Bienvenida a Ventas (`§1.7`: no sigue ejecuciones
 | Errores corregidos en la prueba | — | Lectura de memoria sin valor por defecto (memoria v2 falla si la clave no existe) y tool sin `inputs` en el agente |
 Hallazgo extra: la tool vieja «Verificador Campañas» también usaba `$bot.id`, por eso su 404. Ya no se usa.
 
+### D-30 — Ventas con el carrusel del Shop (tester del CLI, draft de DEV, 2026-11-17)
+Push del 17/11 (lo corrió la persona; 1 operación, verificado por el servidor, 0 bloqueados). Chequeo posterior al push: 8 workflows, **0 hallazgos**. Ejecución `34bac12d-5298-41f4-973e-556859feea15`.
+| Caso | Esperado | Obtenido |
+|---|---|---|
+| «Muéstreme el catálogo de LYNK & CO» | `search_products` con la marca → carrusel del Shop (HU-05 c4, D-30) | ⚠️ El agente llamó `search_products` con `product="LYNK & CO"`, `top_k=10`, pero el Shop respondió **«No hay una tienda registrada»**. El agente cayó al respaldo (Consultar modelos) y listó los 5 modelos en texto con precio del BDC. **V-08 abierto:** falta saber si es una limitación del tester (sesión sintética sin el canal real, como el `INVALID_USER_ID` del carrusel anterior) o si la tienda no está asociada al canal DEV (la doc dice «catálogo configurado en el canal» y no explica dónde). Se confirma por WhatsApp después de publicar |
+Aviso heredado del push (no bloquea): `ai_fallback_model` en «Agente Ventas» (sin modelo de respaldo). Va a la pre-auditoría.
+
 ## 12. Pre-auditoría
 (se llena antes de la puerta)
 
@@ -287,6 +294,7 @@ Hallazgo extra: la tool vieja «Verificador Campañas» también usaba `$bot.id`
 
 | 2026-11-16 | D-28 en `veh-bdc` (4.4 antes del lead) | main `0aef523` | — | despliegue de Function | — | Spec v0.3 (HU-06 c5–c6, RF-007) |
 | 2026-11-17 | D-30: catálogo del BDC cargado en Jelou Shop (10 productos, 43 fotos); «Sample Product» desactivado | main `scripts/shop-catalogo` | — | — (catálogo del Shop, sin publicación) | T026 | Retoma otra persona (vacaciones de H. T.) |
+| 2026-11-17 | D-30: Ventas usa `search_products` (carrusel del Shop) | main `b3be0be` | 0 hallazgos | draft (sin publicar: la publicación la corre la persona) | T026 | Tester: «No hay una tienda registrada» → V-08 |
 
 ### Prueba manual del implementador sobre la versión anterior de DEV (2026-11-16, 20:51–20:53 hora de Ecuador)
 Conversación por WhatsApp en el canal DEV (número de prueba del implementador, enmascarado). Ejecución de Bienvenida `GwHgZm1CpjVi0480hpVfG`.

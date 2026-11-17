@@ -528,6 +528,10 @@
     {
       "fecha": "2026-11-17",
       "evento": "D-30: catálogo del BDC (10 modelos) cargado en Jelou Shop con scripts/shop-catalogo; Sample Product desactivado; búsqueda del Shop comprobada por marca. Ventas modificado en local (search_products en lugar de «Enviar carrusel modelos») y validado sin errores; el push quedó bloqueado por el permiso del agente y lo hace una persona."
+    },
+    {
+      "fecha": "2026-11-17",
+      "evento": "Push de Ventas (D-30) corrido por la persona; chequeo posterior al push 0 hallazgos. Tester: search_products → «No hay una tienda registrada» (V-08 abierto). Publicación en DEV bloqueada por el permiso del agente: la corre la persona."
     }
   ],
   "puntos": {
@@ -724,6 +728,11 @@
       "fecha": "2026-11-17",
       "tipo": "plantilla",
       "descripcion": "capacidades-jelou.md no menciona la tool nativa search_products (carrusel del Shop) ni el límite de 512 KB por imagen del Shop; la doc pública no dice que search_products dibuje carrusel. Proponer a §1 (Catálogo) y §1.7."
+    },
+    {
+      "fecha": "2026-11-17",
+      "tipo": "cli",
+      "descripcion": "`jelou push` no acepta rutas (se usa --workflow <id|slug>); el agente dio primero un comando con ruta. La doc de search_products no explica cómo se asocia la tienda de Jelou Shop al canal («No hay una tienda registrada»)."
     }
   ],
   "por_verificar": [
@@ -776,7 +785,8 @@
       "fase": 5,
       "que": "La tool nativa search_products envía el carrusel del Shop por WhatsApp desde el agente de Ventas, también con 1 sola tarjeta (KEYTON)",
       "prueba": "Ronda por WhatsApp en el canal DEV: «ver catálogo» de KEYTON y de LYNK & CO",
-      "estado": "pendiente (falta el push de Ventas)"
+      "estado": "abierto",
+      "resultado": "2026-11-17: push OK y chequeo 0. En el tester, search_products respondió «No hay una tienda registrada»; el agente usó el respaldo (Consultar modelos) y respondió en texto. Falta publicar DEV y probar por WhatsApp para saber si es el tester o la asociación tienda-canal."
     }
   ],
   "equipo": {
