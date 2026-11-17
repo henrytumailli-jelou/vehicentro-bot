@@ -492,6 +492,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "T004 corregida: origen desde $memory._referral."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "T007/T008: Ventas reconstruida (agente de catálogo, tools vía veh-bdc, carrusel corregido a $user.botId). Falta ver el carrusel por WhatsApp."
     }
   ],
   "puntos": {
@@ -673,6 +677,11 @@
       "fecha": "2026-11-16",
       "tipo": "plantilla",
       "descripcion": "El origen de anuncios CTWA está documentado como $memory._referral en docs.jelou.ai, pero no aparece en las skills locales (jelou-build-workflows, jelou-expert) y el MCP de docs pedía autenticación; se construyó primero leyendo el room. Proponer el dato a capacidades-jelou.md §1.7 y a jelou-expert."
+    },
+    {
+      "fecha": "2026-11-16",
+      "tipo": "plantilla",
+      "descripcion": "$bot no existe dentro de una tool (ni en producción): usar $user.botId. Las tools heredadas de DEV lo usaban y fallaban sin error visible. Proponer a capacidades-jelou.md §1.7."
     }
   ],
   "por_verificar": [

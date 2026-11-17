@@ -247,6 +247,16 @@ Número del implementador (enmascarado). Ejecución de Bienvenida `kqcDZo-9u2lpi
 | **Ventas (Flujo 2, aún sin construir)** | — | ❌ El `HTTP` viejo de Ventas llama al BDC sin OAuth → **401**, y el `SKILL` sin destino falla: **la persona no recibe respuesta** después de elegir la marca. Se corrige con T007–T010 |
 | Historial del agente | — | ⚠️ El agente conserva en su historial los mensajes de conversaciones anteriores (versión vieja, en «tú»). No cambió el resultado; se revisa al cerrar F5 |
 
+### T007/T008 — Ventas (tester del CLI con Ventas como objetivo, 2026-11-16)
+El tester no sigue el paso de Bienvenida a Ventas (`§1.7`: no sigue ejecuciones hijas), así que Ventas se probó directo. Ejecución `28b25a8b-b5a3-4b3f-9d22-b4ba58b0aa13`.
+| Caso | Esperado (spec) | Obtenido |
+|---|---|---|
+| «Hola, quiero saber precios de la marca keyton» | Precio y ficha solo de la API (HU-05 c1, RN-05); botones Ver catálogo / Cotizar / Agencias (c3) | ✅ `Consultar marcas` → id 3; `Consultar modelos` vía `veh-bdc` → FURGONETA M70L EV, USD 22.990, batería y autonomía de la ficha; botones enviados |
+| «Muéstreme el catálogo de LYNK & CO» (cambio de marca, c6) | Carrusel de la nueva marca | ⚠️ Cambio de marca OK (id 7); el carrusel **falló**: la tool armaba la URL con `$bot.id`, que el motor no define en una tool (ni en producción). Corregido a `$user.botId` (v1.0.2). En el tester sigue fallando solo porque el usuario de prueba no es un teléfono (`INVALID_USER_ID`); la consulta de modelos y las 2+ tarjetas sí se arman. **Se confirma por WhatsApp** |
+| «Quiero cotizar» | Pasa a cotización (por ahora a un asesor, hasta T009) | ✅ `accion=cotizar` → «Derivar a Asesor» con marca y modelos consultados |
+| Errores corregidos en la prueba | — | Lectura de memoria sin valor por defecto (memoria v2 falla si la clave no existe) y tool sin `inputs` en el agente |
+Hallazgo extra: la tool vieja «Verificador Campañas» también usaba `$bot.id`, por eso su 404. Ya no se usa.
+
 ## 12. Pre-auditoría
 (se llena antes de la puerta)
 
@@ -273,3 +283,4 @@ Conversación por WhatsApp en el canal DEV (número de prueba del implementador,
 | 2026-11-16 | T006: tool «Consultar marcas» v1.0.2 vía `veh-bdc`; bienvenida con guardrails, un solo asistente, en usted, sin rutas a Repuestos/Talleres/Crédito; Derivar recibe todo lo demás | draft DEV | 0 hallazgos (4 pushes) | draft (sin publicar) | T006 | 7 casos en el tester |
 | 2026-11-16 | Flujo 1: P0, origen, celular/BSUID, 4.5; H-05 corregido; espejo de DEV en main | main `55efa7b` | 0 (tras `--fix`) | draft (sin publicar) | T003, T005 | T004 abierta por V-06 |
 | 2026-11-16 | T004: origen desde `$memory._referral` (getJson); sin lectura del room | main | 0 | draft | — | El implementador señaló la variable documentada |
+| 2026-11-16 | T007/T008: Ventas con agente de catálogo y guardrails; tools de modelos (v1.0.1) y carrusel (v1.0.2) vía `veh-bdc`; precarga del catálogo y nodos viejos eliminados | main `2130bcf` | 0 | draft (sin publicar) | T007 | T008 abierta hasta ver el carrusel por WhatsApp |
