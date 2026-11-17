@@ -304,6 +304,7 @@ Aviso heredado del push (no bloquea): `ai_fallback_model` en «Agente Ventas» (
 | 2026-11-17 | D-30: catálogo del BDC cargado en Jelou Shop (10 productos, 43 fotos); «Sample Product» desactivado | main `scripts/shop-catalogo` | — | — (catálogo del Shop, sin publicación) | T026 | Retoma otra persona (vacaciones de H. T.) |
 | 2026-11-17 | D-30: Ventas usa `search_products` (carrusel del Shop) | main `b3be0be` | 0 hallazgos | publicado en DEV por la persona: id de publicación `01M7MWRDNCTEWSFFQJD5E89V94` (13:57 UTC; publica todo el borrador de DEV) | T026 | Tester: «No hay una tienda registrada» → V-08. El CLI deja «Bienvenida y Enrutamiento» como pendiente en su registro local (no pudo confirmar ese archivo contra la publicación); el borrador está limpio |
 | 2026-11-17 | D-30 corregido: carrusel del Shop vía MCP (`presentation: carousel`) | main `676c8fa` | 0 hallazgos | publicado en DEV por la persona: `01M7MXDTQZE934EJZQCPMYT718` (14:08 UTC) | T026 | V-08 por verificar en WhatsApp |
+| 2026-11-17 | H-07: el aviso de pedido del Shop pasa a cotizar | main `acf009a` | 0 hallazgos | publicado en DEV por la persona: `01M7MXXEFQ831Q7RJJ7D73CXJ5` (14:17 UTC) | T026 | Falta la ronda: elegir modelo + KEYTON |
 
 ### Prueba manual del implementador sobre la versión anterior de DEV (2026-11-16, 20:51–20:53 hora de Ecuador)
 Conversación por WhatsApp en el canal DEV (número de prueba del implementador, enmascarado). Ejecución de Bienvenida `GwHgZm1CpjVi0480hpVfG`.

@@ -562,6 +562,10 @@
     {
       "fecha": "2026-11-17",
       "evento": "Ronda por WhatsApp: carrusel del Shop OK (LYNK & CO). H-07: el aviso de pedido del Shop no avanzaba; corregido en local (pasa a cotizar). Falta push/publicación."
+    },
+    {
+      "fecha": "2026-11-17",
+      "evento": "H-07 publicado en DEV por la persona (01M7MXXEFQ831Q7RJJ7D73CXJ5); chequeo posterior al push 0 hallazgos."
     }
   ],
   "puntos": {
