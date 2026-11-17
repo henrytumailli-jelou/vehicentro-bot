@@ -1,0 +1,7 @@
+{
+  "$schema": "https://jelou.ai/schemas/jelou.json",
+  "function": "veh-bdc",
+  "id": "func_01m7kg9fyreeb8e285xcgg5tz8",
+  "organizationId": "01KYQZ99CEW9FK05441V9J980F",
+  "entrypoint": "index.ts"
+}

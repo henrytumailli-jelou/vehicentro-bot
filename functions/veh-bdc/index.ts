@@ -1,0 +1,74 @@
+import { app, define, z } from "@jelou/functions";
+import { Bdc } from "./bdc.ts";
+
+// Adaptador del BDC de Vehicentro. Toda respuesta: {ok, tipo, data, mensaje?}
+// con tipo ok | vacio | negocio | indisponible | incierto.
+// Secretos: BDC_CLIENT_ID, BDC_CLIENT_SECRET. Configuración: BDC_BASE_URL, BDC_ID_CONEXION.
+
+type Ctx = { env: { get(k: string): string | undefined }; log: (...a: unknown[]) => void };
+
+function bdc(ctx: Ctx) {
+  return new Bdc({
+    baseUrl: ctx.env.get("BDC_BASE_URL") ?? "https://bdc.vehicentro.com:9443/ords/ws_vehicentro",
+    clientId: ctx.env.get("BDC_CLIENT_ID") ?? "",
+    clientSecret: ctx.env.get("BDC_CLIENT_SECRET") ?? "",
+    idConexion: ctx.env.get("BDC_ID_CONEXION") ?? "TESTCLARO",
+    log: (m, e) => ctx.log(m, e ? JSON.stringify(e) : ""),
+  });
+}
+
+const idMarca = z.coerce.number().int().positive();
+
+export default app({
+  config: { timeout: 25_000, mcp: false },
+  tools: {
+    estado: define({
+      description: "Comprueba que el BDC entrega token",
+      input: z.object({}),
+      handler: async (_i, ctx) => {
+        const t = await bdc(ctx).token(true);
+        return { ok: !!t, tipo: t ? "ok" : "indisponible", data: null };
+      },
+    }),
+    marcas: define({
+      description: "Marcas habilitadas (4.1)",
+      input: z.object({}),
+      handler: (_i, ctx) => bdc(ctx).marcas(),
+    }),
+    modelos: define({
+      description: "Modelos de una marca (4.2), con la ficha parseada; busqueda opcional por nombre",
+      input: z.object({ id_marca: idMarca, busqueda: z.string().optional() }),
+      handler: (i, ctx) => bdc(ctx).modelos(i.id_marca, i.busqueda),
+    }),
+    agencias: define({
+      description: "Agencias de una marca (4.3) y sus ciudades; filtra por ciudad si se envía",
+      input: z.object({ id_marca: idMarca, ciudad: z.string().optional() }),
+      handler: (i, ctx) => bdc(ctx).agencias(i.id_marca, i.ciudad),
+    }),
+    asesor: define({
+      description: "Asesor por agencia y marca (4.4), respaldo",
+      input: z.object({ id_agencia: z.coerce.number().int().positive(), id_marca: idMarca }),
+      handler: (i, ctx) => bdc(ctx).asesorDeAgencia(i.id_agencia, i.id_marca),
+    }),
+    existeAsesor: define({
+      description: "Asesor ya asignado al cliente en la marca (4.5)",
+      input: z.object({ id_marca: idMarca, celular: z.string(), cedula: z.string().optional() }),
+      handler: (i, ctx) => bdc(ctx).existeAsesor(i.id_marca, i.celular, i.cedula),
+    }),
+    lead: define({
+      description: "Registra el lead en el BDC (sin id_asesor) y devuelve el asesor asignado (4.5)",
+      input: z.object({
+        id_marca: idMarca,
+        celular: z.string(),
+        cedula: z.string().optional(),
+        nombres: z.string().optional(),
+        id_modelo: z.union([z.string(), z.number()]),
+        id_agencia: z.union([z.string(), z.number()]).optional(),
+        ciudad: z.string().optional(),
+        notas: z.string().optional(),
+      }),
+      config: { methods: ["POST"] },
+      handler: (i, ctx) => bdc(ctx).lead(i),
+    }),
+  },
+});
