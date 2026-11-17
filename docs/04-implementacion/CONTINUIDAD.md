@@ -7,16 +7,18 @@ Personas por rol o iniciales (regla 5). El detalle de cada punto está en los ar
 Bot de WhatsApp para Vehicentro (company **13744**, perfil CLI `dev-vehicentro`), Fase 1: bienvenida y enrutamiento por marca, catálogo y agencias, registro del lead en el BDC del cliente y asignación al teleasesor en PMA. Va por **partner** (Claro).
 
 ## 2. Estado actual
-- **Fase:** **F2 (spec funcional)**. F0 la aprobó el Tech Lead (D. B.) y F1 la PM (J. C.), ambas el 16/11. F1 pasó con 2 excepciones autorizadas por la PM: insumos del cliente sin fecha y lint del SOW sin regenerar.
+- **Fase:** **F4 (tareas)**, lista para la puerta (aprueba la PM). Puertas aprobadas: F0, F2 y F3 por el TL (D. B.); F1 por la PM (J. C.), con 2 excepciones. Todas el 16/11.
 - **Brief/SOW v1.3 aprobado por el cliente:** correo de A. F. del 05/11/2026. **No se emite una versión nueva**: las aclaraciones van en `docs/00-cliente/decisiones.md` y se resuelven en la spec funcional (F2).
 - **Brain:** se construye en **DEV Vehicentro** (`01KYX1WCS2GBQXT355BK6ZHVMD`) y después se **promueve a producción EC-02-113-01 Vehicentro** (`01KYQZ99V5PPM2JSMQF4EMH55X`). DEV ya tiene skills con la forma de la Fase 1 (Bienvenida y Enrutamiento, Ventas, Repuestos, Talleres, Derivar a Asesor; también Crédito Directo, que está fuera de alcance).
 - **Repo:** `henrytumailli-jelou/vehicentro-bot` (privado). `main` para el bot; `vehicentro-sow-hu` para los docs y el estado.
 - **ClickUp:** madre `86e2aact9` (Ai Solution); subtareas F0–F10 creadas. F0 está en curso y el resto en «to do».
 
 ## 3. Qué sigue
-1. **F2 · Spec funcional** (ver sección 8).
-2. **Avisos pendientes en #team-deployment:** arranque, SOW aprobado y las excepciones de F1. Los hace el implementador.
-3. **Insumos del cliente sin fecha:** `id_conexion` de producción por marca, antes del go-live.
+1. **Puerta de F4** (PM): tareas en ClickUp con SP (`04-tareas/tareas.md`), matriz de QA sembrada (`06-qa/matriz.md`).
+2. **F5 · Construcción** en DEV Vehicentro, en el orden de `tareas.md`. Antes de T002, una persona carga los secretos OAuth de `veh-bdc`. Primero las verificaciones V-01 a V-07 (`03-plan/plan.md`).
+3. **Avisos pendientes en #team-deployment:** arranque, SOW aprobado, excepciones de F1. Avisar a la PM y al partner de **D-27** (carrusel en vez de webview) antes de la UAT.
+4. **H-01** (consentimiento) con el TL: bloquea F6. **H-05** (teléfono fijo en un nodo de DEV): se corrige en T005.
+5. El espejo de DEV (`projects/dev-vehicentro/`) está en el clon local y **no se sube** hasta corregir H-05 (excluido en `.git/info/exclude`).
 
 ## 4. Decisiones clave (detalle en `docs/00-cliente/decisiones.md`)
 | # | Decisión |
@@ -70,7 +72,11 @@ Bot de WhatsApp para Vehicentro (company **13744**, perfil CLI `dev-vehicentro`)
 | `docs/04-implementacion/00-prekickoff/BRIEF.md` | Brief de trabajo v1.3 |
 | `docs/04-implementacion/01-sow/` | `sow.json` v1.3 (anonimizado en el repo) + paquete v1.3 (simulador, diagramas, lint) |
 | `docs/04-implementacion/02-apis/` | Revisión de las APIs + colección Postman |
-| `docs/04-implementacion/04-tareas/estimacion-preliminar.md` | Story Points |
+| `docs/04-implementacion/02-spec/spec.md` | Spec funcional v0.2 (aprobada) |
+| `docs/04-implementacion/03-plan/plan.md` | Plan técnico v0.1 (aprobado) |
+| `docs/04-implementacion/04-tareas/tareas.md` | Tareas T001–T025 con SP y espejo de ClickUp |
+| `docs/04-implementacion/06-qa/matriz.md` | Matriz de QA sembrada |
+| `docs/04-implementacion/04-tareas/estimacion-preliminar.md` | Story Points (estimación aprobada) |
 | **Fuera del repo** | Brief v1.3 `.docx`/`.pdf` y cronograma `.xlsx`/`.pdf`: en la carpeta local del implementador (`Implementaciones/Vehicentro spec/docs/04-implementacion/01-sow/v1.3/`). Pedírselos a HT si hacen falta |
 
 ## 10. Cómo retomar
