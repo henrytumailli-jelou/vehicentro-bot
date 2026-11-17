@@ -75,6 +75,38 @@
       "F8": "1dfg0rkjr65",
       "F9": "1dfg0rkjr66",
       "F10": "1dfg0rkjr67"
+    },
+    "tareas": {
+      "T001": "1dfg0rkn7ck",
+      "T002": "1dfg0rkn7cm",
+      "T003": "1dfg0rkn7cn",
+      "T004": "1dfg0rkn7cp",
+      "T005": "1dfg0rkn7cq",
+      "T006": "1dfg0rkn7cr",
+      "T007": "1dfg0rkn7ct",
+      "T008": "1dfg0rkn7cu",
+      "T009": "1dfg0rkn7cv",
+      "T010": "1dfg0rkn7cw",
+      "T011": "1dfg0rkn7cx",
+      "T012": "1dfg0rkn7cy",
+      "T013": "1dfg0rkn7cz",
+      "T014": "1dfg0rkn7d0",
+      "T015": "1dfg0rkn7d1",
+      "T016": "1dfg0rkn7d5",
+      "T017": "1dfg0rkn7d6",
+      "T018": "1dfg0rkn7d7",
+      "T019": "1dfg0rkn7d8",
+      "T020": "1dfg0rkn7d9",
+      "T021": "1dfg0rkn7da",
+      "T022": "1dfg0rkn7db",
+      "T023": "1dfg0rkn7dc",
+      "T024": "1dfg0rkn7dd",
+      "T025": "1dfg0rkn7de"
+    },
+    "tareas_c": {
+      "terminos": "1dfg0rkn7d2",
+      "id_conexion": "1dfg0rkn7d3",
+      "teleasesores_pma": "1dfg0rkn7d4"
     }
   },
   "slack": {
@@ -94,7 +126,7 @@
     "9": "tech-lead+pm",
     "10": "pm"
   },
-  "fase_actual": 3,
+  "fase_actual": 4,
   "puertas": [
     {
       "fase": 0,
@@ -113,6 +145,12 @@
       "fecha": "2026-11-16",
       "aprobado_por": "tech-lead (D. B.)",
       "evidencia": "docs/04-implementacion/02-spec/spec.md v0.2"
+    },
+    {
+      "fase": 3,
+      "fecha": "2026-11-16",
+      "aprobado_por": "tech-lead (D. B.)",
+      "evidencia": "docs/04-implementacion/03-plan/plan.md v0.1"
     }
   ],
   "excepciones": [
@@ -271,7 +309,8 @@
       "insumo": "id_conexion por marca para el ingreso de lead (A-08)",
       "responsable": "Cliente",
       "estado": "parcial",
-      "nota": "Se usa TESTCLARO; faltan los id_conexion de producción por marca antes del go-live (D-13)."
+      "nota": "Se usa TESTCLARO; faltan los id_conexion de producción por marca antes del go-live (D-13).",
+      "clickup_tarea": "1dfg0rkn7d3"
     },
     {
       "id": "C-03",
@@ -286,6 +325,29 @@
       "responsable": "Cliente",
       "estado": "cerrado",
       "nota": "Respondido en D-12, D-14, D-19. Queda abierto solo cómo probar la asignación con asesor sin afectar el reparto (A-09)."
+    },
+    {
+      "id": "C-05",
+      "insumo": "Links de términos y política de datos + versión",
+      "responsable": "Cliente",
+      "estado": "pendiente",
+      "modo": "esperar",
+      "contrato": "no aplica",
+      "hu": [
+        "HU-02"
+      ],
+      "clickup_tarea": "1dfg0rkn7d2"
+    },
+    {
+      "id": "C-06",
+      "insumo": "Teleasesores como operadores de PMA con el correo del BDC",
+      "responsable": "Cliente / Jelou",
+      "estado": "pendiente",
+      "modo": "esperar",
+      "hu": [
+        "HU-06"
+      ],
+      "clickup_tarea": "1dfg0rkn7d4"
     }
   ],
   "golive": {
@@ -369,19 +431,170 @@
     {
       "fecha": "2026-11-16",
       "evento": "F2 aprobada por el Tech Lead (D. B.); F3 en curso. Análisis de DEV (7 skills, 5 tools sin OAuth, Shop vacío, sin Datum ni secretos) y de producción (no usa las tools). Plan técnico v0.1."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "F3 aprobada por el TL (D. B.), con publicación sin confirmar en DEV. F4: 25 tareas T### + 3 [C] en ClickUp (bajo F5 y F6) con SP; SP en F7–F10; tareas.md y matriz de QA sembrada (52 criterios + 9 de consentimiento + 11 del plan + 7 verificaciones)."
     }
   ],
   "puntos": {
     "sow_horas": 126,
-    "estimado_sp": 87,
-    "estimado_horas": 348,
-    "diferencia_pct": 176,
+    "estimado_sp": 84,
+    "estimado_horas": 336,
+    "diferencia_pct": 151,
     "revisado_por": "tech-lead (D. B.)",
     "estado": "aprobada por el Tech Lead (v2, 87 SP / 348 h). Se escribe en ClickUp al crear las T### en F4.",
     "archivo": "docs/04-implementacion/04-tareas/estimacion-preliminar.md",
-    "tareas": [],
+    "tareas": [
+      {
+        "id": "T001",
+        "clickup": "1dfg0rkn7ck",
+        "sp": 1
+      },
+      {
+        "id": "T002",
+        "clickup": "1dfg0rkn7cm",
+        "sp": 5
+      },
+      {
+        "id": "T003",
+        "clickup": "1dfg0rkn7cn",
+        "sp": 3
+      },
+      {
+        "id": "T004",
+        "clickup": "1dfg0rkn7cp",
+        "sp": 3
+      },
+      {
+        "id": "T005",
+        "clickup": "1dfg0rkn7cq",
+        "sp": 5
+      },
+      {
+        "id": "T006",
+        "clickup": "1dfg0rkn7cr",
+        "sp": 5
+      },
+      {
+        "id": "T007",
+        "clickup": "1dfg0rkn7ct",
+        "sp": 3
+      },
+      {
+        "id": "T008",
+        "clickup": "1dfg0rkn7cu",
+        "sp": 3
+      },
+      {
+        "id": "T009",
+        "clickup": "1dfg0rkn7cv",
+        "sp": 3
+      },
+      {
+        "id": "T010",
+        "clickup": "1dfg0rkn7cw",
+        "sp": 5
+      },
+      {
+        "id": "T011",
+        "clickup": "1dfg0rkn7cx",
+        "sp": 3
+      },
+      {
+        "id": "T012",
+        "clickup": "1dfg0rkn7cy",
+        "sp": 5
+      },
+      {
+        "id": "T013",
+        "clickup": "1dfg0rkn7cz",
+        "sp": 3
+      },
+      {
+        "id": "T014",
+        "clickup": "1dfg0rkn7d0",
+        "sp": 2
+      },
+      {
+        "id": "T015",
+        "clickup": "1dfg0rkn7d1",
+        "sp": 2
+      },
+      {
+        "id": "T016",
+        "clickup": "1dfg0rkn7d5",
+        "sp": 2
+      },
+      {
+        "id": "T017",
+        "clickup": "1dfg0rkn7d6",
+        "sp": 2
+      },
+      {
+        "id": "T018",
+        "clickup": "1dfg0rkn7d7",
+        "sp": 2
+      },
+      {
+        "id": "T019",
+        "clickup": "1dfg0rkn7d8",
+        "sp": 2
+      },
+      {
+        "id": "T020",
+        "clickup": "1dfg0rkn7d9",
+        "sp": 2
+      },
+      {
+        "id": "T021",
+        "clickup": "1dfg0rkn7da",
+        "sp": 2
+      },
+      {
+        "id": "T022",
+        "clickup": "1dfg0rkn7db",
+        "sp": 2
+      },
+      {
+        "id": "T023",
+        "clickup": "1dfg0rkn7dc",
+        "sp": 2
+      },
+      {
+        "id": "T024",
+        "clickup": "1dfg0rkn7dd",
+        "sp": 2
+      },
+      {
+        "id": "T025",
+        "clickup": "1dfg0rkn7de",
+        "sp": 3
+      },
+      {
+        "id": "F7",
+        "clickup": "1dfg0rkjr64",
+        "sp": 3
+      },
+      {
+        "id": "F8",
+        "clickup": "1dfg0rkjr65",
+        "sp": 2
+      },
+      {
+        "id": "F9",
+        "clickup": "1dfg0rkjr66",
+        "sp": 5
+      },
+      {
+        "id": "F10",
+        "clickup": "1dfg0rkjr67",
+        "sp": 2
+      }
+    ],
     "fecha_aprobacion": "2026-11-16",
-    "fuente_aprobacion": "comunicada por el implementador"
+    "fuente_aprobacion": "comunicada por el implementador",
+    "nota": "F0–F8 sin estabilización: 79 SP / 316 h. Se descuentan los 3 SP del arranque ya hecho."
   },
   "fricciones": [
     {
@@ -451,8 +664,9 @@
     "brain": "01KYX1WCS2GBQXT355BK6ZHVMD",
     "canal": "DEV Vehicentro",
     "sirve_usuarios_reales": false,
-    "publicar_sin_confirmar": "pendiente de autorización del Tech Lead en la puerta de F3",
-    "modo": "reutilizar y ajustar"
+    "publicar_sin_confirmar": true,
+    "modo": "reutilizar y ajustar",
+    "autorizo": "tech-lead (D. B.), puerta F3 2026-11-16"
   },
   "pruebas": {
     "whatsapp_automatizado": false,
