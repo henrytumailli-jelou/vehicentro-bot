@@ -312,6 +312,12 @@
       "ver": "docs/00-cliente/decisiones.md D-28",
       "decidio": "implementador",
       "nota": "Asesor por 4.4 antes del lead; reemplaza D-23/D-26."
+    },
+    {
+      "fecha": "2026-11-16",
+      "ver": "docs/00-cliente/decisiones.md D-29",
+      "decidio": "implementador",
+      "nota": "Mensaje provisional en lugar del CONNECT hasta tener operador de prueba (V-03)."
     }
   ],
   "insumos_pendientes": [
@@ -469,6 +475,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "D-28 aplicado: veh-bdc pide el asesor a 4.4 antes del lead; id_asesor solo en producción (BDC_ENVIAR_ASESOR). Spec v0.3."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "D-29: «Derivar a Asesor» responde «Aquí va la asignación a PMA.» (draft de DEV). T011 sigue abierta hasta V-03."
     }
   ],
   "puntos": {

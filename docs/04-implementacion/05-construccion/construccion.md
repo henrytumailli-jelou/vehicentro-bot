@@ -201,6 +201,11 @@ Filas: **40**.
 | Acceso a Datum desde los workflows | Nodos `DATUM` | Las bases v2 no se leen con el nodo `DATUM`: se usan nodos `HTTP` a `https://<slug>.jelou.cloud/api` con `x-api-key` = `{{$secret.DATUM_APIKEY_VEH_FASE1}}` | Mismo recurso aprobado; cambia el nodo. Sin cambio de alcance |
 | Rutas de `veh-bdc` | `GET /modelos/:id_marca`, etc. | `app()` genera rutas por herramienta: `/estado`, `/marcas`, `/modelos`, `/agencias`, `/asesor`, `/existe-asesor`, `/lead` con los parámetros en el cuerpo | Ajuste de forma, mismo contrato |
 
+### Desvío temporal D-29
+| Qué | Plan decía | Hoy | Decisión |
+|---|---|---|---|
+| Derivar a Asesor | `CONNECT` al operador por correo + cola general, 4 salidas | Un mensaje «Aquí va la asignación a PMA.» (el `CONNECT` y sus 2 mensajes se quitaron; respaldo local del archivo anterior) | Implementador, 2026-11-16, hasta V-03. **Bloquea la puerta de F5** si sigue así |
+
 ## 11. Pruebas por carril
 (se llena al cerrar cada carril)
 
@@ -226,3 +231,4 @@ Conversación por WhatsApp en el canal DEV (número de prueba del implementador,
 | No se piden términos antes de conversar; el bot tutea | bienvenida 20:51 | T003 (P0) y paso a «usted» |
 | Corrió el nodo «Código» con el teléfono fijo (H-05) | ejecución de Bienvenida, nodo «Código» | T005 |
 | Cada turno del agente tarda 4 a 7 s | `executionTime` del `AI_TASK` | T015 (costos y modelo) |
+| 2026-11-16 | D-29: Derivar a Asesor con mensaje provisional | — | 0 hallazgos | draft (sin publicar) | — | Tester: 2 nodos, sin fallas |
