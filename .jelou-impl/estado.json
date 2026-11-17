@@ -222,6 +222,13 @@
       "tipo": "defecto",
       "descripcion": "Ventas (D-30): el agente afirma «Catálogo enviado» sin enviar nada; search_products solo devuelve datos. Prompt incorrecto + supuesto de plataforma no confirmado antes de construir.",
       "estado": "corregido en local, por verificar"
+    },
+    {
+      "id": "H-07",
+      "fase": 5,
+      "tipo": "defecto",
+      "descripcion": "Ventas: el aviso de pedido del Shop (type SUCCESS, al elegir un modelo en el carrusel) se trataba como tema ajeno y la conversación no avanzaba. Corregido en local: pasa a cotizar con id_modelo del SKU.",
+      "estado": "corregido en local, por verificar"
     }
   ],
   "skills": {
@@ -551,6 +558,10 @@
     {
       "fecha": "2026-11-17",
       "evento": "Push y publicación de la corrección (carrusel del Shop vía MCP) corridos por la persona; publicación 01M7MXDTQZE934EJZQCPMYT718; chequeo posterior al push 0 hallazgos."
+    },
+    {
+      "fecha": "2026-11-17",
+      "evento": "Ronda por WhatsApp: carrusel del Shop OK (LYNK & CO). H-07: el aviso de pedido del Shop no avanzaba; corregido en local (pasa a cotizar). Falta push/publicación."
     }
   ],
   "puntos": {
@@ -809,7 +820,7 @@
       "fase": 5,
       "que": "El carrusel del Shop (search_and_send_products_webview con presentation=carousel, app Jelou Shop por MCP) llega por WhatsApp desde Ventas, también con 1 tarjeta (KEYTON)",
       "prueba": "Ronda por WhatsApp en el canal DEV: «ver catálogo» de KEYTON y de LYNK & CO",
-      "estado": "pendiente: publicado en DEV (01M7MXDTQZE934EJZQCPMYT718), falta la ronda por WhatsApp",
+      "estado": "carrusel LYNK & CO confirmado por WhatsApp (17/11 14:12 UTC); falta KEYTON (1 tarjeta) y la elección de modelo (H-07)",
       "resultado": "2026-11-17: push OK y chequeo 0. En el tester, search_products respondió «No hay una tienda registrada»; el agente usó el respaldo (Consultar modelos) y respondió en texto. Falta publicar DEV y probar por WhatsApp para saber si es el tester o la asociación tienda-canal. | 2026-11-17 14:02–14:03 UTC, WhatsApp DEV: en el canal real search_products SÍ encuentra la tienda (lo del tester era limitación del tester) y devuelve los 5 LYNK & CO, pero solo como datos para el agente (sin imágenes y sin enviar mensaje). No hay carrusel. El agente respondió «Catálogo LYNK & CO enviado» porque el prompt decía que la tool envía el catálogo visual (defecto del prompt, D-30)."
     }
   ],

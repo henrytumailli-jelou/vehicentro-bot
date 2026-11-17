@@ -219,6 +219,8 @@ Filas: **40**.
 - `connections.mcp`: entra la instalación de Jelou Shop (`01M0ZMHJ82E2H4GYSFX6V6GFZC`). La conexión MCP no permite elegir tools: el agente ve las 12 del Shop; el prompt limita el uso a `search_and_send_products_webview` (nada de carrito ni pago).
 - Prompt: siempre `presentation="carousel"` y `queries` = marca activa (+ modelo o segmento); la tool envía el carrusel sola; el agente no repite la lista ni dice «enviado» si la tool no lo confirmó.
 - Por verificar en WhatsApp: carrusel de LYNK & CO (5 tarjetas) y de KEYTON (1 tarjeta).
+- **Ronda del 17/11, 14:12 UTC:** ✅ el carrusel del Shop llegó (LYNK & CO). ❌ Al elegir un modelo en la página del Shop y tocar realizar pedido, el Shop envía «⏳ Estamos procesando tu pedido...» y le pasa al agente un aviso `{"type":"SUCCESS","description":"Tu pedido ha sido realizado con éxito","data":[{sku, product_name, price…}]}`; el agente lo trató como tema ajeno («Puedo ayudarle únicamente con vehículos…») y no avanzó (H-07).
+- **Corrección H-07:** el aviso `SUCCESS` del Shop es la elección del vehículo → `end_function accion=cotizar` con `id_modelo` = número del SKU (`VEH-161` → 161) y `modelo_nombre`; sin hablar de carrito ni pago. Tras el carrusel, un solo mensaje con botones («Toque *Ver detalles*…»). Efecto secundario conocido: cada «pedido» crea una orden en el Shop (no es una venta; se lista en Shop → Pedidos).
 
 **Ventas — primer cambio (reemplazado por la corrección de arriba)** (solo el nodo `AI_TASK` «Agente Ventas»):
 - `connections.tools`: sale «Enviar carrusel modelos» (8425); entra la nativa `{name: "search_products", external: false}`. Se quedan `send_interactive_message`, «Consultar modelos Vehicentro» y «Consultar marcas Vehicentro».
