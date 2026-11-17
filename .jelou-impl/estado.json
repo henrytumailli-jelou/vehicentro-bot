@@ -94,7 +94,7 @@
     "9": "tech-lead+pm",
     "10": "pm"
   },
-  "fase_actual": 2,
+  "fase_actual": 3,
   "puertas": [
     {
       "fase": 0,
@@ -107,6 +107,12 @@
       "fecha": "2026-11-16",
       "aprobado_por": "pm (J. C.)",
       "evidencia": "Brief v1.3 aprobado por el cliente (05/11); decisiones.md D-12..D-24; estimacion-preliminar.md"
+    },
+    {
+      "fase": 2,
+      "fecha": "2026-11-16",
+      "aprobado_por": "tech-lead (D. B.)",
+      "evidencia": "docs/04-implementacion/02-spec/spec.md v0.2"
     }
   ],
   "excepciones": [
@@ -157,6 +163,13 @@
       "descripcion": "El PDF de APIs del cliente trae datos personales reales en los ejemplos: no se sube al repo (regla 5)",
       "estado": "cerrado",
       "cierre": "2026-11-16: el implementador borró el PDF de docs/"
+    },
+    {
+      "id": "H-05",
+      "fase": 3,
+      "tipo": "datos personales / configuración de pruebas",
+      "descripcion": "En DEV, el nodo CODE de «Bienvenida y Enrutamiento» reemplaza el teléfono del usuario por un número fijo (aparentemente de pruebas) y toma $user.id como teléfono (riesgo BSUID). Se corrige en la plataforma en F5; el espejo no se sube con ese dato.",
+      "estado": "abierto"
     }
   ],
   "skills": {
@@ -237,6 +250,12 @@
       "ver": "docs/00-cliente/decisiones.md D-25, D-26",
       "decidio": "implementador",
       "nota": "Un solo asistente para las 4 marcas; lead con id_agencias sin id_asesor."
+    },
+    {
+      "fecha": "2026-11-16",
+      "ver": "docs/00-cliente/decisiones.md D-27; plan.md «Decisiones confirmadas»",
+      "decidio": "implementador",
+      "nota": "Carrusel en vez de webview de Shop; reutilizar DEV; canal DEV solo pruebas; pruebas manuales."
     }
   ],
   "insumos_pendientes": [
@@ -346,6 +365,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "Spec v0.2: marcas cerradas con D-25 y D-26. Lista para la puerta de F2 (aprueba el Tech Lead)."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "F2 aprobada por el Tech Lead (D. B.); F3 en curso. Análisis de DEV (7 skills, 5 tools sin OAuth, Shop vacío, sin Datum ni secretos) y de producción (no usa las tools). Plan técnico v0.1."
     }
   ],
   "puntos": {
@@ -373,6 +396,36 @@
       "fase": 5,
       "que": "El BDC acepta el lead con id_agencias y sin id_asesor (TESTCLARO), asigna un asesor de esa agencia y 4.5 lo devuelve de inmediato con email_usuario",
       "prueba": "POST de un lead de prueba con id_agencias y luego GET 4.5 con la misma marca, cédula y celular; si falla, respaldo con 4.4 (D-26)"
+    },
+    {
+      "id": "V-02",
+      "fase": 5,
+      "que": "Salida al puerto 9443 y token OAuth desde la Function veh-bdc"
+    },
+    {
+      "id": "V-03",
+      "fase": 5,
+      "que": "CONNECT asigna a un operador por su correo"
+    },
+    {
+      "id": "V-04",
+      "fase": 5,
+      "que": "Recordatorio por inactividad nativo con máximo 4 envíos y franja horaria"
+    },
+    {
+      "id": "V-05",
+      "fase": 5,
+      "que": "Agrupación de mensajes de 2 s configurable"
+    },
+    {
+      "id": "V-06",
+      "fase": 5,
+      "que": "Origen del anuncio que entregan Meta y TikTok"
+    },
+    {
+      "id": "V-07",
+      "fase": 5,
+      "que": "Interior de las 5 tools de la organización (jelou tool pull) para pasar sus llamadas a veh-bdc"
     }
   ],
   "equipo": {
@@ -393,5 +446,16 @@
       "tema": "SOW aprobado (hito F1) + excepciones de F1",
       "decidio": "implementador lo deja para después (2026-11-16)"
     }
-  ]
+  ],
+  "construccion": {
+    "brain": "01KYX1WCS2GBQXT355BK6ZHVMD",
+    "canal": "DEV Vehicentro",
+    "sirve_usuarios_reales": false,
+    "publicar_sin_confirmar": "pendiente de autorización del Tech Lead en la puerta de F3",
+    "modo": "reutilizar y ajustar"
+  },
+  "pruebas": {
+    "whatsapp_automatizado": false,
+    "ruta": "manual, una ronda por carril con guion"
+  }
 }

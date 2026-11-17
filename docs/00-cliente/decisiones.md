@@ -49,3 +49,4 @@ Compromisos:
 | D-24 | Aprobación de D-07 | No requiere ratificación de Comercial: el proyecto va por partner y el Brief v1.3 aprobado ya lo incluye. Q-CP-1 cerrada |
 | D-25 | Persona del asistente | **Un solo asistente de Vehicentro para las 4 marcas** (por ahora); ajusta «persona por marca» del SOW |
 | D-26 | Agencia elegida en el lead | El lead se registra con `id_agencias` de la agencia elegida y **sin** `id_asesor`; el BDC asigna el asesor de esa agencia y 4.5 lo devuelve. Respaldo: 4.4 antes del registro. Se verifica en V-01 |
+| D-27 | Catálogo | **Carrusel en el chat** con la API 4.2 (tool «Enviar carrusel modelos», ya existe) en lugar del webview de Jelou Shop, cuyo catálogo está vacío. Cambia el Ecommerce WebView del SOW: hay que avisar al PM y al partner antes de la UAT |
