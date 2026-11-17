@@ -47,3 +47,5 @@ Compromisos:
 | D-22 | Ecommerce WebView | Es el webview que ya existe en Jelou Shop; no se desarrolla |
 | D-23 | Asignación del asesor (D-07) | **Primero se registra el lead** (POST, sin `id_asesor`; el BDC lo asigna) y **después se consulta 4.5 Existe asesor**, que devuelve el asesor con su correo para asignar la conversación en PMA. Si 4.5 ya devolvía asesor al inicio, se usa ese. 4.4 queda como respaldo. Por verificar en F5: que el BDC asigna al momento del POST (también con `TESTCLARO`) |
 | D-24 | Aprobación de D-07 | No requiere ratificación de Comercial: el proyecto va por partner y el Brief v1.3 aprobado ya lo incluye. Q-CP-1 cerrada |
+| D-25 | Persona del asistente | **Un solo asistente de Vehicentro para las 4 marcas** (por ahora); ajusta «persona por marca» del SOW |
+| D-26 | Agencia elegida en el lead | El lead se registra con `id_agencias` de la agencia elegida y **sin** `id_asesor`; el BDC asigna el asesor de esa agencia y 4.5 lo devuelve. Respaldo: 4.4 antes del registro. Se verifica en V-01 |

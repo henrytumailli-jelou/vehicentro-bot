@@ -231,6 +231,12 @@
       "ver": "docs/00-cliente/decisiones.md D-23, D-24",
       "decidio": "implementador",
       "nota": "D-07: POST del lead y luego 4.5 para obtener el correo del asesor; no requiere Comercial (partner, Brief aprobado)."
+    },
+    {
+      "fecha": "2026-11-16",
+      "ver": "docs/00-cliente/decisiones.md D-25, D-26",
+      "decidio": "implementador",
+      "nota": "Un solo asistente para las 4 marcas; lead con id_agencias sin id_asesor."
     }
   ],
   "insumos_pendientes": [
@@ -336,6 +342,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "F2: borrador v0.1 de la spec funcional (docs/04-implementacion/02-spec/spec.md). 9 HU, RF-000..015, 2 marcas abiertas (persona por marca, asignación por agencia elegida). HU-02 escrita según la regla 17 (H-01 pendiente con el TL)."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "Spec v0.2: marcas cerradas con D-25 y D-26. Lista para la puerta de F2 (aprueba el Tech Lead)."
     }
   ],
   "puntos": {
@@ -361,8 +371,8 @@
     {
       "id": "V-01",
       "fase": 5,
-      "que": "El BDC asigna asesor al recibir el POST (con TESTCLARO) y 4.5 lo devuelve de inmediato con email_usuario",
-      "prueba": "POST de un lead de prueba y luego GET 4.5 con la misma marca, cédula y celular"
+      "que": "El BDC acepta el lead con id_agencias y sin id_asesor (TESTCLARO), asigna un asesor de esa agencia y 4.5 lo devuelve de inmediato con email_usuario",
+      "prueba": "POST de un lead de prueba con id_agencias y luego GET 4.5 con la misma marca, cédula y celular; si falla, respaldo con 4.4 (D-26)"
     }
   ],
   "equipo": {

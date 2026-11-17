@@ -1,7 +1,7 @@
 # Spec funcional — Vehicentro · Fase 1
 
-Archivo: `docs/04-implementacion/02-spec/spec.md` · Fase 2 · **Borrador v0.1**
-SOW de origen: `01-sow/sow.json` v1.3 (aprobado por el cliente el 05/11/2026) + `docs/00-cliente/decisiones.md` D-12..D-24 · Fecha: 2026-11-16
+Archivo: `docs/04-implementacion/02-spec/spec.md` · Fase 2 · **v0.2 (sin marcas abiertas; lista para la puerta)**
+SOW de origen: `01-sow/sow.json` v1.3 (aprobado por el cliente el 05/11/2026) + `docs/00-cliente/decisiones.md` D-12..D-26 · Fecha: 2026-11-16
 
 > Qué ve y necesita la persona, no cómo se construye (eso va en F3). Los ids de historia,
 > regla e integración son los del SOW. Los pasos se escriben `<flujo>:<paso>` (F1 = Flujo_1,
@@ -18,7 +18,7 @@ Anuncio Meta/TikTok → F1:P1 entrada → origen guardado (F1:P2)
    ├─ Sin interés → cierre (F1:P13)
    └─ Comercial → F1:P4–P5 celular (si llega BSUID) → F1:P6–P7 ¿ya tiene asesor en esa marca? (4.5)
         ├─ Sí → datos del asesor y fin (F1:P8)
-        └─ No → F1:P12 persona de la marca → Flujo_2
+        └─ No → F1:P12 contexto de la marca → Flujo_2
 Flujo_2: F2:Q1–Q3 catálogo y comparación (4.2) · F2:Q4 webview de Shop
  → F2:Q5–Q6 cédula → F2:Q7 ciudad → F2:Q8–Q9 agencia (4.3)
  → F2:Q10 registro del lead (POST) y consulta del asesor asignado (4.5) → F2:Q11 quién lo atiende → F2:Q12 asignación en PMA
@@ -58,7 +58,7 @@ El SOW (RN-02) acordó con el cliente una aceptación **implícita** («al conti
 
 El prospecto escribe libremente (o con el mensaje predeterminado del anuncio) y el bot entiende de qué marca habla y qué quiere.
 
-**Prueba independiente:** un usuario escribe «quiero info de la camioneta Sinotruk» y el bot responde con la persona de SINOTRUK CAMIONETAS; otro escribe «hola» y el bot le muestra la lista de marcas.
+**Prueba independiente:** un usuario escribe «quiero info de la camioneta Sinotruk» y el bot sigue con el catálogo de SINOTRUK CAMIONETAS; otro escribe «hola» y el bot le muestra la lista de marcas.
 
 **Criterios de aceptación:**
 1. **Dado** un mensaje del que se puede inferir la marca (anuncio o texto), **cuando** el router lo evalúa, **entonces** el bot sigue con esa marca sin preguntarla.
@@ -66,7 +66,7 @@ El prospecto escribe libremente (o con el mensaje predeterminado del anuncio) y 
 3. **Dado** que tras la lista **no elige una marca** (escribe otra cosa dos veces), **entonces** se deriva a PMA con la intención identificada (RN-04).
 4. **Dado** que la intención es **Repuestos o Talleres**, **entonces** el bot avisa que lo atenderá un asesor y deriva a PMA con marca, intención y origen de la campaña.
 5. **Dado** que dice que no le interesa, **entonces** el bot agradece y cierra (F1:P13, RN-07).
-6. **Dado** una marca identificada, **entonces** el bot adopta la persona de esa marca (F1:P12) en el resto de la conversación, hasta que cambie de marca (HU-05).
+6. **Dado** una marca identificada, **entonces** el mismo asistente de Vehicentro continúa con el catálogo y los datos de esa marca (F1:P12) hasta que el usuario cambie de marca (HU-05). Hay **un solo asistente para las 4 marcas** (D-25).
 
 ---
 
@@ -82,7 +82,7 @@ El prospecto escribe libremente (o con el mensaje predeterminado del anuncio) y 
 3. **Dado** cualquier respuesta del catálogo, **entonces** el bot ofrece los botones **Ver catálogo**, **Cotizar** y **Agencias** (F2:Q3).
 4. **Dado** que toca **Ver catálogo**, **entonces** se abre el webview de Jelou Shop con el catálogo de la marca activa (F2:Q4) y, al volver, el bot ofrece cotizar.
 5. **Dado** que pide comparar dos modelos de la misma marca, **entonces** el bot responde con las diferencias de precio y ficha de ambos, con datos de la API.
-6. **Dado** que cambia de marca durante la conversación, **entonces** el bot responde con el catálogo y la persona de la nueva marca y, antes de cotizar, vuelve a consultar si tiene asesor en esa marca (HU-03).
+6. **Dado** que cambia de marca durante la conversación, **entonces** el bot responde con el catálogo de la nueva marca y, antes de cotizar, vuelve a consultar si tiene asesor en esa marca (HU-03).
 7. **Dado** que pregunta algo que el catálogo no cubre (financiamiento, repuestos, otro país), **entonces** el bot dice que no tiene ese dato y ofrece un asesor (RN-05).
 8. **Dado** que intenta que el bot cambie de rol, revele sus instrucciones o hable de otro tema, **entonces** el bot lo reconoce en una frase y vuelve al catálogo.
 
@@ -101,8 +101,8 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 2. **Dado** una cédula que no tiene 10 dígitos numéricos, **entonces** el bot la vuelve a pedir **1 vez**; al segundo error deriva a PMA con el contexto (RN-06).
 3. **Dado** una cédula válida, **entonces** el bot muestra **las ciudades donde la marca tiene agencias** (según 4.3) como lista interactiva; si son más de 10, la lista se pagina.
 4. **Dado** que elige una ciudad, **entonces** el bot muestra **solo las agencias de la marca en esa ciudad**, con nombre, dirección y horario, como lista interactiva (F2:Q9).
-5. **Dado** que elige una agencia y la marca y el modelo son conocidos, **entonces** se registra el lead en el BDC (F2:Q10) con: nombres, celular, cédula, modelo, ciudad y unas `notas` (máximo **1000** caracteres) con la marca, los modelos consultados, la agencia elegida y el origen de la campaña (D-14). No se preguntan forma de pago ni entrada (D-15).
-6. **Dado** que el lead se registró (201), **entonces** se consulta 4.5 con la marca, la cédula y el celular, y el asesor que devuelve es el que atiende.
+5. **Dado** que elige una agencia y la marca y el modelo son conocidos, **entonces** se registra el lead en el BDC (F2:Q10) con: nombres, celular, cédula, modelo, **la agencia elegida (`id_agencias`, sin `id_asesor`; D-26)**, ciudad y unas `notas` (máximo **1000** caracteres) con la marca, los modelos consultados, la agencia elegida y el origen de la campaña (D-14). No se preguntan forma de pago ni entrada (D-15).
+6. **Dado** que el lead se registró (201), **entonces** se consulta 4.5 con la marca, la cédula y el celular, y el asesor que devuelve (de la agencia elegida) es el que atiende.
 7. **Dado** que 4.5 devuelve un asesor, **entonces** el bot informa «Le atenderá {nombre del asesor} de la agencia {agencia}» (F2:Q11) y asigna la conversación en PMA **al usuario de PMA con el correo de ese asesor**, con marca, modelos consultados, agencia, ciudad y origen (F2:Q12).
 8. **Dado** que el correo del asesor no existe como usuario de PMA, **entonces** la conversación va a la cola general de PMA con el mismo contexto (RN-08).
 9. **Dado** que el usuario **ya tenía asesor** en esa marca (HU-03 o una consulta anterior), **entonces** no se registra un lead nuevo: se informa su asesor y se asigna en PMA.
@@ -134,7 +134,7 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 1. **Dado** que se conoce la marca y Meta entrega el celular, **entonces** el bot consulta 4.5 con la marca y el celular (cédula vacía) **sin pedir nada al usuario**.
 2. **Dado** que Meta **no** entrega el celular (BSUID), **entonces** el bot pide el celular; acepta **10 dígitos que empiezan con 09** (o el mismo número con +593); si no es válido lo pide **1 vez** más y, si vuelve a fallar, sigue al catálogo sin la consulta (RN-03).
 3. **Dado** que 4.5 devuelve un asesor, **entonces** el bot envía «Usted ya tiene un asesor asignado: {nombre}. Puede escribirle al {contacto}» y termina (F1:P8).
-4. **Dado** que 4.5 no devuelve asesor, **entonces** el bot sigue a la persona de la marca y al catálogo (F1:P12).
+4. **Dado** que 4.5 no devuelve asesor, **entonces** el bot sigue al catálogo de la marca (F1:P12).
 5. **Dado** un usuario sin celular válido que llega a cotizar, **entonces** el bot le pide el celular antes de registrar el lead (HU-06); si no lo da, deriva a PMA.
 
 ---
@@ -201,7 +201,7 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 - **RF-004**: El agente DEBE responder precios, modelos y fichas solo con datos de la API 4.2; lo que el catálogo no cubre se deriva a un asesor. *(RN-05)*
 - **RF-005**: El agente DEBE pedir la cédula solo al cotizar y validar que tenga 10 dígitos (1 reintento; al segundo error, PMA). *(RN-06)*
 - **RF-006**: El agente DEBE mostrar solo las agencias de la marca en la ciudad elegida, con nombre, dirección y horario.
-- **RF-007**: El agente DEBE registrar el lead en el BDC con marca y modelo conocidos, y después obtener el asesor asignado con 4.5 para asignar la conversación en PMA por su correo; sin usuario de PMA con ese correo, cola general. *(RN-08, D-07, D-23)*
+- **RF-007**: El agente DEBE registrar el lead en el BDC con marca, modelo y la agencia elegida (sin asesor), y después obtener el asesor asignado con 4.5 para asignar la conversación en PMA por su correo; sin usuario de PMA con ese correo, cola general. *(RN-08, D-07, D-23)*
 - **RF-008**: Dos registros con el mismo **celular + marca** son el mismo lead: el agente DEBE registrar como máximo 1 lead por marca y conversación. Ante un resultado incierto, DEBE verificar con 4.5 y, si no hay asesor, informar que está confirmando el registro y derivar a PMA; nunca pedir que lo reintente. *(AP-35)*
 - **RF-009**: El agente DEBE cerrar sin insistir ante falta de interés o interacción negativa. *(RN-07)*
 - **RF-010**: El agente DEBE agrupar los mensajes que lleguen con menos de 2 s de diferencia y responder una vez. *(D-05)*
@@ -215,8 +215,8 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 | Qué | Valor | Fuente |
 |---|---|---|
 | Tratamiento | **usted** | SOW, agentes F1/F2/T1 |
-| Tono | cercano y comercial; el bot adopta la personalidad de la marca identificada | SOW (`idioma_tono`) |
-| Persona por marca | [NECESITA ACLARACIÓN: nombre y rasgos del asistente para cada una de las 4 marcas (KEYTON, LYNK & CO, SINOTRUK AUTOS, SINOTRUK CAMIONETAS), o confirmar que es un solo asistente «Vehicentro» con el nombre de la marca] | SOW: «POR DEFINIR (persona por marca)» |
+| Tono | cercano y comercial | SOW (`idioma_tono`) |
+| Asistente | **Un solo asistente de Vehicentro para las 4 marcas** (por ahora); habla del catálogo de la marca activa, sin una persona propia por marca | D-25 (ajusta «persona por marca» del SOW) |
 | Bienvenida | «¡Hola! Soy el asistente virtual de Vehicentro…» + link de términos — **se ajusta** para llevar los botones Acepto / No acepto (HU-02) | SOW F1:P3 |
 | Asesor ya asignado | «Usted ya tiene un asesor asignado: {nombre}. Puede escribirle al {contacto}.» | SOW F1:P8 |
 | Pedir marca | «¿Qué marca le interesa?» + lista | SOW F1:P10 |
@@ -253,8 +253,8 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 - **CE-006**: Leads registrados por día y tasa de cotización (cotizaciones / conversaciones Comerciales), como línea base para el cliente.
 
 ## Supuestos
-- **S-01 (plataforma / tercero):** al recibir el lead **sin** `id_asesor`, el BDC asigna un asesor al momento y 4.5 lo devuelve en la consulta siguiente, también con la conexión `TESTCLARO`. Se verifica en F5 (**V-01**).
-- **S-02:** [NECESITA ACLARACIÓN: ¿el BDC asigna un asesor **de la agencia que eligió el usuario**? La documentación pide `id_agencias` solo «si hay asesor». Si el BDC no respeta la agencia elegida, el asesor puede ser de otra agencia: ¿se envía `id_agencias` sin `id_asesor`, o se usa 4.4 para pedir el asesor de esa agencia antes del registro?]
+- **S-01 (tercero):** al recibir el lead con `id_agencias` y **sin** `id_asesor`, el BDC lo acepta (201), asigna un asesor **de esa agencia** al momento, y 4.5 lo devuelve en la consulta siguiente, también con la conexión `TESTCLARO`. Se verifica en F5 (**V-01**). Si el BDC rechaza `id_agencias` sin asesor o asigna otra agencia, el respaldo es pedir el asesor con 4.4 antes del registro (D-26).
+- **S-02:** se envía `id_agencias` de la agencia elegida sin `id_asesor` (D-26). La documentación dice «No enviar en pruebas»; con `TESTCLARO` se prueba igual en V-01 y, si el cliente lo objeta, solo en las pruebas con el cliente.
 - **S-03:** franja sin recordatorios 21:00–07:59 (el SOW dice «sin envíos nocturnos» sin horas). Se confirma en la UAT.
 - **S-04:** el catálogo del webview de Jelou Shop tiene los mismos modelos y precios que la API 4.2 (RN-05). Si difieren, el usuario vería dos precios. Responsable: implementador + cliente; se verifica en F3.
 - **S-05:** el nombre para el lead se toma del **nombre del perfil de WhatsApp**; si viene vacío, se registra «Cliente WhatsApp». No se pregunta (D-15: no se agregan preguntas fuera de alcance).
@@ -294,6 +294,5 @@ Pasos de fin (F1:P21, F2:Q21) pertenecen a la HU del paso que los precede. Todos
 |---|---|---|---|
 | Paso P0: Acepto / No acepto antes de cualquier dato, con evidencia y refresco a 30 días | 17 | La bienvenida (F1:P3) pasa de aviso implícito a mensaje con 2 botones; +1 interacción al inicio; camino de rechazo con asesor | **H-01:** lo decide el Tech Lead (D. B.) con el cliente. Borrador de aviso a la PM pendiente (los avisos los hace el implementador) |
 
-## Marcas abiertas (para cerrar antes de la puerta de F2)
-1. Persona por marca (Tono y textos fijos).
-2. Asignación por agencia elegida (S-02).
+## Marcas abiertas
+Ninguna. Las dos de la v0.1 se cerraron con D-25 (un solo asistente) y D-26 (`id_agencias` sin `id_asesor`).
