@@ -213,7 +213,8 @@
       "fase": 3,
       "tipo": "datos personales / configuración de pruebas",
       "descripcion": "En DEV, el nodo CODE de «Bienvenida y Enrutamiento» reemplaza el teléfono del usuario por un número fijo (aparentemente de pruebas) y toma $user.id como teléfono (riesgo BSUID). Se corrige en la plataforma en F5; el espejo no se sube con ese dato.",
-      "estado": "abierto"
+      "estado": "cerrado",
+      "cierre": "2026-11-16: nodo reemplazado por «Contexto inicial» (sin teléfono fijo; $user.id solo si es número). Espejo subido a main 55efa7b."
     }
   ],
   "skills": {
@@ -483,6 +484,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "T006 construida y probada en el tester (7 casos). Consentimiento P0 aún no construido (T003): la bienvenida de DEV hoy no pide términos."
+    },
+    {
+      "fecha": "2026-11-16",
+      "evento": "Flujo 1 construido (T003 consentimiento, T004 origen, T005 celular y 4.5) y probado en el tester; H-05 cerrado; espejo de DEV en main."
     }
   ],
   "puntos": {
@@ -695,7 +700,9 @@
     {
       "id": "V-06",
       "fase": 5,
-      "que": "Origen del anuncio que entregan Meta y TikTok"
+      "que": "Origen del anuncio que entregan Meta y TikTok",
+      "estado": "pendiente",
+      "resultado": "2026-11-16: el origen se lee de metadata.referral del room con {{$user.roomId}}; en el tester el room no existe (404). Falta probar desde un anuncio real."
     },
     {
       "id": "V-07",

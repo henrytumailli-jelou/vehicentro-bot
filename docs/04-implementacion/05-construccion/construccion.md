@@ -220,6 +220,19 @@ Filas: **40**.
 | Guardrail al inicio del prompt | `initialState` con las reglas | «Reglas prioritarias» presente en el rastro | `04b7fd5d-…` |
 Ajustes durante la prueba: «Verificador Campañas» salió del agente (su falla confundía al modelo; el origen pasa a un nodo fijo en T004) y el agente cierra sin escribir cuando deriva o no hay interés. **Pendiente para la ronda manual por WhatsApp:** la lista interactiva de marcas cuando no se infiere (HU-04 c2) y «Sinotruk» con botones; el tester no muestra listas.
 
+### Flujo 1 completo — T003, T004, T005 (tester del CLI, 3 turnos, 2026-11-16)
+Ejecución `13695051-d1c5-47cc-af6d-b00c71c96467`: «Hola, quiero información de una keyton» → «Acepto» → celular ficticio.
+| Paso | Esperado (spec) | Obtenido |
+|---|---|---|
+| Origen (F1:P2) | Se guarda; si falla, sigue (RN-01) | La lectura del room falla en el tester (no hay room real); el flujo sigue y el viaje se registra con origen «directo». **V-06 sigue abierto**: probar desde un anuncio real |
+| P0 consentimiento | Términos antes de cualquier dato; 3 botones | Mensaje con Acepto / No acepto / Hablar con asesor, links provisionales |
+| Aceptación | Registro con id, canal, versión, decisión y fecha (HU-02 c2) | Registro en `consentimientos` (`decision=acepto`, `version=v1`) |
+| Marca después de «Acepto» | Conserva el primer mensaje | KEYTON (id 3), comercial → `ventas` (se corrigió: antes el agente perdía el primer mensaje) |
+| Celular sin teléfono del canal (BSUID) | Se pide; 10 dígitos 09… (HU-03 c2) | Pedido, validado y guardado en `usuarios` |
+| 4.5 después de la marca (A-03) | Sin asesor → sigue a Ventas (HU-03 c4) | `veh-bdc /existe-asesor` → `vacio` → «Ir a Ventas» |
+| Chequeo del push | 0 | 3 botones con destino roto tras el primer push (AP-33) → `--fix` → 0 |
+**Pendiente para la ronda manual por WhatsApp:** consentimiento vigente (no se vuelve a pedir), «No acepto», texto en vez de botón (QA-C08), asesor ya asignado con un celular real del cliente (UAT), origen desde un anuncio real (V-06), lista de marcas.
+
 ## 12. Pre-auditoría
 (se llena antes de la puerta)
 
@@ -244,3 +257,4 @@ Conversación por WhatsApp en el canal DEV (número de prueba del implementador,
 | Cada turno del agente tarda 4 a 7 s | `executionTime` del `AI_TASK` | T015 (costos y modelo) |
 | 2026-11-16 | D-29: Derivar a Asesor con mensaje provisional | — | 0 hallazgos | draft (sin publicar) | — | Tester: 2 nodos, sin fallas |
 | 2026-11-16 | T006: tool «Consultar marcas» v1.0.2 vía `veh-bdc`; bienvenida con guardrails, un solo asistente, en usted, sin rutas a Repuestos/Talleres/Crédito; Derivar recibe todo lo demás | draft DEV | 0 hallazgos (4 pushes) | draft (sin publicar) | T006 | 7 casos en el tester |
+| 2026-11-16 | Flujo 1: P0, origen, celular/BSUID, 4.5; H-05 corregido; espejo de DEV en main | main `55efa7b` | 0 (tras `--fix`) | draft (sin publicar) | T003, T005 | T004 abierta por V-06 |
