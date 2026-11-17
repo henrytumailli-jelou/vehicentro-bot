@@ -1,0 +1,283 @@
+{
+  "workflowId": 75020,
+  "workflowName": "veh-prueba-bdc",
+  "workflowDescription": "Prueba técnica interna de conectividad con el BDC de Vehicentro; no atiende usuarios",
+  "workflowDefault": false,
+  "nodes": [
+    {
+      "id": "-t-_UExtOrNZony7WpmLc",
+      "title": "Fallo",
+      "configuration": {
+        "messages": [
+          {
+            "id": "45R9ag747w6J9J6fUoE9x",
+            "text": "Fallo HTTP hacia veh-bdc",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2040,
+        50
+      ]
+    },
+    {
+      "id": "azX06fs3j-HEagTVreQhm",
+      "title": "Existe asesor (4.5)",
+      "configuration": {
+        "url": "https://veh-bdc.fn.jelou.ai/existe-asesor",
+        "body": {
+          "type": "application/json",
+          "content": "{\"id_marca\": 3, \"celular\": \"0990000001\"}",
+          "enabled": true
+        },
+        "title": "Existe asesor (4.5)",
+        "method": "POST",
+        "output": "leadResp",
+        "headers": [
+          {
+            "id": "h_ct_lead",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "timeout": 30000,
+          "sslCertificate": true
+        },
+        "authentication": {
+          "type": "bearer",
+          "token": "{{$secret.JELOU_FN_INVOKE_KEY}}",
+          "enabled": true
+        }
+      },
+      "type": "HTTP",
+      "position": [
+        1652,
+        480
+      ]
+    },
+    {
+      "id": "BjtmqNQLwCMEtEDb0lSFA",
+      "title": "Modelos KEYTON",
+      "configuration": {
+        "url": "https://veh-bdc.fn.jelou.ai/modelos",
+        "body": {
+          "type": "application/json",
+          "content": "{\"id_marca\": 3}",
+          "enabled": true
+        },
+        "title": "Modelos KEYTON",
+        "method": "POST",
+        "output": "modelosResp",
+        "headers": [
+          {
+            "id": "h_ct_p_modelos",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "timeout": 30000,
+          "sslCertificate": true
+        },
+        "authentication": {
+          "type": "bearer",
+          "token": "{{$secret.JELOU_FN_INVOKE_KEY}}",
+          "enabled": true
+        }
+      },
+      "type": "HTTP",
+      "position": [
+        1264,
+        50
+      ]
+    },
+    {
+      "id": "dK7J7kQdHCGViQKxoh5GZ",
+      "title": "Resultado",
+      "configuration": {
+        "messages": [
+          {
+            "id": "Z_ZFNPLGqlfFJxa4t8rol",
+            "text": "{{$memory.bdc_resumen}}",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2040,
+        400
+      ]
+    },
+    {
+      "id": "dRFWpkmnWCDyvK4zmD1Km",
+      "title": "Start",
+      "type": "START",
+      "position": [
+        100,
+        50
+      ]
+    },
+    {
+      "id": "mDYgL-HrF8lTwSQm3beYO",
+      "title": "Estado BDC",
+      "configuration": {
+        "url": "https://veh-bdc.fn.jelou.ai/estado",
+        "body": {
+          "type": "application/json",
+          "content": "{}",
+          "enabled": true
+        },
+        "title": "Estado BDC",
+        "method": "POST",
+        "output": "estadoResp",
+        "headers": [
+          {
+            "id": "h_ct_p_estado",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "timeout": 30000,
+          "sslCertificate": true
+        },
+        "authentication": {
+          "type": "bearer",
+          "token": "{{$secret.JELOU_FN_INVOKE_KEY}}",
+          "enabled": true
+        }
+      },
+      "type": "HTTP",
+      "position": [
+        488,
+        50
+      ]
+    },
+    {
+      "id": "Rv851Zi6QkO2YjboLHyy0",
+      "title": "Resumen",
+      "configuration": {
+        "title": "Resumen",
+        "content": "const leer = (n) => { try { const r = $context.getHttpResponse(n); return r ? r.json() : null; } catch (e) { return null; } };\nconst l = leer('leadResp');\nconst e = leer('estadoResp'), m = leer('marcasResp'), mo = leer('modelosResp');\nconst marcas = (m && m.data) ? m.data.map((x) => x.id + ':' + x.nombre).join(', ') : '-';\nconst n = (mo && Array.isArray(mo.data)) ? mo.data.length : 0;\nconst primero = n ? mo.data[0] : null;\n$memory.set('bdc_resumen', 'estado=' + (e ? e.tipo : 'sin respuesta') + ' | marcas=' + (m ? m.tipo : '-') + ' [' + marcas + '] | modelos(3)=' + (mo ? mo.tipo : '-') + ' n=' + n + (primero ? ' primero=' + primero.id_modelo + ' ' + primero.nombre + ' img=' + primero.imagenes.length : ''));\n$memory.set('bdc_resumen', $memory.get('bdc_resumen') + ' | lead=' + (l ? l.tipo : '-') + ' asesor=' + (l && l.data && l.data.asesor ? 'si, correo=' + (l.data.asesor.correo ? 'si' : 'no') : 'no'));",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        1652,
+        65
+      ]
+    },
+    {
+      "id": "tEa_Ue9QplCpZ4pMQg1hr",
+      "title": "Marcas",
+      "configuration": {
+        "url": "https://veh-bdc.fn.jelou.ai/marcas",
+        "body": {
+          "type": "application/json",
+          "content": "{}",
+          "enabled": true
+        },
+        "title": "Marcas",
+        "method": "POST",
+        "output": "marcasResp",
+        "headers": [
+          {
+            "id": "h_ct_p_marcas",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "timeout": 30000,
+          "sslCertificate": true
+        },
+        "authentication": {
+          "type": "bearer",
+          "token": "{{$secret.JELOU_FN_INVOKE_KEY}}",
+          "enabled": true
+        }
+      },
+      "type": "HTTP",
+      "position": [
+        876,
+        50
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "13hIxkYaDX7vOKEnn7Hm-",
+      "sourceId": "azX06fs3j-HEagTVreQhm",
+      "targetId": "-t-_UExtOrNZony7WpmLc",
+      "branch": "failed"
+    },
+    {
+      "id": "3f4PR67QyaTSgzNtZbzwY",
+      "sourceId": "BjtmqNQLwCMEtEDb0lSFA",
+      "targetId": "-t-_UExtOrNZony7WpmLc",
+      "branch": "failed"
+    },
+    {
+      "id": "4fDe8bAjp94KIxSMxhDYD",
+      "sourceId": "Rv851Zi6QkO2YjboLHyy0",
+      "targetId": "dK7J7kQdHCGViQKxoh5GZ",
+      "branch": "success"
+    },
+    {
+      "id": "gqapkYSjlfa3JkbVct8lh",
+      "sourceId": "Rv851Zi6QkO2YjboLHyy0",
+      "targetId": "-t-_UExtOrNZony7WpmLc",
+      "branch": "failed"
+    },
+    {
+      "id": "obqyVmHXwbccOaOycViks",
+      "sourceId": "mDYgL-HrF8lTwSQm3beYO",
+      "targetId": "-t-_UExtOrNZony7WpmLc",
+      "branch": "failed"
+    },
+    {
+      "id": "PEJ0fjCDbMliChqyheLto",
+      "sourceId": "tEa_Ue9QplCpZ4pMQg1hr",
+      "targetId": "BjtmqNQLwCMEtEDb0lSFA",
+      "branch": "success"
+    },
+    {
+      "id": "PV-fE9p3wWO0SjM8yOw7d",
+      "sourceId": "mDYgL-HrF8lTwSQm3beYO",
+      "targetId": "tEa_Ue9QplCpZ4pMQg1hr",
+      "branch": "success"
+    },
+    {
+      "id": "Qzs1n8ymArV7f4rLtCKe9",
+      "sourceId": "dRFWpkmnWCDyvK4zmD1Km",
+      "targetId": "mDYgL-HrF8lTwSQm3beYO",
+      "branch": "default"
+    },
+    {
+      "id": "TlBn2J13ana3K72VNRjF7",
+      "sourceId": "azX06fs3j-HEagTVreQhm",
+      "targetId": "Rv851Zi6QkO2YjboLHyy0",
+      "branch": "success"
+    },
+    {
+      "id": "WvJ6Xz7-kGfbWkn0BvFSe",
+      "sourceId": "tEa_Ue9QplCpZ4pMQg1hr",
+      "targetId": "-t-_UExtOrNZony7WpmLc",
+      "branch": "failed"
+    },
+    {
+      "id": "ZGJ3mqhpzxiovG1WeL9vT",
+      "sourceId": "BjtmqNQLwCMEtEDb0lSFA",
+      "targetId": "azX06fs3j-HEagTVreQhm",
+      "branch": "success"
+    }
+  ]
+}

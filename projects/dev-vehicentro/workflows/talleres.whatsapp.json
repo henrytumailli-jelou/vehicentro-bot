@@ -1,0 +1,476 @@
+{
+  "workflowId": 64846,
+  "workflowName": "Talleres",
+  "workflowDescription": "Agendamiento de citas en taller automotriz: selección de ciudad y agencia, identificación del vehículo y reserva de horarios disponibles.",
+  "workflowDefault": false,
+  "nodes": [
+    {
+      "id": "1Scg8QLtUyxBkKj1_FoRE",
+      "title": "Consultar agencias taller",
+      "configuration": {
+        "url": "https://bdc.vehicentro.com:9443/ords/ws_vehicentro/api/conexiones/botwa_agencias/{{$memory.id_marca_talleres}}",
+        "body": {
+          "type": "no-content",
+          "content": null,
+          "enabled": false
+        },
+        "title": "Consultar agencias taller",
+        "method": "GET",
+        "output": "agenciasTallerResponse",
+        "settings": {
+          "retries": 1,
+          "timeout": 30000,
+          "proxyOptions": {
+            "ip": "",
+            "auth": {
+              "password": null,
+              "username": null
+            },
+            "host": null,
+            "port": null,
+            "enabled": false,
+            "protocol": "https"
+          },
+          "retryOptions": {
+            "enabled": true,
+            "retries": 1,
+            "retryDelay": "exponential_delay",
+            "milliseconds": 0,
+            "retryCondition": "is_network_or_idempotent_request_error",
+            "shouldResetTimeout": false
+          },
+          "sslCertificate": true
+        },
+        "instruction": "Obtiene agencias con taller de la marca activa.",
+        "authentication": {
+          "type": "no-auth"
+        },
+        "nonHappyPathHandlers": {
+          "error": {
+            "mode": "message",
+            "message": "No pude cargar las agencias. Te conecto con un asesor de taller."
+          }
+        }
+      },
+      "type": "HTTP",
+      "position": [
+        876,
+        50
+      ]
+    },
+    {
+      "id": "5nzlqcR503AxC_lVRPy5B",
+      "title": "Confirmación asesor taller",
+      "configuration": {
+        "title": "Confirmación asesor taller",
+        "messages": [
+          {
+            "id": "msg_ok_taller",
+            "text": "Te conecto con un asesor de taller Vehicentro. En breve te atienden. 🛠️\n\n📞 (03) 2 994740",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        3204,
+        50
+      ]
+    },
+    {
+      "id": "b-f41zXIBOHyRffABuJnw",
+      "title": "Confirmación cita taller",
+      "configuration": {
+        "title": "Confirmación cita taller",
+        "messages": [
+          {
+            "id": "msg_confirm_cita",
+            "text": "✅ *Cita de taller registrada*\n\n📍 Agencia: {{$memory.agencia_seleccionada}}\n🚗 Vehículo: {{$memory.placa_vehiculo}}\n📅 Fecha: {{$memory.fecha_cita}}\n🕐 Hora: {{$memory.hora_cita}}\n\nUn asesor confirmará tu cita y te contactará. ¡Gracias por confiar en Vehicentro! 🛠️",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        3204,
+        270
+      ]
+    },
+    {
+      "id": "c-cp99nOCY1VoeR4F3qE7",
+      "title": "VeHi - Talleres",
+      "configuration": {
+        "name": "VeHi - Talleres",
+        "model": "openai/gpt-5.6-luna",
+        "title": "VeHi - Talleres",
+        "version": "v2",
+        "settings": {
+          "expiration": {
+            "time": "hours",
+            "enabled": true,
+            "duration": 8,
+            "timeInSeconds": 28800
+          },
+          "splitMessages": true,
+          "messageHistory": {
+            "count": 15,
+            "enabled": true
+          }
+        },
+        "variable": "talleresResult",
+        "connections": {
+          "mcp": [],
+          "datum": [],
+          "tools": [
+            {
+              "name": "get_current_date_time",
+              "external": false
+            },
+            {
+              "name": "get_weekday_of_a_date",
+              "external": false
+            },
+            {
+              "name": "send_interactive_message",
+              "action": "pause",
+              "external": false
+            }
+          ]
+        },
+        "description": "VeHi: asistente de agendamiento de citas en taller Vehicentro.",
+        "endFunction": {
+          "rawSchema": {
+            "accion": {
+              "type": "string",
+              "required": true
+            },
+            "ciudad": {
+              "type": "string",
+              "required": false
+            },
+            "motivo": {
+              "type": "string",
+              "required": false
+            },
+            "agencia": {
+              "type": "string",
+              "required": false
+            },
+            "hora_cita": {
+              "type": "string",
+              "required": false
+            },
+            "fecha_cita": {
+              "type": "string",
+              "required": false
+            },
+            "placa_vehiculo": {
+              "type": "string",
+              "required": false
+            }
+          },
+          "description": "Valores accion: continuar, agendar, asesor, finalizar."
+        },
+        "filesConfig": {
+          "files": [],
+          "enabled": true
+        },
+        "instructions": "Eres VeHi en el flujo de Talleres. Guías al usuario para agendar cita: ciudad, agencia, identificación del vehículo (placa/VIN/foto matrícula) y horario. Responde en español, mensajes cortos.",
+        "startCommand": "Mensaje: {{$message.text}}\nMarca: {{$memory.id_marca_talleres}}\nCiudad: {{$memory.ciudad_usuario}}\nAgencia: {{$memory.agencia_seleccionada}}\nPlaca: {{$memory.placa_vehiculo}}\nAgencias cargadas: {{$memory.agencias_cargadas}}\nNota: viene de bienvenida VeHi — no saludar de nuevo.",
+        "fallbackModel": {
+          "name": "gpt-4.1-mini",
+          "model": "openai/gpt-4.1-mini",
+          "provider": "openai"
+        },
+        "instructions_lang": "es",
+        "instructions_role": "Eres *VeHi* en el flujo de *Talleres*. El usuario ya pasó por bienvenida. NO saludes de nuevo. Ayúdalo a agendar su cita de servicio.",
+        "instructions_process": "1. Continúa sin saludo inicial.\n2. Marca: {{ $memory.id_marca_talleres }}. Agencias cargadas: {{ $memory.agencias_cargadas }}.\n3. Paso 1 — Ciudad: pregunta en qué ciudad desea el servicio.\n4. Paso 2 — Agencia: muestra agencias de agencias_taller filtradas por ciudad (nombre, dirección, horario).\n5. Paso 3 — Vehículo: pide placa, VIN o foto de matrícula 📸.\n6. Paso 4 — Horario: pregunta día y hora preferidos (API de agenda se conectará en fase posterior).\n7. Cuando tengas ciudad + agencia + vehículo + horario → accion=agendar.\n8. Si necesita asesor → accion=asesor.\n9. Si ya no necesita → accion=finalizar.\n10. Mientras falten datos → accion=continuar.",
+        "nonHappyPathHandlers": {
+          "error": {
+            "mode": "message",
+            "message": "Tuve un inconveniente agendando tu cita. Te conecto con un asesor de taller. 🛠️"
+          }
+        },
+        "instructions_guardrails": "No inventes horarios disponibles. No prometas reprogramación/cancelación (fuera de alcance). Deriva a asesor si hay duda."
+      },
+      "type": "AI_TASK",
+      "position": [
+        1652,
+        50
+      ]
+    },
+    {
+      "id": "DvlHRGOltNjyTdYBw1CDe",
+      "title": "Despedida talleres",
+      "configuration": {
+        "title": "Despedida talleres",
+        "messages": [
+          {
+            "id": "msg_desp_taller",
+            "text": "¡Gracias por contactar Talleres Vehicentro! 🛠️\n\nCuando quieras agendar tu cita, escríbeme.",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        3204,
+        490
+      ]
+    },
+    {
+      "id": "iuoN4zbPhtK-Cjq0KIH3C",
+      "title": "Acción post-talleres",
+      "configuration": {
+        "title": "Acción post-talleres",
+        "conditions": [
+          {
+            "id": "agendar",
+            "name": "Agendar cita",
+            "terms": [
+              {
+                "id": "t1",
+                "type": "string",
+                "value1": "{{$memory.accion_talleres}}",
+                "value2": "agendar",
+                "operator": "equal"
+              }
+            ]
+          },
+          {
+            "id": "asesor",
+            "name": "Asesor",
+            "terms": [
+              {
+                "id": "t2",
+                "type": "string",
+                "value1": "{{$memory.accion_talleres}}",
+                "value2": "asesor",
+                "operator": "equal"
+              }
+            ]
+          },
+          {
+            "id": "finalizar",
+            "name": "Finalizar",
+            "terms": [
+              {
+                "id": "t3",
+                "type": "string",
+                "value1": "{{$memory.accion_talleres}}",
+                "value2": "finalizar",
+                "operator": "equal"
+              }
+            ]
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        2428,
+        50
+      ]
+    },
+    {
+      "id": "llRDVCGkF9mMEMUgaYhaf",
+      "title": "Parsear agencias taller",
+      "configuration": {
+        "title": "Parsear agencias taller",
+        "content": "const response = $context.getHttpResponse('agenciasTallerResponse');\nlet data = {};\ntry { data = response.json(); } catch (e) { data = {}; }\nconst items = data.items || data.agencias || data.data || (Array.isArray(data) ? data : []);\n$memory.setJson('agencias_taller', items, 86400);\n$memory.set('agencias_cargadas', items.length > 0 ? 'si' : 'no');",
+        "instruction": "Normaliza listado de agencias para el agente.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        1264,
+        50
+      ]
+    },
+    {
+      "id": "qmDDbdcxCjYX727ELXqbx",
+      "title": "Derivar a asesor taller",
+      "configuration": {
+        "title": "Derivar a asesor taller",
+        "priority": 0,
+        "assignment": {
+          "by": "shuffle",
+          "type": "direct"
+        }
+      },
+      "type": "CONNECT",
+      "position": [
+        2816,
+        50
+      ]
+    },
+    {
+      "id": "w4Do2JdNDVmcfnV_rw8qv",
+      "title": "Error derivación taller",
+      "configuration": {
+        "title": "Error derivación taller",
+        "messages": [
+          {
+            "id": "msg_fail_taller",
+            "text": "No hay asesores disponibles. Escríbenos en horario comercial (L-V 8:00-18:00).",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        3204,
+        710
+      ]
+    },
+    {
+      "id": "WejRT7hY4a9rIfXAx1y4l",
+      "title": "Guardar acción talleres",
+      "configuration": {
+        "title": "Guardar acción talleres",
+        "content": "const r = $memory.getJson('talleresResult', {});\nconst accion = (r.accion || 'continuar').toLowerCase();\n$memory.set('accion_talleres', accion);\nif (r.ciudad) $memory.set('ciudad_usuario', String(r.ciudad));\nif (r.agencia) $memory.set('agencia_seleccionada', String(r.agencia));\nif (r.placa_vehiculo) $memory.set('placa_vehiculo', String(r.placa_vehiculo));\nif (r.fecha_cita) $memory.set('fecha_cita', String(r.fecha_cita));\nif (r.hora_cita) $memory.set('hora_cita', String(r.hora_cita));",
+        "instruction": "Persiste datos de agendamiento.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        2040,
+        50
+      ]
+    },
+    {
+      "id": "WJMTjvkFuptaJz9zVfdr1",
+      "title": "Inicializar contexto talleres",
+      "configuration": {
+        "title": "Inicializar contexto talleres",
+        "content": "const marca = $memory.get('marca_activa') || $memory.get('marca_seleccionada') || $memory.get('id_marca') || '0';\n$memory.set('id_marca_talleres', String(marca));\n$memory.set('flujo_activo', 'talleres');",
+        "instruction": "Prepara marca e intención heredadas de bienvenida.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        488,
+        50
+      ]
+    },
+    {
+      "id": "yCPfqwBBDbXaqSVJPiAm0",
+      "title": "Tiempo agotado talleres",
+      "configuration": {
+        "title": "Tiempo agotado talleres",
+        "messages": [
+          {
+            "id": "msg_timeout_taller",
+            "text": "Tu sesión expiró ⏳ Escríbeme cuando quieras retomar tu agendamiento.",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        3204,
+        930
+      ]
+    },
+    {
+      "id": "Z-QKcpyedAQdukYqfoGgH",
+      "title": "Start",
+      "type": "START",
+      "position": [
+        100,
+        50
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "_7gWgCqUrtQc1yB1fBmIn",
+      "sourceId": "qmDDbdcxCjYX727ELXqbx",
+      "targetId": "w4Do2JdNDVmcfnV_rw8qv",
+      "branch": "output:OPERATOR_NOT_FOUND:failed"
+    },
+    {
+      "id": "_Ja-pL_tfNXT5_49keNIJ",
+      "sourceId": "iuoN4zbPhtK-Cjq0KIH3C",
+      "targetId": "b-f41zXIBOHyRffABuJnw",
+      "branch": "condition:agendar"
+    },
+    {
+      "id": "2wTxPhkxVocipnCoUHFth",
+      "sourceId": "qmDDbdcxCjYX727ELXqbx",
+      "targetId": "5nzlqcR503AxC_lVRPy5B",
+      "branch": "output:JelouConnect:success"
+    },
+    {
+      "id": "6Yqk0b9-7mjMKkKMx50LP",
+      "sourceId": "1Scg8QLtUyxBkKj1_FoRE",
+      "targetId": "llRDVCGkF9mMEMUgaYhaf",
+      "branch": "success"
+    },
+    {
+      "id": "aqHvp0y92Wmxo7BaXrhJP",
+      "sourceId": "llRDVCGkF9mMEMUgaYhaf",
+      "targetId": "c-cp99nOCY1VoeR4F3qE7",
+      "branch": "success"
+    },
+    {
+      "id": "BkT1urzuoCkB4F2WosFo_",
+      "sourceId": "qmDDbdcxCjYX727ELXqbx",
+      "targetId": "w4Do2JdNDVmcfnV_rw8qv",
+      "branch": "output:UNKNOWN_ERROR:failed"
+    },
+    {
+      "id": "Dm6GCvL87baJQufKFv0W8",
+      "sourceId": "WJMTjvkFuptaJz9zVfdr1",
+      "targetId": "1Scg8QLtUyxBkKj1_FoRE",
+      "branch": "success"
+    },
+    {
+      "id": "FUDvkT2pkHvbvQZ4t83YR",
+      "sourceId": "iuoN4zbPhtK-Cjq0KIH3C",
+      "targetId": "c-cp99nOCY1VoeR4F3qE7",
+      "branch": "else"
+    },
+    {
+      "id": "FUfHZb19YkEzzmvsX_23K",
+      "sourceId": "c-cp99nOCY1VoeR4F3qE7",
+      "targetId": "WejRT7hY4a9rIfXAx1y4l",
+      "branch": "success"
+    },
+    {
+      "id": "HK5T-bR1kLSffVwOhtbLQ",
+      "sourceId": "qmDDbdcxCjYX727ELXqbx",
+      "targetId": "w4Do2JdNDVmcfnV_rw8qv",
+      "branch": "output:OPERATORS_NOT_IN_SCHEDULER:failed"
+    },
+    {
+      "id": "huDHvcw8RkEUQR3c0itfu",
+      "sourceId": "iuoN4zbPhtK-Cjq0KIH3C",
+      "targetId": "qmDDbdcxCjYX727ELXqbx",
+      "branch": "condition:asesor"
+    },
+    {
+      "id": "Lp-x8TcPih3_ZjgBCUsik",
+      "sourceId": "iuoN4zbPhtK-Cjq0KIH3C",
+      "targetId": "DvlHRGOltNjyTdYBw1CDe",
+      "branch": "condition:finalizar"
+    },
+    {
+      "id": "nCl0TxloTcJZ8JHwGNhCi",
+      "sourceId": "c-cp99nOCY1VoeR4F3qE7",
+      "targetId": "yCPfqwBBDbXaqSVJPiAm0",
+      "branch": "expire"
+    },
+    {
+      "id": "Qb6Amcs0gdsQ0O-ZnR5t3",
+      "sourceId": "Z-QKcpyedAQdukYqfoGgH",
+      "targetId": "WJMTjvkFuptaJz9zVfdr1",
+      "branch": "default"
+    },
+    {
+      "id": "tlu95NNum7vuIcvXeVYOg",
+      "sourceId": "WejRT7hY4a9rIfXAx1y4l",
+      "targetId": "iuoN4zbPhtK-Cjq0KIH3C",
+      "branch": "success"
+    }
+  ]
+}

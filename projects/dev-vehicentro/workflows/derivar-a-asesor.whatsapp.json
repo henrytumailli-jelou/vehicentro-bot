@@ -1,0 +1,43 @@
+{
+  "workflowId": 64994,
+  "workflowName": "Derivar a Asesor",
+  "workflowDescription": "Deriva la conversación a un asesor de Vehicentro (PMA) con la marca, la intención y el contexto del prospecto",
+  "workflowDefault": false,
+  "nodes": [
+    {
+      "id": "1I4mdHvHXzc__BD9spKq8",
+      "title": "Start",
+      "type": "START",
+      "position": [
+        818,
+        338
+      ]
+    },
+    {
+      "id": "uiVCn4SHOBcsWzlfr-coK",
+      "title": "Asignación a PMA (provisional)",
+      "configuration": {
+        "messages": [
+          {
+            "id": "6liLSpAZCtdytMniE06jW",
+            "text": "Aquí va la asignación a PMA.",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        1206,
+        338
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "KyJSnoFMaJUQUiFluJdWW",
+      "sourceId": "1I4mdHvHXzc__BD9spKq8",
+      "targetId": "uiVCn4SHOBcsWzlfr-coK",
+      "branch": "default"
+    }
+  ]
+}

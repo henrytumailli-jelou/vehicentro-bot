@@ -1,0 +1,263 @@
+{
+  "toolId": 8423,
+  "workflowId": 65027,
+  "toolName": "Verificar cliente Vehicentro",
+  "toolDescription": "Consulta botwa_existe_asesor en Baycentro para saber si el cliente ya existe. Requiere id_marca, cedula y celular. Devuelve existe=true/false y datos de usuario/agencia cuando aplica.",
+  "triggerType": "DEFAULT",
+  "ownership": "OWNED",
+  "inputs": [
+    {
+      "name": "id_marca",
+      "id": "7FO0bDkLOYiS6BDQEd1qR",
+      "displayName": "ID marca",
+      "description": "ID numérico de la marca (ej: 3 KEYTON, 7 LYNK & CO).",
+      "type": "STRING",
+      "required": true,
+      "defaultValue": null,
+      "configuration": null,
+      "position": 0
+    },
+    {
+      "name": "cedula",
+      "id": "YG_nXV-WwlKfffWMd5go6",
+      "displayName": "Cédula",
+      "description": "Cédula del cliente capturada en la conversación.",
+      "type": "STRING",
+      "required": true,
+      "defaultValue": null,
+      "configuration": null,
+      "position": 1
+    },
+    {
+      "name": "celular",
+      "id": "YnUXo-HVqYpa74J_cLIEa",
+      "displayName": "Celular",
+      "description": "Número celular del cliente (puede incluir código de país).",
+      "type": "STRING",
+      "required": true,
+      "defaultValue": null,
+      "configuration": null,
+      "position": 2
+    }
+  ],
+  "outputs": [
+    {
+      "name": "failed",
+      "id": "oJ84AAGmIe1ptC0uERb_V",
+      "displayName": "Error verificación",
+      "type": "FAILED",
+      "required": true,
+      "schema": null,
+      "position": 0
+    },
+    {
+      "name": "success",
+      "id": "qhzR7sYm5RRQ0jxCXUBDh",
+      "displayName": "Resultado verificación",
+      "type": "SUCCESS",
+      "required": true,
+      "schema": null,
+      "position": 0
+    }
+  ],
+  "nodes": [
+    {
+      "id": "1fvzONX0i8bz5UrWlmA0U",
+      "title": "Registrar error HTTP",
+      "configuration": {
+        "content": "$output.set('failed', { existe: false, error: 'No pude consultar si el cliente existe en este momento.' });",
+        "instruction": "Devuelve failed cuando falla el HTTP de botwa_existe_asesor.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        1408,
+        840
+      ]
+    },
+    {
+      "id": "69HjKBQE9M9HW1mgWKOm1",
+      "title": "Code Error",
+      "configuration": {
+        "content": "$output.set('failed', { existe: false, error: 'Error interno al verificar cliente.' });",
+        "instruction": "Captura fallos inesperados de nodos CODE.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        1844,
+        422
+      ]
+    },
+    {
+      "id": "hQmFt_z9yF-LvcdoI-y5E",
+      "title": "Fin error",
+      "configuration": {
+        "outputId": "oJ84AAGmIe1ptC0uERb_V"
+      },
+      "type": "END",
+      "position": [
+        2280,
+        426
+      ]
+    },
+    {
+      "id": "pKh-AcaBgvOiurnIJgqP1",
+      "title": "Parsear respuesta cliente",
+      "configuration": {
+        "content": "const response = $context.getHttpResponse('existeAsesorResponse');\nlet payload = {};\ntry {\n  payload = response.json();\n} catch (e) {\n  throw new Error('Respuesta inválida de botwa_existe_asesor');\n}\nlet items = payload.data;\nif (!Array.isArray(items)) {\n  items = items ? [items] : [];\n}\nconst existe = items.length > 0;\nif (!existe) {\n  $output.set('success', {\n    existe: false,\n    cliente: null,\n    agencia: null,\n    message: 'Cliente no encontrado en CRM'\n  });\n} else {\n  const row = items[0] || {};\n  $output.set('success', {\n    existe: true,\n    cliente: {\n      id_usuario: String(row.id_usuario || ''),\n      nombre_usuario: row.nombre_usuario || '',\n      celular_usuario: row.celular_usuario || '',\n      email_usuario: row.email_usuario || ''\n    },\n    agencia: {\n      id_agencia: row.id_agencia != null ? String(row.id_agencia) : '',\n      nombre_agencia: row.nombre_agencia || '',\n      direccion_agencia: row.direccion_agencia || '',\n      referencia_agencia: row.referencia_agencia || '',\n      ubicacion_agencia: row.ubicacion_agencia || '',\n      web_agencia: row.web_agencia || '',\n      horario_agencia: row.horario_agencia || ''\n    },\n    message: 'Cliente encontrado en CRM'\n  });\n}",
+        "instruction": "Interpreta data[] de botwa_existe_asesor.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        1408,
+        422
+      ]
+    },
+    {
+      "id": "RjN7IR-K7SvI1ka4l6VnY",
+      "title": "Consultar existe asesor",
+      "configuration": {
+        "url": "https://bdc.vehicentro.com:9443/ords/ws_vehicentro/api/conexiones/botwa_existe_asesor/{{$context.id_marca}}/{{$context.cedula}}/{{$context.celular}}",
+        "body": {
+          "type": "no-content",
+          "content": null,
+          "enabled": false
+        },
+        "method": "GET",
+        "output": "existeAsesorResponse",
+        "settings": {
+          "retries": 1,
+          "timeout": 30000,
+          "proxyOptions": {
+            "ip": "",
+            "auth": {
+              "password": null,
+              "username": null
+            },
+            "host": null,
+            "port": null,
+            "enabled": false,
+            "protocol": "https"
+          },
+          "retryOptions": {
+            "enabled": true,
+            "retries": 1,
+            "retryDelay": "exponential_delay",
+            "milliseconds": 0,
+            "retryCondition": "is_network_or_idempotent_request_error",
+            "shouldResetTimeout": false
+          },
+          "sslCertificate": true
+        },
+        "instruction": "GET botwa_existe_asesor con id_marca, cedula y celular.",
+        "authentication": {
+          "type": "no-auth"
+        }
+      },
+      "type": "HTTP",
+      "position": [
+        972,
+        310
+      ]
+    },
+    {
+      "id": "uGoUUW6u5iu5GKWFe4sqX",
+      "title": "Fin éxito",
+      "configuration": {
+        "outputId": "qhzR7sYm5RRQ0jxCXUBDh"
+      },
+      "type": "END",
+      "position": [
+        1844,
+        699
+      ]
+    },
+    {
+      "id": "w2V8rWaNnfXOUApF8JuRv",
+      "title": "Preparar inputs",
+      "configuration": {
+        "content": "function readInput(name) {\n  try { return String($input.get(name) ?? '').trim(); } catch (e) { return ''; }\n}\nconst idMarca = readInput('id_marca');\nlet cedula = readInput('cedula').replace(/[^0-9]/g, '');\nlet celular = readInput('celular').replace(/[^0-9+]/g, '');\nif (!idMarca || idMarca === '0') {\n  throw new Error('id_marca es requerido');\n}\nif (!cedula) {\n  throw new Error('cedula es requerida');\n}\nif (!celular) {\n  throw new Error('celular es requerido');\n}\n// Si llega con +593..., deja dígitos; Baycentro acepta formato local o con prefijo.\ncelular = celular.replace(/^\\+/, '');\n$context.set('id_marca', idMarca);\n$context.set('cedula', cedula);\n$context.set('celular', celular);",
+        "instruction": "Valida y normaliza id_marca, cedula y celular para botwa_existe_asesor.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        536,
+        161
+      ]
+    },
+    {
+      "id": "XHxThECLGPhTpic6L6eKN",
+      "title": "Start",
+      "type": "START",
+      "position": [
+        100,
+        50
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "1xh2uj-C5WbnGLHkhcPWO",
+      "sourceId": "pKh-AcaBgvOiurnIJgqP1",
+      "targetId": "69HjKBQE9M9HW1mgWKOm1",
+      "branch": "failed"
+    },
+    {
+      "id": "bgWeefdW29nEbHkggUBLd",
+      "sourceId": "RjN7IR-K7SvI1ka4l6VnY",
+      "targetId": "pKh-AcaBgvOiurnIJgqP1",
+      "branch": "success"
+    },
+    {
+      "id": "CmD7wU-qNDZBN6vJpuski",
+      "sourceId": "w2V8rWaNnfXOUApF8JuRv",
+      "targetId": "69HjKBQE9M9HW1mgWKOm1",
+      "branch": "failed"
+    },
+    {
+      "id": "eMzr129ooO7YUJZde8I4o",
+      "sourceId": "1fvzONX0i8bz5UrWlmA0U",
+      "targetId": "hQmFt_z9yF-LvcdoI-y5E",
+      "branch": "success"
+    },
+    {
+      "id": "K4J5urh9PaUItBzOHs4Cq",
+      "sourceId": "pKh-AcaBgvOiurnIJgqP1",
+      "targetId": "uGoUUW6u5iu5GKWFe4sqX",
+      "branch": "success"
+    },
+    {
+      "id": "mMAdlK7HefGb3mB7V4hS7",
+      "sourceId": "RjN7IR-K7SvI1ka4l6VnY",
+      "targetId": "1fvzONX0i8bz5UrWlmA0U",
+      "branch": "failed"
+    },
+    {
+      "id": "PFHglfHEF0dxwXo1Rokv_",
+      "sourceId": "XHxThECLGPhTpic6L6eKN",
+      "targetId": "w2V8rWaNnfXOUApF8JuRv",
+      "branch": "default"
+    },
+    {
+      "id": "q1lJE6rUbO-W1ZrQp-Go_",
+      "sourceId": "69HjKBQE9M9HW1mgWKOm1",
+      "targetId": "hQmFt_z9yF-LvcdoI-y5E",
+      "branch": "success"
+    },
+    {
+      "id": "vDmd10j4aajBLHorv50SD",
+      "sourceId": "w2V8rWaNnfXOUApF8JuRv",
+      "targetId": "RjN7IR-K7SvI1ka4l6VnY",
+      "branch": "success"
+    },
+    {
+      "id": "xsHRK7kjfudEvvegMd76i",
+      "sourceId": "1fvzONX0i8bz5UrWlmA0U",
+      "targetId": "69HjKBQE9M9HW1mgWKOm1",
+      "branch": "failed"
+    }
+  ]
+}

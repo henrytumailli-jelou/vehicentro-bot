@@ -1,0 +1,429 @@
+{
+  "workflowId": 64847,
+  "workflowName": "Crédito Directo",
+  "workflowDescription": "Solicitud de crédito directo para compra de vehículos: financiamiento con Vehicentro o financieras, captura de datos y derivación a asesor.",
+  "workflowDefault": false,
+  "nodes": [
+    {
+      "id": "_OnMfuugSrk6yHLUC2DCV",
+      "title": "Inicio crédito Vehicentro",
+      "configuration": {
+        "title": "Inicio crédito Vehicentro",
+        "messages": [
+          {
+            "id": "msg_form_v",
+            "text": "🏢 *Financiamiento directo con Vehicentro*\n\nPerfecto, te guiaré en tu solicitud de crédito.\n\nPróximamente aquí se abrirá el formulario seguro (WhatsApp Flow) para tus datos personales, laborales y financieros, seguido de validación biométrica y firma digital.\n\nPor ahora, te conecto con un asesor de crédito para iniciar tu proceso. 💰",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2040,
+        50
+      ]
+    },
+    {
+      "id": "3IeNT7INXAGnLaO4S1m4s",
+      "title": "VeHi - Crédito Directo",
+      "configuration": {
+        "name": "VeHi - Crédito Directo",
+        "model": "openai/gpt-5.6-luna",
+        "title": "VeHi - Crédito Directo",
+        "version": "v2",
+        "settings": {
+          "expiration": {
+            "time": "hours",
+            "enabled": true,
+            "duration": 8,
+            "timeInSeconds": 28800
+          },
+          "splitMessages": true,
+          "messageHistory": {
+            "count": 12,
+            "enabled": true
+          }
+        },
+        "variable": "creditoResult",
+        "connections": {
+          "mcp": [],
+          "datum": [],
+          "tools": [
+            {
+              "name": "get_current_date_time",
+              "external": false
+            },
+            {
+              "name": "send_interactive_message",
+              "action": "pause",
+              "external": false
+            }
+          ]
+        },
+        "description": "VeHi: asistente de solicitud de crédito directo Vehicentro.",
+        "endFunction": {
+          "rawSchema": {
+            "accion": {
+              "type": "string",
+              "required": true
+            },
+            "motivo": {
+              "type": "string",
+              "required": false
+            },
+            "tipo_credito": {
+              "type": "string",
+              "required": false
+            },
+            "modelo_interes": {
+              "type": "string",
+              "required": false
+            }
+          },
+          "description": "Valores accion: continuar, vehicentro, financieras, asesor, finalizar."
+        },
+        "filesConfig": {
+          "files": [],
+          "enabled": false
+        },
+        "instructions": "Eres VeHi en el flujo de Crédito Directo. Ofreces dos caminos: financiamiento directo con Vehicentro o con financieras aliadas. Guías al usuario y deriva al formulario o asesor según corresponda. Responde en español, mensajes cortos.",
+        "startCommand": "Mensaje: {{$message.text}}\nMarca: {{$memory.id_marca_credito}}\nTipo crédito: {{$memory.tipo_credito}}\nNota: viene de bienvenida VeHi — no saludar de nuevo.",
+        "fallbackModel": {
+          "name": "gpt-4.1-mini",
+          "model": "openai/gpt-4.1-mini",
+          "provider": "openai"
+        },
+        "instructions_lang": "es",
+        "instructions_role": "Eres *VeHi* en el flujo de *Crédito Directo*. El usuario ya pasó por bienvenida y aceptó LOPDP. NO saludes de nuevo. Ayúdalo a iniciar su solicitud de crédito para compra de vehículo.",
+        "instructions_process": "1. Continúa sin saludo inicial.\n2. Marca activa: {{ $memory.id_marca_credito }}.\n3. Ofrece las dos opciones con send_interactive_message:\n   - '🏢 Financiamiento directo Vehicentro'\n   - '🏦 Financiamiento con financieras'\n4. Explica brevemente cada opción:\n   - Vehicentro: formulario completo, biometría, buró Equifax, firma digital (fases posteriores).\n   - Financieras: formulario y derivación a asesor para envío a financiera.\n5. Si elige Vehicentro → accion=vehicentro.\n6. Si elige Financieras → accion=financieras.\n7. Si tiene dudas o quiere asesor → accion=asesor.\n8. Si ya no necesita → accion=finalizar.\n9. Mientras elige → accion=continuar.",
+        "nonHappyPathHandlers": {
+          "error": {
+            "mode": "message",
+            "message": "Tuve un inconveniente con tu solicitud de crédito. Te conecto con un asesor. 💰"
+          }
+        },
+        "instructions_guardrails": "No prometas tasas, plazos ni aprobación de crédito. No solicites datos sensibles en chat (van en Flows seguro). El flujo completo con biometría, Equifax y firma se implementará en fases posteriores. Deriva a asesor ante dudas."
+      },
+      "type": "AI_TASK",
+      "position": [
+        876,
+        50
+      ]
+    },
+    {
+      "id": "c6Use8EzPetzZdUxBJT89",
+      "title": "Error derivación crédito",
+      "configuration": {
+        "title": "Error derivación crédito",
+        "messages": [
+          {
+            "id": "msg_fail_cred",
+            "text": "No hay asesores disponibles. Escríbenos en horario comercial (L-V 8:00-18:00).",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2816,
+        50
+      ]
+    },
+    {
+      "id": "gWmtQtKA4Qd02_B3hD5ra",
+      "title": "Tiempo agotado crédito",
+      "configuration": {
+        "title": "Tiempo agotado crédito",
+        "messages": [
+          {
+            "id": "msg_timeout_cred",
+            "text": "Tu sesión expiró ⏳ Escríbeme cuando quieras retomar tu solicitud de crédito.",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2816,
+        270
+      ]
+    },
+    {
+      "id": "jhL44MUAb6wHosiq3k668",
+      "title": "Guardar acción crédito",
+      "configuration": {
+        "title": "Guardar acción crédito",
+        "content": "const r = $memory.getJson('creditoResult', {});\nconst accion = (r.accion || 'continuar').toLowerCase();\n$memory.set('accion_credito', accion);\nif (r.tipo_credito) $memory.set('tipo_credito', String(r.tipo_credito));\nif (r.modelo_interes) $memory.set('modelo_interes', String(r.modelo_interes));\nif (accion === 'vehicentro') $memory.set('tipo_credito', 'vehicentro');\nif (accion === 'financieras') $memory.set('tipo_credito', 'financieras');",
+        "instruction": "Persiste tipo de crédito seleccionado.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        1264,
+        50
+      ]
+    },
+    {
+      "id": "KaeBB40VzNKsvM1LifyHA",
+      "title": "Confirmación asesor crédito",
+      "configuration": {
+        "title": "Confirmación asesor crédito",
+        "messages": [
+          {
+            "id": "msg_ok_cred",
+            "text": "Te conecto con un asesor de crédito Vehicentro. En breve te atienden para tu solicitud. 💰\n\n📞 (03) 2 994740",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2816,
+        490
+      ]
+    },
+    {
+      "id": "pEvt1XLyxHwEBDHh7BOYt",
+      "title": "Acción post-crédito",
+      "configuration": {
+        "title": "Acción post-crédito",
+        "conditions": [
+          {
+            "id": "vehicentro",
+            "name": "Crédito Vehicentro",
+            "terms": [
+              {
+                "id": "t1",
+                "type": "string",
+                "value1": "{{$memory.accion_credito}}",
+                "value2": "vehicentro",
+                "operator": "equal"
+              }
+            ]
+          },
+          {
+            "id": "financieras",
+            "name": "Crédito financieras",
+            "terms": [
+              {
+                "id": "t2",
+                "type": "string",
+                "value1": "{{$memory.accion_credito}}",
+                "value2": "financieras",
+                "operator": "equal"
+              }
+            ]
+          },
+          {
+            "id": "asesor",
+            "name": "Asesor",
+            "terms": [
+              {
+                "id": "t3",
+                "type": "string",
+                "value1": "{{$memory.accion_credito}}",
+                "value2": "asesor",
+                "operator": "equal"
+              }
+            ]
+          },
+          {
+            "id": "finalizar",
+            "name": "Finalizar",
+            "terms": [
+              {
+                "id": "t4",
+                "type": "string",
+                "value1": "{{$memory.accion_credito}}",
+                "value2": "finalizar",
+                "operator": "equal"
+              }
+            ]
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        1652,
+        50
+      ]
+    },
+    {
+      "id": "q8nqPZ-Ft4I5DF9EpokJP",
+      "title": "Derivar a asesor crédito",
+      "configuration": {
+        "title": "Derivar a asesor crédito",
+        "priority": 0,
+        "assignment": {
+          "by": "shuffle",
+          "type": "direct"
+        }
+      },
+      "type": "CONNECT",
+      "position": [
+        2428,
+        160
+      ]
+    },
+    {
+      "id": "tqpHaeTbgr3sHR8WhDwgg",
+      "title": "Despedida crédito",
+      "configuration": {
+        "title": "Despedida crédito",
+        "messages": [
+          {
+            "id": "msg_desp_cred",
+            "text": "¡Gracias por tu interés en financiar tu vehículo con Vehicentro! 💰\n\nCuando quieras retomar, escríbeme.",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2816,
+        710
+      ]
+    },
+    {
+      "id": "VXR9wPWtiyyZ3KZaS5Yq2",
+      "title": "Start",
+      "type": "START",
+      "position": [
+        100,
+        50
+      ]
+    },
+    {
+      "id": "w9STJeC1uQ8FQR5JhtrVk",
+      "title": "Inicializar contexto crédito",
+      "configuration": {
+        "title": "Inicializar contexto crédito",
+        "content": "const marca = $memory.get('marca_activa') || $memory.get('marca_seleccionada') || $memory.get('id_marca') || '0';\n$memory.set('id_marca_credito', String(marca));\n$memory.set('flujo_activo', 'credito');",
+        "instruction": "Prepara marca e intención heredadas de bienvenida.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        488,
+        50
+      ]
+    },
+    {
+      "id": "XxJBLpGuPdKN4BrcCmN_9",
+      "title": "Inicio crédito financieras",
+      "configuration": {
+        "title": "Inicio crédito financieras",
+        "messages": [
+          {
+            "id": "msg_form_f",
+            "text": "🏦 *Financiamiento con financieras aliadas*\n\nExcelente elección. Te conecto con un asesor que te guiará en el formulario y envío de tu solicitud a la financiera correspondiente.\n\nPróximamente el formulario estará disponible directamente en este chat. 💰",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2040,
+        270
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "4MUcpC70HBrM8yQwa3emI",
+      "sourceId": "w9STJeC1uQ8FQR5JhtrVk",
+      "targetId": "3IeNT7INXAGnLaO4S1m4s",
+      "branch": "success"
+    },
+    {
+      "id": "5qQ2QwGfBVGC-BKI2osAJ",
+      "sourceId": "VXR9wPWtiyyZ3KZaS5Yq2",
+      "targetId": "w9STJeC1uQ8FQR5JhtrVk",
+      "branch": "default"
+    },
+    {
+      "id": "ACHvCfUnVG4t3wBx-VV8p",
+      "sourceId": "pEvt1XLyxHwEBDHh7BOYt",
+      "targetId": "XxJBLpGuPdKN4BrcCmN_9",
+      "branch": "condition:financieras"
+    },
+    {
+      "id": "c8bne38ah4OUrQcNyc0xq",
+      "sourceId": "3IeNT7INXAGnLaO4S1m4s",
+      "targetId": "jhL44MUAb6wHosiq3k668",
+      "branch": "success"
+    },
+    {
+      "id": "ERBJDObZwhEapSUU_475_",
+      "sourceId": "3IeNT7INXAGnLaO4S1m4s",
+      "targetId": "gWmtQtKA4Qd02_B3hD5ra",
+      "branch": "expire"
+    },
+    {
+      "id": "lL69Z9dUg6JtFJCX1inYG",
+      "sourceId": "pEvt1XLyxHwEBDHh7BOYt",
+      "targetId": "tqpHaeTbgr3sHR8WhDwgg",
+      "branch": "condition:finalizar"
+    },
+    {
+      "id": "mjwvSGdX3Q5zxT7_bSW-7",
+      "sourceId": "pEvt1XLyxHwEBDHh7BOYt",
+      "targetId": "q8nqPZ-Ft4I5DF9EpokJP",
+      "branch": "condition:asesor"
+    },
+    {
+      "id": "nkck3EdtvOHsu1BcMPl2d",
+      "sourceId": "q8nqPZ-Ft4I5DF9EpokJP",
+      "targetId": "c6Use8EzPetzZdUxBJT89",
+      "branch": "output:UNKNOWN_ERROR:failed"
+    },
+    {
+      "id": "OJ8OAt_UBgv1SV4QmCRii",
+      "sourceId": "q8nqPZ-Ft4I5DF9EpokJP",
+      "targetId": "KaeBB40VzNKsvM1LifyHA",
+      "branch": "output:JelouConnect:success"
+    },
+    {
+      "id": "P3cn122LuOBQKApGAb8OX",
+      "sourceId": "pEvt1XLyxHwEBDHh7BOYt",
+      "targetId": "_OnMfuugSrk6yHLUC2DCV",
+      "branch": "condition:vehicentro"
+    },
+    {
+      "id": "PjJeqMaLbQyh5Ebx_aPKe",
+      "sourceId": "pEvt1XLyxHwEBDHh7BOYt",
+      "targetId": "3IeNT7INXAGnLaO4S1m4s",
+      "branch": "else"
+    },
+    {
+      "id": "PtbB9pOVjr_myd6OmTs4J",
+      "sourceId": "q8nqPZ-Ft4I5DF9EpokJP",
+      "targetId": "c6Use8EzPetzZdUxBJT89",
+      "branch": "output:OPERATORS_NOT_IN_SCHEDULER:failed"
+    },
+    {
+      "id": "r4gLlygqPAFRvHofvd0cl",
+      "sourceId": "q8nqPZ-Ft4I5DF9EpokJP",
+      "targetId": "c6Use8EzPetzZdUxBJT89",
+      "branch": "output:OPERATOR_NOT_FOUND:failed"
+    },
+    {
+      "id": "ruYkI79v27YCsAwqgXMRh",
+      "sourceId": "_OnMfuugSrk6yHLUC2DCV",
+      "targetId": "q8nqPZ-Ft4I5DF9EpokJP",
+      "branch": "default"
+    },
+    {
+      "id": "YGtccNId3augbfE182Zw4",
+      "sourceId": "XxJBLpGuPdKN4BrcCmN_9",
+      "targetId": "q8nqPZ-Ft4I5DF9EpokJP",
+      "branch": "default"
+    },
+    {
+      "id": "YO4FSfSb4djT0ii6p0UY7",
+      "sourceId": "jhL44MUAb6wHosiq3k668",
+      "targetId": "pEvt1XLyxHwEBDHh7BOYt",
+      "branch": "success"
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "toolId": 8417,
+  "workflowId": 64886,
+  "toolName": "Consultar marcas Vehicentro",
+  "toolDescription": "Consulta las marcas habilitadas de Vehicentro (BDC 4.1, vía veh-bdc). Devuelve id y nombre de cada marca.",
+  "triggerType": "DEFAULT",
+  "ownership": "OWNED",
+  "inputs": [],
+  "outputs": [
+    {
+      "name": "failed",
+      "id": "tLyMyQwMgJAzm8t3xLKBr",
+      "displayName": "Error al consultar marcas",
+      "type": "FAILED",
+      "required": true,
+      "schema": null,
+      "position": 0
+    },
+    {
+      "name": "success",
+      "id": "KLxNfp4602ee-7d50Fdk6",
+      "displayName": "Marcas obtenidas",
+      "type": "SUCCESS",
+      "required": true,
+      "schema": null,
+      "position": 0
+    }
+  ],
+  "nodes": [
+    {
+      "id": "b7Km2nQxR1vN3wL5jTfYa",
+      "title": "Consultar marcas API",
+      "configuration": {
+        "url": "https://veh-bdc.fn.jelou.ai/marcas",
+        "body": {
+          "type": "application/json",
+          "content": "{}",
+          "enabled": true
+        },
+        "title": "Consultar marcas API",
+        "method": "POST",
+        "output": "marcasResponse",
+        "settings": {
+          "retries": 1,
+          "timeout": 30000,
+          "proxyOptions": {
+            "ip": "",
+            "auth": {
+              "password": null,
+              "username": null
+            },
+            "host": null,
+            "port": null,
+            "enabled": false,
+            "protocol": "https"
+          },
+          "retryOptions": {
+            "enabled": true,
+            "retries": 1,
+            "retryDelay": "exponential_delay",
+            "milliseconds": 0,
+            "retryCondition": "is_network_or_idempotent_request_error",
+            "shouldResetTimeout": false
+          },
+          "sslCertificate": true
+        },
+        "authentication": {
+          "type": "bearer",
+          "enabled": true,
+          "token": "{{$secret.JELOU_FN_INVOKE_KEY}}"
+        },
+        "headers": [
+          {
+            "id": "h_ct_marcas",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ]
+      },
+      "type": "HTTP",
+      "position": [
+        520,
+        50
+      ]
+    },
+    {
+      "id": "c8Ln3oRyS2wO4xM6kUgZb",
+      "title": "Parsear marcas",
+      "configuration": {
+        "title": "Parsear marcas",
+        "content": "const response = $context.getHttpResponse('marcasResponse');\nlet payload = {};\ntry { payload = response.json(); } catch (e) { throw new Error('Respuesta inválida de veh-bdc'); }\n// veh-bdc responde {ok, tipo, data}; solo \"ok\" trae marcas.\nif (payload.tipo !== 'ok') { throw new Error('Marcas no disponibles: ' + String(payload.tipo || 'sin tipo')); }\nconst marcas = (payload.data || []).map(function (m) { return { id: String(m.id), nombre: String(m.nombre) }; })\n  .filter(function (m) { return m.id && m.nombre; });\nif (marcas.length === 0) { throw new Error('No se encontraron marcas'); }\n$output.set('success', { marcas: marcas, total: marcas.length });",
+        "instruction": "Normaliza la respuesta de botwa_marcas y devuelve el listado al agente.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        940,
+        50
+      ]
+    },
+    {
+      "id": "d9Mo4pSzT3xP5yN7lVhAc",
+      "title": "Registrar error marcas",
+      "configuration": {
+        "title": "Registrar error marcas",
+        "content": "$output.set('failed', { error: 'No pude consultar el servicio de marcas en este momento.', marcas: [] });",
+        "instruction": "Devuelve error cuando falla la consulta HTTP de marcas.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        940,
+        410
+      ]
+    },
+    {
+      "id": "e0Np5qTaU4yQ6zO8mWiBd",
+      "title": "Fin éxito",
+      "configuration": {
+        "title": "Fin éxito",
+        "outputId": "KLxNfp4602ee-7d50Fdk6"
+      },
+      "type": "END",
+      "position": [
+        1360,
+        50
+      ]
+    },
+    {
+      "id": "f1Oq6rUbV5zR7aP9nXjCe",
+      "title": "Fin error",
+      "configuration": {
+        "outputId": "tLyMyQwMgJAzm8t3xLKBr"
+      },
+      "type": "END",
+      "position": [
+        1557,
+        479
+      ]
+    },
+    {
+      "id": "p0Xz5aCkE1fA7lY0xIvMt",
+      "title": "Code Error",
+      "configuration": {
+        "title": "Code Error",
+        "content": "$output.set('failed', { error: 'Error interno al procesar las marcas.', marcas: [] });",
+        "instruction": "Captura fallos inesperados de nodos CODE y devuelve output failed.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        1360,
+        230
+      ]
+    },
+    {
+      "id": "zgihg-8G8EUygztDuceCg",
+      "title": "Start",
+      "type": "START",
+      "position": [
+        100,
+        50
+      ],
+      "configuration": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "g2Pr7sVcW3xS9cP1oZlDm",
+      "sourceId": "zgihg-8G8EUygztDuceCg",
+      "targetId": "b7Km2nQxR1vN3wL5jTfYa",
+      "branch": "default"
+    },
+    {
+      "id": "h3Qs8tWdX4yT0dQ2pAmEn",
+      "sourceId": "b7Km2nQxR1vN3wL5jTfYa",
+      "targetId": "c8Ln3oRyS2wO4xM6kUgZb",
+      "branch": "success"
+    },
+    {
+      "id": "i4Rt9uXeY5zU1eR3qBnFo",
+      "sourceId": "b7Km2nQxR1vN3wL5jTfYa",
+      "targetId": "d9Mo4pSzT3xP5yN7lVhAc",
+      "branch": "failed"
+    },
+    {
+      "id": "j5Su0vYfZ6aV2fS4rCoGp",
+      "sourceId": "c8Ln3oRyS2wO4xM6kUgZb",
+      "targetId": "e0Np5qTaU4yQ6zO8mWiBd",
+      "branch": "success"
+    },
+    {
+      "id": "k6Tv1wZgA7bW3gT5sDqHq",
+      "sourceId": "d9Mo4pSzT3xP5yN7lVhAc",
+      "targetId": "f1Oq6rUbV5zR7aP9nXjCe",
+      "branch": "success"
+    },
+    {
+      "id": "l7Uw2xZhB8cX4iV7uFsJq",
+      "sourceId": "c8Ln3oRyS2wO4xM6kUgZb",
+      "targetId": "p0Xz5aCkE1fA7lY0xIvMt",
+      "branch": "failed"
+    },
+    {
+      "id": "m8Vx3yAiC9dY5jW8vGtKr",
+      "sourceId": "d9Mo4pSzT3xP5yN7lVhAc",
+      "targetId": "p0Xz5aCkE1fA7lY0xIvMt",
+      "branch": "failed"
+    },
+    {
+      "id": "n9Wy4zBjD0eZ6kX9wHuLs",
+      "sourceId": "p0Xz5aCkE1fA7lY0xIvMt",
+      "targetId": "f1Oq6rUbV5zR7aP9nXjCe",
+      "branch": "success"
+    }
+  ]
+}

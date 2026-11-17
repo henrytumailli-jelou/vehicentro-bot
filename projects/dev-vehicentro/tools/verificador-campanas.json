@@ -1,0 +1,424 @@
+{
+  "toolId": 8420,
+  "workflowId": 64998,
+  "toolName": "Verificador Campañas",
+  "toolDescription": "Determina si el mensaje del usuario proviene de una pauta/campaña publicitaria consultando el historial del room en Jelou y analizando URLs en el texto.",
+  "triggerType": "DEFAULT",
+  "ownership": "OWNED",
+  "inputs": [
+    {
+      "name": "textMsg",
+      "id": "wJDG8CzfhRw-ARHk2F1FH",
+      "displayName": "Mensaje del usuario",
+      "description": "Texto completo del mensaje recibido, incluyendo Enlace, URL y saludo.",
+      "type": "STRING",
+      "required": true,
+      "defaultValue": null,
+      "configuration": null,
+      "position": 0
+    }
+  ],
+  "outputs": [
+    {
+      "name": "error",
+      "id": "X6FPn9Ied312yi5B8_q1k",
+      "displayName": "No es Pauta/Publicidad",
+      "description": "error",
+      "type": "FAILED",
+      "required": true,
+      "schema": {
+        "error": "error"
+      },
+      "position": 0
+    },
+    {
+      "name": "errorcode",
+      "id": "Kbwge-4D7dhJC1Y1kIAsH",
+      "displayName": "Code Error",
+      "description": "Error",
+      "type": "FAILED",
+      "required": true,
+      "schema": {
+        "errorcode": "errorcode"
+      },
+      "position": 0
+    },
+    {
+      "name": "failed",
+      "id": "pA3k2nq-TP6Fh1wlQ92OU",
+      "displayName": "Error verificador",
+      "type": "FAILED",
+      "required": true,
+      "schema": null,
+      "position": 0
+    },
+    {
+      "name": "success",
+      "id": "ZeZvX7bIiaCAFzFApClRK",
+      "displayName": "Veredicto campaña",
+      "type": "SUCCESS",
+      "required": true,
+      "schema": null,
+      "position": 0
+    }
+  ],
+  "nodes": [
+    {
+      "id": "2nDwG_lBLrHCUQ-XODy0N",
+      "title": "AI Task",
+      "configuration": {
+        "model": "deepseek-v4-flash",
+        "version": "v2",
+        "variable": "parametros",
+        "connections": {
+          "mcp": [],
+          "datum": [],
+          "tools": []
+        },
+        "instructions": "**Instrucciones:** Analiza cuidadosamente el mensaje proporcionado por el usuario y separa el texto de la URL que contenga. ### Mensaje del usuario: {{$input.textMsg}} ### Objetivo: Identifica dos elementos dentro del mensaje: 1. **texto**: todo el contenido del mensaje EXCLUYENDO la URL. Elimina espacios sobrantes al inicio y al final. Si no hay texto además de la URL, devuelve una cadena vacía \"\". 2. **url**: la primera URL válida presente en el mensaje (debe iniciar con http:// o https://, o contener un dominio válido como www. o .com/.net/.org, etc.). Si no hay URL, devuelve una cadena vacía \"\". ### Formato de salida: Responde **únicamente** con el siguiente esquema en formato JSON, sin texto adicional: { \"texto\": (texto sin la URL), \"url\": (URL detectada) } ### Reglas importantes: - No incluyas explicaciones, comentarios ni caracteres fuera del esquema JSON. - **No utilices bloques de código ni etiquetas como ```json. Escribe el JSON directamente sin formato adicional.** - Conserva el contenido original del texto tal cual (respetando tildes, mayúsculas y signos), solo quita la URL y los espacios sobrantes. - Si el mensaje contiene varias URLs, toma únicamente la primera. Tu **única salida** debe ser el esquema JSON correspondiente, sin ningún texto adicional."
+      },
+      "type": "AI_LOGIC",
+      "position": [
+        1536,
+        712
+      ]
+    },
+    {
+      "id": "a1HtRm9kLp2vNw3xQf7Yb",
+      "title": "Consultar historial room",
+      "configuration": {
+        "url": "https://api.jelou.ai/v1/rooms/G:{{$bot.id}}:{{$user.id}}",
+        "body": {
+          "type": "no-content",
+          "content": null,
+          "enabled": false
+        },
+        "method": "GET",
+        "output": "campaniaResponse",
+        "headers": [
+          {
+            "id": "hdr_content_type",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "retries": 1,
+          "timeout": 30000,
+          "proxyOptions": {
+            "ip": "",
+            "auth": {
+              "password": null,
+              "username": null
+            },
+            "host": null,
+            "port": null,
+            "enabled": false,
+            "protocol": "https"
+          },
+          "retryOptions": {
+            "enabled": true,
+            "retries": 1,
+            "retryDelay": "exponential_delay",
+            "milliseconds": 0,
+            "retryCondition": "is_network_or_idempotent_request_error",
+            "shouldResetTimeout": false
+          },
+          "sslCertificate": true
+        },
+        "instruction": "Obtiene el historial del room para detectar metadata de referral de campaña.",
+        "authentication": {
+          "type": "basic",
+          "enabled": true,
+          "password": "lzgwLwk5ezJUv6lnHug00rNbD0SqWES0U6APOj/7Xawolmjog04ex7rOYXmZ90AGg1HcaygxCdYWpRJCfUQ4CWyvgsCPw6T/tiZO95i6PThdKYMb1y/3W7U8Ag8MYE3xvwty3bIpgZR8wWlm4GKsr2Dn3t95mjynVrMS/fv6PSQRYP3VfbETW7VESkwzOzerwpXSoxlF0yBJb7ecWYiglPsPxBRDbnw3EOjWmkvSvPYF7J9IsCLvtBqNpAOZz3aSKDR29fKcDd2mfOQtL+PvoHkuH2LSo4XMptXRoQGoP9Y6F5VrdbfLwT7FtaLPqEC3CCdgV2g5cE+5co6dg3hihBDfKVX1ycJq8r/ECMgkF0Z2tvIQlQ73mUAe11IjyAyJjOUAgHMiPwNi84d86US8KQIDNJIilRADqxDKOjSgZdj5pdVgqGfTfUON9kI5mNbkqeWlBB0CbYz/JcawqYuZZWwBBR4ImS7LOe1P2zYQUas2l786it5UmYeVPtl6G+kK00YIhIBPmIkcuj91l3fpORlJbDNyW4y1QCFc2oRZnyb7EHvBGEEi7TkQ5C42/8ZhsVbz23N3Y+sv9qSgtIQiPtKTB02cPaMtIEbSTerlKdQwrXJ5DjCoG3kaBaEROlrPv5pqdxB4EDrLGHM+1vTCNQbnHiQZ+G8hBWzhpl2ZphI=",
+          "username": "{{$company.clientId}}",
+          "isEncrypted": true
+        }
+      },
+      "type": "HTTP",
+      "position": [
+        629,
+        97
+      ]
+    },
+    {
+      "id": "b2IuSn0mMq3wOx4yRg8Zc",
+      "title": "Parsear respuesta room",
+      "configuration": {
+        "content": "let campaniaResponse = $context.get(\"campaniaResponse\") || {};\nif (typeof campaniaResponse === 'string') {\n  campaniaResponse = JSON.parse(campaniaResponse);\n}\n\nlet data = campaniaResponse.data.data || {};\nif (typeof data === 'string') {\n  data = JSON.parse(data);\n}\nconst msgsUsuario = data.messages || [];\nconst msgUsuario = msgsUsuario[0] || {};\nconst metadata = msgUsuario?.metadata || {};\nconst hasreferral = !!(metadata.referral);\n\n$utils.logger.log(\"campaniaResponse data\", data);\n\nif (hasreferral) {\n  const referral = metadata.referral;\n  $memory.set(\"headline\", referral.headline || \"\");\n  $memory.set(\"source_url\", referral.source_url || \"\");\n}\n\nconst bubble = msgUsuario?.bubble || {};\nconst text = bubble.text || \"\";\n\n$context.set(\"hasreferral\", hasreferral);\n$memory.set(\"text\", text);",
+        "instruction": "Extrae referral del historial del room.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        1257,
+        226
+      ]
+    },
+    {
+      "id": "EwDKe0Bu7JW10PAQ559X1",
+      "title": "Condicional",
+      "configuration": {
+        "conditions": [
+          {
+            "id": "x5vD_dYR-kqpHqt7_LunI",
+            "name": "Si",
+            "terms": [
+              {
+                "id": "eChSlqleCOUTUt8870E_-",
+                "value1": "{{$context.hasreferral}}",
+                "value2": "true",
+                "operator": "equal",
+                "inputDisplayName": {
+                  "value1": "{{$context.hasreferral}}",
+                  "value2": "true"
+                }
+              }
+            ],
+            "conditionPanelCollapsed": false
+          },
+          {
+            "id": "j2Oj7-RqQ_oiFvCvmeVdj",
+            "name": "Si es una posible pauta",
+            "terms": [
+              {
+                "id": "BxjSmS2u3wzf1Zwl9T4H5",
+                "value1": "{{$input.textMsg}}",
+                "value2": "/\\\\b(?:https?:\\\\/\\\\/|www\\\\.)\\\\S+\\\\b/",
+                "operator": "regex_match",
+                "inputDisplayName": {
+                  "value1": "{{$input.textMsg}}",
+                  "value2": "/\\\\b(?:https?:\\\\/\\\\/|www\\\\.)\\\\S+\\\\b/"
+                }
+              }
+            ],
+            "conditionPanelCollapsed": false
+          },
+          {
+            "id": "mZsHydiXXo_-O4AiN2WBG",
+            "name": "Si es publicidad",
+            "terms": [
+              {
+                "id": "Kw6CQlpJn4rrJZRhK9G7I",
+                "value1": "{{$input.textMsg}}",
+                "value2": "/(?:https?:\\\\/\\\\/|www\\\\.)\\\\S+/i",
+                "operator": "regex_match",
+                "inputDisplayName": {
+                  "value1": "{{$input.textMsg}}",
+                  "value2": "/(?:https?:\\\\/\\\\/|www\\\\.)\\\\S+/i"
+                }
+              }
+            ],
+            "conditionPanelCollapsed": false
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        1584,
+        51
+      ]
+    },
+    {
+      "id": "FyFDERlQxAvsE_tSCmjNP",
+      "title": "Condicional",
+      "configuration": {
+        "conditions": [
+          {
+            "id": "OeodDGzuxKoDlD4LrMNHF",
+            "name": "Enlace URL",
+            "terms": [
+              {
+                "id": "7Tys9Wmkt4MERh-I77VB5",
+                "value1": "{{$input.textMsg}}",
+                "value2": "https?:\\/\\/\\S+|www\\.\\S+",
+                "operator": "regex_match",
+                "inputDisplayName": {
+                  "value1": "{{$input.textMsg}}",
+                  "value2": "https?:\\/\\/\\S+|www\\.\\S+"
+                }
+              }
+            ],
+            "conditionPanelCollapsed": false
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        1221,
+        745
+      ]
+    },
+    {
+      "id": "g7NzXs5rRv8bTc9dWl3Eh",
+      "title": "Fin éxito",
+      "configuration": {
+        "outputId": "ZeZvX7bIiaCAFzFApClRK"
+      },
+      "type": "END",
+      "position": [
+        2026,
+        113
+      ]
+    },
+    {
+      "id": "Ny2cyd9mi7hCk-n_RvRJt",
+      "title": "nodes.End",
+      "configuration": {
+        "outputId": "ZeZvX7bIiaCAFzFApClRK"
+      },
+      "type": "END",
+      "position": [
+        2171,
+        784
+      ]
+    },
+    {
+      "id": "pl7c1OOTyHXGXTOEg87fU",
+      "title": "nodes.End",
+      "configuration": {
+        "outputId": "X6FPn9Ied312yi5B8_q1k"
+      },
+      "type": "END",
+      "position": [
+        2033,
+        378
+      ]
+    },
+    {
+      "id": "qFMS2lw7YRAvnkfXfWMpe",
+      "title": "Start",
+      "type": "START",
+      "position": [
+        100,
+        50
+      ]
+    },
+    {
+      "id": "sP3dAiH_3GP4OUM2-H5UN",
+      "title": "nodes.End",
+      "configuration": {
+        "outputId": "X6FPn9Ied312yi5B8_q1k"
+      },
+      "type": "END",
+      "position": [
+        1536,
+        982
+      ]
+    },
+    {
+      "id": "SxVPPTD5TEZ3gqJvX-aNh",
+      "title": "nodes.End",
+      "configuration": {
+        "outputId": "Kbwge-4D7dhJC1Y1kIAsH"
+      },
+      "type": "END",
+      "position": [
+        1569,
+        482
+      ]
+    },
+    {
+      "id": "TvfPmtneVyreYXyDeRSup",
+      "title": "Variable",
+      "configuration": {
+        "variables": {
+          "source_url": "{{$memory.parametros.url}}",
+          "mensajePautaUsuario": "{{$memory.parametros.texto}}"
+        }
+      },
+      "type": "MEMORY",
+      "position": [
+        1877,
+        685
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "2VAJP-dK3G5EHgGgj4HwK",
+      "sourceId": "2nDwG_lBLrHCUQ-XODy0N",
+      "targetId": "TvfPmtneVyreYXyDeRSup",
+      "branch": "failed"
+    },
+    {
+      "id": "alKZ28LcUrIRZ8dhn51SN",
+      "sourceId": "EwDKe0Bu7JW10PAQ559X1",
+      "targetId": "g7NzXs5rRv8bTc9dWl3Eh",
+      "branch": "condition:x5vD_dYR-kqpHqt7_LunI"
+    },
+    {
+      "id": "e1Tu2vWxY3zB4cD5eF6gH",
+      "sourceId": "a1HtRm9kLp2vNw3xQf7Yb",
+      "targetId": "b2IuSn0mMq3wOx4yRg8Zc",
+      "branch": "success"
+    },
+    {
+      "id": "fvXBhB6cuE0EHOcEYYMbl",
+      "sourceId": "TvfPmtneVyreYXyDeRSup",
+      "targetId": "Ny2cyd9mi7hCk-n_RvRJt",
+      "branch": "default"
+    },
+    {
+      "id": "h8VtOHTflqfaHyTbt2aoJ",
+      "sourceId": "FyFDERlQxAvsE_tSCmjNP",
+      "targetId": "sP3dAiH_3GP4OUM2-H5UN",
+      "branch": "else"
+    },
+    {
+      "id": "HUe5QS7KnTgj6sXQ0GT9b",
+      "sourceId": "EwDKe0Bu7JW10PAQ559X1",
+      "targetId": "g7NzXs5rRv8bTc9dWl3Eh",
+      "branch": "condition:mZsHydiXXo_-O4AiN2WBG"
+    },
+    {
+      "id": "JvaUryaCWPqSusDKedgR3",
+      "sourceId": "qFMS2lw7YRAvnkfXfWMpe",
+      "targetId": "a1HtRm9kLp2vNw3xQf7Yb",
+      "branch": "default"
+    },
+    {
+      "id": "P4pwKHrclTV1OhSor011f",
+      "sourceId": "FyFDERlQxAvsE_tSCmjNP",
+      "targetId": "2nDwG_lBLrHCUQ-XODy0N",
+      "branch": "condition:OeodDGzuxKoDlD4LrMNHF"
+    },
+    {
+      "id": "pRJW9sRNt5dgg0XSYuEey",
+      "sourceId": "b2IuSn0mMq3wOx4yRg8Zc",
+      "targetId": "SxVPPTD5TEZ3gqJvX-aNh",
+      "branch": "failed"
+    },
+    {
+      "id": "q2MW_EGEriNceEfUzwHat",
+      "sourceId": "a1HtRm9kLp2vNw3xQf7Yb",
+      "targetId": "FyFDERlQxAvsE_tSCmjNP",
+      "branch": "failed"
+    },
+    {
+      "id": "qXU_QAg5vMcq-mKb-adKM",
+      "sourceId": "EwDKe0Bu7JW10PAQ559X1",
+      "targetId": "pl7c1OOTyHXGXTOEg87fU",
+      "branch": "else"
+    },
+    {
+      "id": "rPBwqthEPFvIESJilfX6i",
+      "sourceId": "2nDwG_lBLrHCUQ-XODy0N",
+      "targetId": "TvfPmtneVyreYXyDeRSup",
+      "branch": "success"
+    },
+    {
+      "id": "RuJLqcgj8RB4E0HmZlRhv",
+      "sourceId": "b2IuSn0mMq3wOx4yRg8Zc",
+      "targetId": "EwDKe0Bu7JW10PAQ559X1",
+      "branch": "success"
+    },
+    {
+      "id": "TbKbBalfLN-WuD-Oud0Lc",
+      "sourceId": "EwDKe0Bu7JW10PAQ559X1",
+      "targetId": "g7NzXs5rRv8bTc9dWl3Eh",
+      "branch": "condition:j2Oj7-RqQ_oiFvCvmeVdj"
+    }
+  ]
+}

@@ -1,0 +1,394 @@
+{
+  "workflowId": 64845,
+  "workflowName": "Repuestos",
+  "workflowDescription": "Consulta y pedido de repuestos automotrices: identificación de vehículo por placa o VIN, búsqueda de repuestos, disponibilidad y opciones de checkout.",
+  "workflowDefault": false,
+  "nodes": [
+    {
+      "id": "_m3pkBSaQQYCtOt8WnWDi",
+      "title": "Inicializar contexto repuestos",
+      "configuration": {
+        "title": "Inicializar contexto repuestos",
+        "content": "const marca = $memory.get('marca_activa') || $memory.get('marca_seleccionada') || $memory.get('id_marca') || '0';\n$memory.set('id_marca_repuestos', String(marca));\n$memory.set('flujo_activo', 'repuestos');",
+        "instruction": "Prepara marca e intención heredadas de bienvenida.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        488,
+        50
+      ]
+    },
+    {
+      "id": "_pONI_beKg58PV1rlSple",
+      "title": "Despedida repuestos",
+      "configuration": {
+        "title": "Despedida repuestos",
+        "messages": [
+          {
+            "id": "msg_desp_rep",
+            "text": "¡Gracias por contactar a Vehicentro Repuestos! 🔧\n\nCuando necesites un repuesto, escríbeme. ¡Estoy aquí para ayudarte!",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2816,
+        50
+      ]
+    },
+    {
+      "id": "6hLaFippGOcYn1-vthXD9",
+      "title": "VeHi - Repuestos",
+      "configuration": {
+        "name": "VeHi - Repuestos",
+        "model": "openai/gpt-5.6-luna",
+        "title": "VeHi - Repuestos",
+        "version": "v2",
+        "settings": {
+          "expiration": {
+            "time": "hours",
+            "enabled": true,
+            "duration": 8,
+            "timeInSeconds": 28800
+          },
+          "splitMessages": true,
+          "messageHistory": {
+            "count": 15,
+            "enabled": true
+          }
+        },
+        "variable": "repuestosResult",
+        "connections": {
+          "mcp": [],
+          "datum": [],
+          "tools": [
+            {
+              "name": "get_current_date_time",
+              "external": false
+            },
+            {
+              "name": "send_interactive_message",
+              "action": "pause",
+              "external": false
+            }
+          ]
+        },
+        "description": "VeHi: asistente de consulta y pedido de repuestos Vehicentro.",
+        "endFunction": {
+          "rawSchema": {
+            "accion": {
+              "type": "string",
+              "required": true
+            },
+            "ciudad": {
+              "type": "string",
+              "required": false
+            },
+            "motivo": {
+              "type": "string",
+              "required": false
+            },
+            "placa_vehiculo": {
+              "type": "string",
+              "required": false
+            },
+            "opcion_checkout": {
+              "type": "string",
+              "required": false
+            },
+            "repuesto_solicitado": {
+              "type": "string",
+              "required": false
+            }
+          },
+          "description": "Valores accion: continuar, checkout, asesor, finalizar. Incluye placa_vehiculo, repuesto_solicitado, ciudad, opcion_checkout cuando estén disponibles."
+        },
+        "filesConfig": {
+          "files": [],
+          "enabled": true
+        },
+        "instructions": "Eres VeHi en el flujo de Repuestos de Vehicentro. Guías al usuario para identificar su vehículo (placa, VIN o foto de matrícula), buscar el repuesto, confirmar ciudad y elegir checkout (instalación con asesor, info de pago DEUNA/QR, o retiro en punto de venta). Responde en español, mensajes cortos. No inventes precios ni disponibilidad.",
+        "startCommand": "Mensaje: {{$message.text}}\nMarca: {{$memory.id_marca_repuestos}}\nPlaca/VIN: {{$memory.placa_vehiculo}}\nRepuesto: {{$memory.repuesto_solicitado}}\nCiudad: {{$memory.ciudad_usuario}}\nNota: usuario viene de bienvenida VeHi — no saludar de nuevo.",
+        "fallbackModel": {
+          "name": "gpt-4.1-mini",
+          "model": "openai/gpt-4.1-mini",
+          "provider": "openai"
+        },
+        "instructions_lang": "es",
+        "instructions_role": "Eres *VeHi* en el flujo de *Repuestos*. El usuario ya pasó por bienvenida y aceptó LOPDP. NO saludes de nuevo. Continúa ayudándolo a encontrar y pedir repuestos para su vehículo.",
+        "instructions_process": "1. Continúa sin saludo inicial.\n2. Marca activa: {{ $memory.id_marca_repuestos }}.\n3. Paso 1 — Identificar vehículo: pide placa, VIN o foto de matrícula. Indica que puede enviar una foto 📸.\n4. Paso 2 — Repuesto: pregunta qué repuesto necesita (nombre, foto o número de serie).\n5. Paso 3 — Ciudad: pregunta en qué ciudad se encuentra.\n6. Paso 4 — Checkout: ofrece con send_interactive_message:\n   - '🔧 Coordinar instalación con asesor'\n   - '💳 Info de pago (DEUNA/QR)'\n   - '🏪 Retirar en punto de venta'\n7. Cuando tengas vehículo + repuesto + ciudad + opción checkout → accion=checkout.\n8. Si necesita asesor humano → accion=asesor.\n9. Si ya no necesita ayuda → accion=finalizar.\n10. Mientras falten datos, accion=continuar y pregunta lo que falte.",
+        "nonHappyPathHandlers": {
+          "error": {
+            "mode": "message",
+            "message": "Tuve un inconveniente con tu consulta de repuestos. Te conecto con un asesor. 🔧"
+          }
+        },
+        "instructions_guardrails": "No inventes precios, stock ni compatibilidad de repuestos. No prometas envío a domicilio (no está en alcance). OCR y APIs se conectarán en fases posteriores — por ahora recopila datos y guía al usuario. Deriva a asesor si hay duda técnica."
+      },
+      "type": "AI_TASK",
+      "position": [
+        876,
+        50
+      ]
+    },
+    {
+      "id": "B1Ghgt4054aJCeErx4Ytb",
+      "title": "Derivar a asesor repuestos",
+      "configuration": {
+        "title": "Derivar a asesor repuestos",
+        "priority": 0,
+        "assignment": {
+          "by": "shuffle",
+          "type": "direct"
+        }
+      },
+      "type": "CONNECT",
+      "position": [
+        2428,
+        50
+      ]
+    },
+    {
+      "id": "eGJyzMojcBv3sWDAN-K06",
+      "title": "Tiempo agotado repuestos",
+      "configuration": {
+        "title": "Tiempo agotado repuestos",
+        "messages": [
+          {
+            "id": "msg_timeout_rep",
+            "text": "Tu sesión expiró ⏳ Escríbeme cuando quieras retomar tu pedido de repuesto.",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2816,
+        270
+      ]
+    },
+    {
+      "id": "EwnNw2C-hazAIsPx5LARd",
+      "title": "Start",
+      "type": "START",
+      "position": [
+        100,
+        50
+      ]
+    },
+    {
+      "id": "sKOvour0BeM9NpOYW0yNo",
+      "title": "Confirmación pedido repuesto",
+      "configuration": {
+        "title": "Confirmación pedido repuesto",
+        "messages": [
+          {
+            "id": "msg_checkout_rep",
+            "text": "✅ *Resumen de tu pedido de repuesto*\n\n🚗 Vehículo: {{$memory.placa_vehiculo}}\n🔧 Repuesto: {{$memory.repuesto_solicitado}}\n📍 Ciudad: {{$memory.ciudad_usuario}}\n📦 Opción: {{$memory.opcion_checkout}}\n\nUn asesor confirmará disponibilidad y te indicará los siguientes pasos. Te conecto ahora. 🙌",
+            "type": "text"
+          }
+        ],
+        "instruction": "Resume el pedido y próximos pasos."
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2040,
+        50
+      ]
+    },
+    {
+      "id": "ucSoEMBVGTdDITKXfms7M",
+      "title": "Confirmación asesor repuestos",
+      "configuration": {
+        "title": "Confirmación asesor repuestos",
+        "messages": [
+          {
+            "id": "msg_ok_rep",
+            "text": "Te conecto con un asesor de repuestos Vehicentro. En breve te atienden. 🔧\n\n📞 (03) 2 994740",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2816,
+        490
+      ]
+    },
+    {
+      "id": "vKsEzj0dTjXrraIxijzJ8",
+      "title": "Acción post-repuestos",
+      "configuration": {
+        "title": "Acción post-repuestos",
+        "conditions": [
+          {
+            "id": "checkout",
+            "name": "Checkout",
+            "terms": [
+              {
+                "id": "t1",
+                "type": "string",
+                "value1": "{{$memory.accion_repuestos}}",
+                "value2": "checkout",
+                "operator": "equal"
+              }
+            ]
+          },
+          {
+            "id": "asesor",
+            "name": "Asesor",
+            "terms": [
+              {
+                "id": "t2",
+                "type": "string",
+                "value1": "{{$memory.accion_repuestos}}",
+                "value2": "asesor",
+                "operator": "equal"
+              }
+            ]
+          },
+          {
+            "id": "finalizar",
+            "name": "Finalizar",
+            "terms": [
+              {
+                "id": "t3",
+                "type": "string",
+                "value1": "{{$memory.accion_repuestos}}",
+                "value2": "finalizar",
+                "operator": "equal"
+              }
+            ]
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        1652,
+        50
+      ]
+    },
+    {
+      "id": "VLfd_apgTepL_yClS4uX_",
+      "title": "Error derivación repuestos",
+      "configuration": {
+        "title": "Error derivación repuestos",
+        "messages": [
+          {
+            "id": "msg_fail_rep",
+            "text": "No hay asesores disponibles ahora. Escríbenos en horario comercial (L-V 8:00-18:00) o llama al (03) 2 994740.",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        2816,
+        710
+      ]
+    },
+    {
+      "id": "Y2Nus-6E6oBoicF71C55C",
+      "title": "Guardar acción repuestos",
+      "configuration": {
+        "title": "Guardar acción repuestos",
+        "content": "const r = $memory.getJson('repuestosResult', {});\nconst accion = (r.accion || 'continuar').toLowerCase();\n$memory.set('accion_repuestos', accion);\nif (r.placa_vehiculo) $memory.set('placa_vehiculo', String(r.placa_vehiculo));\nif (r.repuesto_solicitado) $memory.set('repuesto_solicitado', String(r.repuesto_solicitado));\nif (r.ciudad) $memory.set('ciudad_usuario', String(r.ciudad));\nif (r.opcion_checkout) $memory.set('opcion_checkout', String(r.opcion_checkout));",
+        "instruction": "Persiste datos recopilados por VeHi.",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        1264,
+        50
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "1edJJ_sSua1F0l0tT1-nN",
+      "sourceId": "B1Ghgt4054aJCeErx4Ytb",
+      "targetId": "VLfd_apgTepL_yClS4uX_",
+      "branch": "output:UNKNOWN_ERROR:failed"
+    },
+    {
+      "id": "20SXsav9ky8O2iuAMRWZI",
+      "sourceId": "_m3pkBSaQQYCtOt8WnWDi",
+      "targetId": "6hLaFippGOcYn1-vthXD9",
+      "branch": "success"
+    },
+    {
+      "id": "2DMGcRQODjL7yQ19YT8xF",
+      "sourceId": "vKsEzj0dTjXrraIxijzJ8",
+      "targetId": "6hLaFippGOcYn1-vthXD9",
+      "branch": "else"
+    },
+    {
+      "id": "7MUxY4AZlKPF9xz5B0oFM",
+      "sourceId": "vKsEzj0dTjXrraIxijzJ8",
+      "targetId": "_pONI_beKg58PV1rlSple",
+      "branch": "condition:finalizar"
+    },
+    {
+      "id": "cymGEqEgUTjLPsfxJENVi",
+      "sourceId": "6hLaFippGOcYn1-vthXD9",
+      "targetId": "eGJyzMojcBv3sWDAN-K06",
+      "branch": "expire"
+    },
+    {
+      "id": "EYiuCAUoCvzdI4lxhPJHu",
+      "sourceId": "B1Ghgt4054aJCeErx4Ytb",
+      "targetId": "VLfd_apgTepL_yClS4uX_",
+      "branch": "output:OPERATORS_NOT_IN_SCHEDULER:failed"
+    },
+    {
+      "id": "HwMaiOXmP6Luzmsn-FfZv",
+      "sourceId": "vKsEzj0dTjXrraIxijzJ8",
+      "targetId": "sKOvour0BeM9NpOYW0yNo",
+      "branch": "condition:checkout"
+    },
+    {
+      "id": "Jg8nJS3nhl3RtJyDEIuI7",
+      "sourceId": "6hLaFippGOcYn1-vthXD9",
+      "targetId": "Y2Nus-6E6oBoicF71C55C",
+      "branch": "success"
+    },
+    {
+      "id": "K9M6tq2-LSaEDwxN_K1ay",
+      "sourceId": "B1Ghgt4054aJCeErx4Ytb",
+      "targetId": "ucSoEMBVGTdDITKXfms7M",
+      "branch": "output:JelouConnect:success"
+    },
+    {
+      "id": "KgYg8WzlOnYwxebzpjnGG",
+      "sourceId": "Y2Nus-6E6oBoicF71C55C",
+      "targetId": "vKsEzj0dTjXrraIxijzJ8",
+      "branch": "success"
+    },
+    {
+      "id": "p---7DwfE7Vuuv0Q8DDCQ",
+      "sourceId": "sKOvour0BeM9NpOYW0yNo",
+      "targetId": "B1Ghgt4054aJCeErx4Ytb",
+      "branch": "default"
+    },
+    {
+      "id": "pL-2Raes_r--HIrMDE8yo",
+      "sourceId": "vKsEzj0dTjXrraIxijzJ8",
+      "targetId": "B1Ghgt4054aJCeErx4Ytb",
+      "branch": "condition:asesor"
+    },
+    {
+      "id": "R8OQodg4N0KXuV63lzrVX",
+      "sourceId": "EwnNw2C-hazAIsPx5LARd",
+      "targetId": "_m3pkBSaQQYCtOt8WnWDi",
+      "branch": "default"
+    },
+    {
+      "id": "ZnrZ8I3g6vmiTYY3Vbt7J",
+      "sourceId": "B1Ghgt4054aJCeErx4Ytb",
+      "targetId": "VLfd_apgTepL_yClS4uX_",
+      "branch": "output:OPERATOR_NOT_FOUND:failed"
+    }
+  ]
+}

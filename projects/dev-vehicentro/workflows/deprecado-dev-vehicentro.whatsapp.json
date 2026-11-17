@@ -1,0 +1,18 @@
+{
+  "workflowId": 59576,
+  "workflowName": "[Deprecado] DEV Vehicentro",
+  "workflowDescription": "Ambiente de Desarrollo",
+  "workflowDefault": false,
+  "nodes": [
+    {
+      "id": "Aj_u1fMBd0PPcn4vU_A9l",
+      "title": "Start",
+      "type": "START",
+      "position": [
+        818,
+        338
+      ]
+    }
+  ],
+  "edges": []
+}

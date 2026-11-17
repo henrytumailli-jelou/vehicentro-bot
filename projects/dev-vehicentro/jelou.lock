@@ -1,0 +1,114 @@
+lockfileVersion: 7
+brain: 01KYX1WCS2GBQXT355BK6ZHVMD
+engine:
+  name: workflow-core
+  resolvedAt: "2026-11-17T00:12:06.082Z"
+  selectedBy: default
+workflows:
+  workflows/bienvenida-y-enrutamiento.whatsapp.json:
+    channel: WHATSAPP
+    default: true
+    description: "Da la bienvenida, identifica la marca y la intención del prospecto y lo enruta a Ventas o a un asesor"
+    hash: "sha256:c1e25c5035b8389432827b9240ba2cdb25bd86688bdfa01299f2544aafe72caa"
+    lastPulledAt: "2026-11-17T04:02:55.803Z"
+    name: "Bienvenida y Enrutamiento"
+    skillId: 46693
+    workflowId: 64836
+  workflows/credito-directo.whatsapp.json:
+    channel: WHATSAPP
+    default: false
+    description: "Solicitud de crédito directo para compra de vehículos: financiamiento con Vehicentro o financieras, captura de datos y derivación a asesor."
+    hash: "sha256:7e5b0ff6d7fc8dcd736c72ed40d2fba6405bf14fe806e378927b2fb1abeda1ab"
+    lastPulledAt: "2026-11-17T00:12:06.081Z"
+    name: "Crédito Directo"
+    skillId: 46703
+    workflowId: 64847
+  workflows/deprecado-dev-vehicentro.whatsapp.json:
+    channel: WHATSAPP
+    default: false
+    description: "Ambiente de Desarrollo"
+    hash: "sha256:34d6f636d7fb6481f4329f9c42ff88b2df63edf31f8e1db87b89dd5b06fc4be6"
+    lastPulledAt: "2026-11-17T00:12:06.081Z"
+    name: "[Deprecado] DEV Vehicentro"
+    skillId: 43023
+    workflowId: 59576
+  workflows/derivar-a-asesor.whatsapp.json:
+    channel: WHATSAPP
+    default: false
+    description: "Deriva la conversación a un asesor de Vehicentro (PMA) con la marca, la intención y el contexto del prospecto"
+    hash: "sha256:b9931ed7fa42f514753f5d28bd37ceb2e1d5d133022df2f91260601c17af5c7d"
+    lastPulledAt: "2026-11-17T02:19:43.933Z"
+    name: "Derivar a Asesor"
+    skillId: 46809
+    workflowId: 64994
+  workflows/repuestos.whatsapp.json:
+    channel: WHATSAPP
+    default: false
+    description: "Consulta y pedido de repuestos automotrices: identificación de vehículo por placa o VIN, búsqueda de repuestos, disponibilidad y opciones de checkout."
+    hash: "sha256:60175bd76da53cbbae1d6aed1dd2f433f31d0506ed9b0e7d1c89e028e4e0ad1a"
+    lastPulledAt: "2026-11-17T00:12:06.081Z"
+    name: Repuestos
+    skillId: 46701
+    workflowId: 64845
+  workflows/talleres.whatsapp.json:
+    channel: WHATSAPP
+    default: false
+    description: "Agendamiento de citas en taller automotriz: selección de ciudad y agencia, identificación del vehículo y reserva de horarios disponibles."
+    hash: "sha256:142ee00af664542d7c38ebd58f974c00707b710a0e3222b1617aa1006150d214"
+    lastPulledAt: "2026-11-17T00:12:06.081Z"
+    name: Talleres
+    skillId: 46702
+    workflowId: 64846
+  workflows/veh-prueba-bdc.whatsapp.json:
+    channel: WHATSAPP
+    default: false
+    description: "Prueba técnica interna de conectividad con el BDC de Vehicentro; no atiende usuarios"
+    hash: "sha256:cb91b1978fe9a678d9b701c20f76f06148d06467e2061dd8f84f107714c41323"
+    lastPulledAt: "2026-11-17T01:20:44.661Z"
+    name: veh-prueba-bdc
+    skillId: 54614
+    workflowId: 75020
+  workflows/ventas.whatsapp.json:
+    channel: WHATSAPP
+    default: false
+    description: "Consulta de catálogo de vehículos, precios, especificaciones técnicas, agencias disponibles y asesoría comercial para compra de autos."
+    hash: "sha256:72be0202e795c6344ce71bf3cb8c70b7bcafd6bdec17dabea2f59f31b7862510"
+    lastPulledAt: "2026-11-17T00:12:06.081Z"
+    name: Ventas
+    skillId: 46694
+    workflowId: 64837
+tools:
+  consultar-marcas-vehicentro:
+    contractHash: "sha256:0e37e56911f8af004650f85b78623c2d0bfb8b6b065014ee1d9ddd99d35bb61e"
+    envelopeHash: "sha256:9795a02984bd5d4fa3dc2d33e09b0fe451910e1ae044cd95815834bf71394e71"
+    hash: "sha256:1ae0a1c8fb9c4341d657f04b372552cf489e20fcb13d5716e209d6000487b8df"
+    lastPulledAt: "2026-11-17T03:05:14.084Z"
+    latestVersion: 1.0.2
+    metaHash: "sha256:68de8dab79468bd356fa8f6ee4ee4493feda85ea19ecbb70ab33302f7b46e13b"
+    name: "Consultar marcas Vehicentro"
+    ownership: OWNED
+    toolId: 8417
+    versionIndex: 3
+    workflowId: 64886
+  verificador-campanas:
+    contractHash: "sha256:6eea885af8c9d063a5a7b1bf834be92dda9e445ef13fbc0864d9391edd98785f"
+    envelopeHash: "sha256:8ae56ae430d558412f7a2973e521760a1c1519f6489cf5b4191f374420afba3c"
+    hash: "sha256:e1df0f8e47a687de4444705da0cef9604ed64b928cb2c67a9eae763c1f6fc6c0"
+    lastPulledAt: "2026-11-17T03:53:46.808Z"
+    metaHash: "sha256:bdd254b018ec8b3bca2a10fd2e2a288b2f0d69a375aef9d48302e90738025350"
+    name: "Verificador Campañas"
+    ownership: OWNED
+    toolId: 8420
+    versionIndex: 2
+    workflowId: 64998
+  verificar-cliente-vehicentro:
+    contractHash: "sha256:5afafd0504faa7aa8b7825e2c8c123614e530bbb573776c820bcfab8ff0bd210"
+    envelopeHash: "sha256:bd6be5a60509e58e8b43cc1a2ae4142559d8b1ee7a89a68895ccdff103aeecd5"
+    hash: "sha256:9a5d63df3d6facbf01b9c77b4f6dabbba19dfcae2ad93ea14195715e18df6d91"
+    lastPulledAt: "2026-11-17T03:02:10.196Z"
+    metaHash: "sha256:a29ad5de020b81f8a8bfb5a100003e747086406c473317a8bfac422de016a3f1"
+    name: "Verificar cliente Vehicentro"
+    ownership: OWNED
+    toolId: 8423
+    versionIndex: 1
+    workflowId: 65027
