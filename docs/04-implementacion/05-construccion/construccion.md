@@ -1,0 +1,211 @@
+# Construcción — Vehicentro · Fase 1 — 2026-11-16
+
+Archivo: `docs/04-implementacion/05-construccion/construccion.md` · Fase 5
+Entrada: `03-plan/plan.md` v0.1 (aprobado 2026-11-16) · `01-sow/sow.json` v1.3 · `02-spec/spec.md` v0.2 · CLI **4.29.0** (actualizado al iniciar F5)
+
+> F5 ejecuta el plan. Primero este diseño, después la plataforma. Lo que no coincida con el plan va a «Desvíos» y, si cambia una herramienta o capacidad, vuelve a F3.
+
+## 1. Puerta de entrada: insumos del cliente
+| Servicio | Insumo de pruebas | Entregado | Acceso confirmado con | Insumo de producción (F8) | Estado |
+|---|---|---|---|---|---|
+| BDC (OAuth) | Client ID y Secret | sí (D-20) | `veh-bdc /health` → token (V-02) | — (mismo servidor) | **entregado, sin cargar**: lo carga una persona como secreto de `veh-bdc` |
+| BDC lead | `TESTCLARO` | sí (doc 11/11) | POST de prueba (V-01) | `id_conexion` por marca ([C] `1dfg0rkn7d3`) | entregado (pruebas) |
+| Términos | links + versión | no ([C] `1dfg0rkn7d2`) | abrir los links | el mismo | **pendiente**: P0 se construye con un link marcado `PROVISIONAL` en configuración; no pasa la puerta de F5 sin el link real |
+| PMA | teleasesores con correo | no ([C] `1dfg0rkn7d4`) | V-03 con un operador de prueba | los reales | pendiente (se exige antes de la UAT) |
+
+Sin mock: todos los servicios del BDC existen y tienen contrato confirmado.
+
+## 2. Verificado en vivo
+| Qué | Comando | Resultado | ¿Cambia el plan? |
+|---|---|---|---|
+| Company y perfil | `jelou whoami`, `jelou doctor --profile dev-vehicentro` | 13744 «EC-02-113-01 Vehicentro»; api/auth/profile/project **pass**; skills y versión **warn** (CLI desactualizado) | no |
+| CLI | `jelou update` | 4.24.0 → **4.29.0**; skills del CLI reinstaladas | no |
+| Apps | `jelou context` | Jelou Shop instalada (no se usa, D-27); 0 bases; 0 secretos | no |
+| Reglas de calidad del push | `jelou settings get qualityRules --company 13744` | **off** (por defecto) | Propuesta al TL: encender `basico` (§3) |
+| Skills de construcción | `jelou skills list` | `jelou-build-workflows`, `jelou-functions`, `jelou-databases`, `jelou-project`, `jelou-test-workflows`, `jelou-settings`, `jelou-whatsapp`, `jelou-cost-workflows`, `jelou-audit-workflows` disponibles | no |
+
+### Supuestos de plataforma (se prueban antes de construir encima)
+| Id | Supuesto | Prueba | Resultado | ¿Cambia el diseño? |
+|---|---|---|---|---|
+| V-01 | Lead con `id_agencias` sin `id_asesor` + 4.5 devuelve el asesor de esa agencia | POST TESTCLARO + 4.5 desde `veh-bdc` | pendiente (necesita secretos) | |
+| V-02 | Puerto 9443 + token OAuth desde la Function | `veh-bdc /health` | pendiente (necesita secretos) | |
+| V-03 | `CONNECT` a un operador por correo | workflow de 2 nodos | pendiente | |
+| V-04 | Recordatorio por inactividad nativo (4 envíos, franja) | configuración en DEV con 1 min | pendiente | |
+| V-05 | Agrupación de mensajes de 2 s | 3 mensajes seguidos | pendiente | |
+| V-06 | Origen Meta / TikTok en el mensaje de entrada | anuncio de prueba | pendiente | |
+| V-07 | Interior de las 5 tools | `jelou tool pull` | pendiente | |
+
+## 3. Pasos humanos (pedidos de una vez)
+| Paso | Quién | Comando o ruta | Estado |
+|---|---|---|---|
+| Aprobar el inventario de recursos (§4) | Tech Lead (D. B.) | — | **pedido** |
+| Encender las reglas de calidad del push para toda la company: `jelou settings set qualityRules basico --company 13744 --dry-run` y luego `--yes` | Tech Lead confirma; lo corre el agente | CLI | **pedido** |
+| Cargar `BDC_CLIENT_ID` y `BDC_CLIENT_SECRET` en `veh-bdc` (después de que el agente cree la Function) | Implementador (H. T.) | `! jelou functions secrets set veh-bdc BDC_CLIENT_ID` (comando exacto se confirma con `--help` al crear la Function) | pedido |
+| Links de términos y política + versión | Cliente | [C] `1dfg0rkn7d2` | pedido |
+| Agregar los números de prueba al canal DEV | Implementador | Studio → brain DEV Vehicentro → Canales (o `jelou channels`) | pedido |
+| Un operador de prueba en PMA con correo conocido (para V-03) | Implementador | Studio → Operadores | pedido |
+
+## 4. Inventario de recursos — **para aprobar una vez (Tech Lead)**
+| Recurso | Tipo | Skill | Carril | Costo | Alcance | Creado |
+|---|---|---|---|---|---|---|
+| `veh-fase1` (consentimientos, usuarios, viajes, leads) | Datum | `jelou-databases` | A | según el plan de la company | proyecto | |
+| `veh-bdc` | Function | `jelou-functions` | A | por ejecución | organización (Functions son de la org) | |
+| Secretos `BDC_CLIENT_ID`, `BDC_CLIENT_SECRET` | secretos de Function | `jelou-functions` | A | — | Function | |
+| Bienvenida y Enrutamiento (modificar) | workflow | `jelou-build-workflows` | B | — | proyecto DEV | existe |
+| Ventas (modificar) | workflow | `jelou-build-workflows` | B | — | proyecto DEV | existe |
+| Derivar a Asesor (modificar) | workflow | `jelou-build-workflows` | B | — | proyecto DEV | existe |
+| 5 tools de la organización (nueva versión que llama a `veh-bdc`) | tools | `jelou-build-workflows` | B | — | organización (producción no las usa) | existen |
+| Recordatorio por inactividad (o Function `veh-recordatorios` con cron si V-04 falla) | config / Function | `jelou-build-workflows` / `jelou-functions` | B | por ejecución | proyecto / org | |
+| Workflows de prueba de V-03 y V-04 (se borran al terminar) | workflow | `jelou-build-workflows` | B | — | proyecto DEV | |
+| `qualityRules: basico` | ajuste de la company | `jelou-settings` | — | — | **company (todos los proyectos)** | |
+
+**No se toca:** EC-02-113-01 Vehicentro, EC Vehicentro Cobranzas, CO Vehicentro, Jelou Shop, los workflows Repuestos, Talleres y Crédito Directo (solo pierden la entrada desde el router).
+
+## 5. Orden y carriles
+Un solo implementador; los carriles ordenan.
+1. **Carril A — datos e integración:** T014 (Datum) → T002 (`veh-bdc` + secretos + V-02 + V-01).
+2. **Carril B — conversación:** V-03/V-04/V-05/V-07 → T011 (Derivar) → T003 (P0) → T006 (router) → T005 (celular + 4.5, H-05) → T004 (origen, V-06) → T007/T008 (catálogo) → T009/T010 (cotización + lead) → T013 → T012.
+3. Pulido: T015. Cada carril cierra con su revisión contra la spec y su ronda manual.
+
+## 6. Function `veh-bdc`
+- **Rutas** (todas responden `{ok, tipo, data, mensaje?}`; `tipo` ∈ `ok | vacio | negocio | indisponible | incierto`):
+  - `GET /health` → pide token; `ok` si el BDC responde.
+  - `GET /marcas` → `[{id, nombre}]`.
+  - `GET /modelos/:id_marca?busqueda=` → `[{id_modelo, nombre, segmento, precio, moneda, ficha (objeto, recortado), caracteristicas, imagenes[]}]` (parsea `json_ficha_tecnica`; separa `imagenes` por coma).
+  - `GET /agencias/:id_marca?ciudad=` → `{ciudades[], agencias[{id, nombre, ciudad, direccion, referencia, horario, ubicacion}]}`.
+  - `GET /asesor/:id_agencia/:id_marca` → asesor (respaldo de 4.4).
+  - `GET /existe-asesor/:id_marca?cedula=&celular=` → `{asesor?}` o `vacio`.
+  - `POST /lead {clave_lead, marca, id_marca, celular, cedula, nombres, id_modelo, id_agencia, ciudad, notas}` → registra con `TESTCLARO` (configuración `BDC_ID_CONEXION`), luego 4.5; devuelve `{tipo, asesor?}`.
+- **Secretos:** `BDC_CLIENT_ID`, `BDC_CLIENT_SECRET`. **Configuración (no secreta):** `BDC_BASE_URL`, `BDC_ID_CONEXION` (por marca en F8).
+- **Token:** se pide con Basic + `grant_type=client_credentials`; se guarda en memoria de la Function con vencimiento a los 55 min; ante `401`, token nuevo y 1 repetición.
+- **Mapeo de errores:** `200 + status:error` → `negocio` · `data: []` → `vacio` · timeout / red / `5xx` en lectura → 1 reintento y luego `indisponible` · `400` en POST → `negocio` · timeout / `5xx` en POST → `incierto` (sin reintento; se consulta 4.5) · `404` → `negocio` + log.
+- **Tiempos:** 10 s por llamada al BDC; la Function responde antes de 25 s.
+- **Idempotencia del lead:** `clave_lead = celular + id_marca`. El workflow no llama a `/lead` si Datum `leads` ya tiene esa clave en `registrado`. `notas` se recorta a 1000 caracteres.
+- **Logs:** sin cédula, celular ni nombres (se enmascaran).
+- **Pruebas unitarias:** clasificación de cada respuesta (con un BDC simulado **solo en las pruebas**, con un caso negativo que demuestra que el doble falla), parseo de la ficha, recorte de notas, token y 401.
+
+## 7. Workflows: cambios nodo por nodo
+**Bienvenida y Enrutamiento** (`projects/dev-vehicentro/workflows/bienvenida-y-enrutamiento.whatsapp.json`)
+| # | Nodo | Qué hace | Salidas | Memoria |
+|---|---|---|---|---|
+| 1 | `START` (existe) | — | → 2 | |
+| 2 | `CODE` «Contexto inicial» (**reemplaza** el nodo «Código» con el teléfono fijo, H-05) | Lee el teléfono que entrega el canal si existe (sin `$user.id` como teléfono); guarda `celular_canal` (09…) o vacío si es BSUID; genera `id_sesion` | → 3 | `celular_canal`, `id_sesion` (v2) |
+| 3 | Tool «Verificador Campañas» + `DATUM` `viajes` (nuevo) | Guarda el origen | ok/failed → 4 (el origen no bloquea) | `origen` |
+| 4 | `DATUM` consulta `consentimientos` (nuevo) | ¿Aceptó hace ≤ 30 días con la versión vigente? | sí → 7 · no / vacío → 5 · failed → 5 | |
+| 5 | `CHANNEL_MESSAGE` con 2 botones «Acepto» / «No acepto» (nuevo, P0) | Bienvenida + links (texto del SOW F1:P3, en **usted**) | Acepto → 6a · No acepto → 6b · otro texto → repite 1 vez con botón «Hablar con un asesor» | |
+| 6a | `DATUM` guarda aceptación | | → 7 | |
+| 6b | `DATUM` guarda rechazo (sin datos personales) → `SKILL` Derivar a Asesor | | — | |
+| 7 | `AI_TASK` «Agente Bienvenida» (existe; **prompt reescrito**: guardrails al inicio, sin pedir LOPDP ni cédula, sin rutas a Repuestos/Talleres/Crédito, en usted, un solo asistente) + tool «Consultar marcas» | Marca e intención | → 8 | `bienvenidaResult` |
+| 8 | `CODE` «Guardar decisión» (existe; ajustar) | `accion` ∈ comercial / derivar / sin_interes / pedir_marca | → 9 | `marca_activa`, `id_marca`, `intencion` |
+| 9 | `CONDITIONAL` «Enrutar» (existe; **se reemplazan sus ramas**) | pedir_marca → 10 · comercial → 11 · derivar → 15 · sin_interes → 16 · otro → 15 | | |
+| 10 | `CHANNEL_MESSAGE` lista de 4 marcas (nuevo) | De `veh-bdc /marcas` | elegida → 11 · 2 textos inválidos → 15 | |
+| 11 | `CONDITIONAL` ¿hay `celular_canal`? (nuevo) | | sí → 13 · no → 12 | |
+| 12 | Pedir celular + `CODE` validar (nuevo) | 10 dígitos que empiezan con 09 o +593; 1 reintento | válido → 13 · inválido x2 → 14 | `celular` |
+| 13 | Tool «Verificar cliente» → `veh-bdc /existe-asesor` | | asesor → mensaje F1:P8 y fin · vacío → 14 · indisponible/negocio → 14 (sigue sin consulta) | `asesor_existente` |
+| 14 | `MEMORY` «Pasar contexto a Ventas» (existe) → `SKILL` Ventas (existe) | | | |
+| 15 | `MEMORY` + `SKILL` → Derivar a Asesor (reemplaza el `CONNECT` local) | | | `motivo_derivacion` |
+| 16 | `CHANNEL_MESSAGE` «Despedida» (existe; texto del SOW F1:P13, en usted) | | fin | |
+Se quitan del flujo: `SKILL` Ir a Repuestos / Talleres / Crédito Directo y sus `MEMORY`, el `CONNECT` «Derivar a PMA» y «Info cliente existente» (se reemplaza por el texto del SOW F1:P8).
+
+**Ventas** (`projects/dev-vehicentro/workflows/ventas.whatsapp.json`)
+| # | Nodo | Qué hace | Salidas |
+|---|---|---|---|
+| 1 | `START`, `CODE` «Inicializar contexto» (existen) | | → 2 |
+| 2 | `AI_TASK` «Agente Ventas» (existe; prompt reescrito con guardrails, en usted) + tools «Consultar modelos» y «Enviar carrusel modelos» (→ `veh-bdc`) | Catálogo, comparación, cambio de marca; termina con botones Ver catálogo / Cotizar / Agencias | → 3 |
+| 3 | `CODE` «Guardar acción» (existe; ajustar acciones) | `catalogo` / `cotizar` / `agencias` / `cambio_marca` / `derivar` / `sin_interes` | → 4 |
+| 4 | `CONDITIONAL` «Acción post-ventas» (existe; ramas nuevas) | catalogo → carrusel (nodos existentes, vía tool) → 2 · cotizar/agencias → 5 · cambio_marca → 4.5 de la nueva marca → 2 · derivar → Derivar a Asesor · sin_interes → «Despedida ventas» | |
+| 5 | Pedir cédula + `CODE` validar (nuevo) | 10 dígitos; 1 reintento; x2 → Derivar | → 6 |
+| 6 | ¿Hay celular válido? (nuevo) | si no, pedirlo (como Bienvenida 12) | → 7 |
+| 7 | `HTTP` «Consultar agencias» (existe → **apunta a `veh-bdc /agencias`**) + lista de ciudades (nuevo, paginada) | | ok → 8 · vacio → mensaje + otra opción · indisponible → Derivar (contingencia) |
+| 8 | Lista de agencias de la ciudad (reemplaza «Mostrar agencias») | | elegida → 9 |
+| 9 | `DATUM` ¿lead `registrado` para `clave_lead`? (nuevo) | | sí → 11 con su asesor · no → 10 |
+| 10 | `HTTP` → `veh-bdc POST /lead` + `DATUM` `leads` (nuevo) | | ok+asesor → 11 · ok sin asesor / incierto → mensaje «Estamos confirmando…» → Derivar (cola general) · negocio/indisponible → Derivar (contingencia) |
+| 11 | `CHANNEL_MESSAGE` F2:Q11 (nuevo) → `MEMORY` correo del asesor → `SKILL` Derivar a Asesor | | |
+Se retira el `HTTP` directo a `botwa_modelos` (pasa por la tool) y el nodo «Seguimiento post-carrusel» se integra en el agente. Los textos existentes en «tú» pasan a «usted».
+
+**Derivar a Asesor** (`projects/dev-vehicentro/workflows/derivar-a-asesor.whatsapp.json`)
+| # | Nodo | Qué hace | Salidas |
+|---|---|---|---|
+| 1 | `START` | Recibe `motivo_derivacion`, `asesor_correo?`, contexto | → 2 |
+| 2 | `CONDITIONAL` ¿hay `asesor_correo`? | | sí → 3 · no → 4 |
+| 3 | `CONNECT` al operador por correo (V-03) | | asignado → 5 · sin operador / fuera de horario / error → 4 |
+| 4 | `CONNECT` cola general (existe, «Derivar a asesor ventas») | | asignado → 5 · las otras 3 salidas → 6 |
+| 5 | `CHANNEL_MESSAGE` confirmación (existe; en usted) | | fin |
+| 6 | `CHANNEL_MESSAGE` contingencia (existe; en usted, sin «inténtelo de nuevo» ante un lead incierto) | | fin |
+Contexto en la nota del handoff: marca, intención, modelos consultados, agencia, ciudad, origen.
+
+**Recordatorios (T012):** según V-04. Si es nativo: intervalo 60 min, máximo 4, franja 21:00–07:59, mensaje F1/T1:R3 con «Continuar» / «No me interesa»; al agotar, `veh-bdc /lead` con estado no gestionado si hay `id_modelo` y celular. Si no es nativo: Function `veh-recordatorios` con cron cada 15 min que lee `viajes` abiertos.
+
+## 8. Parámetros por recurso
+| Recurso | Parámetros | Ramas | Prueba |
+|---|---|---|---|
+| `veh-bdc` | base URL, `TESTCLARO`, 10 s, token 55 min | 5 tipos | unitarias + llamadas reales de lectura + 1 POST TESTCLARO |
+| Consentimiento | versión `v1`, 30 días, link PROVISIONAL hasta el [C] | acepto / no acepto / texto | ronda manual QA-C01 a C09 |
+| Recordatorio | 60 min, 4, 21:00–07:59, 24 h | enviado / respondido / agotado | intervalo 1 min en DEV |
+| `CONNECT` | correo; cola general | 4 salidas | operador de prueba |
+| Agrupación | 2 s | — | 3 mensajes seguidos |
+
+## 9. Cobertura por paso
+Pasos del SOW: **37** (F1: 15, F2: 14, T1: 8) + P0 por agente entrante (F1, F2, T1) = **40 filas**.
+| Paso | Recurso | Nodo o ruta | Carril | Estado |
+|---|---|---|---|---|
+| F1:P0 | Bienvenida | 4–6 | B | pendiente |
+| F2:P0 | Bienvenida (Ventas solo se alcanza después del P0 de F1) | 4–6 | B | pendiente |
+| T1:P0 | No aplica pedirlo en el recordatorio (QA-C07); se cubre con F1:P0 | — | B | pendiente |
+| F1:P1 | Bienvenida | 1 | B | pendiente |
+| F1:P2 | Bienvenida + Datum `viajes` | 3 | B | pendiente |
+| F1:P3 | Bienvenida | 5 | B | pendiente |
+| F1:P4 | Bienvenida | 2, 11 | B | pendiente |
+| F1:P5 | Bienvenida | 12 | B | pendiente |
+| F1:P6 | Bienvenida + `veh-bdc /existe-asesor` | 13 | A/B | pendiente |
+| F1:P7 | Bienvenida | 13 (ramas) | B | pendiente |
+| F1:P8 | Bienvenida | 13 → mensaje | B | pendiente |
+| F1:P9 | Bienvenida (`AI_TASK`) | 7–9 | B | pendiente |
+| F1:P10 | Bienvenida | 10 | B | pendiente |
+| F1:P11 | Bienvenida | 10 (respuesta) | B | pendiente |
+| F1:P12 | Bienvenida → Ventas | 14 | B | pendiente |
+| F1:P13 | Bienvenida | 16 | B | pendiente |
+| F1:P20 | Derivar a Asesor | 15 → 1–6 | B | pendiente |
+| F1:P21 | Fin | — | B | pendiente |
+| F2:Q1 | Ventas (`AI_TASK`) | 2 | B | pendiente |
+| F2:Q2 | Tool «Consultar modelos» → `veh-bdc /modelos` | 2 | A/B | pendiente |
+| F2:Q3 | Ventas | 2–4 | B | pendiente |
+| F2:Q4 | Tool «Enviar carrusel modelos» (D-27) | 4 → carrusel | B | pendiente |
+| F2:Q5 | Ventas | 5 | B | pendiente |
+| F2:Q6 | Ventas | 5 (respuesta) | B | pendiente |
+| F2:Q7 | Ventas | 7 | B | pendiente |
+| F2:Q8 | Ventas + `veh-bdc /agencias` | 7 | A/B | pendiente |
+| F2:Q9 | Ventas | 8 | B | pendiente |
+| F2:Q10 | Ventas + `veh-bdc /lead` + Datum `leads` | 9–10 | A/B | pendiente |
+| F2:Q11 | Ventas | 11 | B | pendiente |
+| F2:Q12 | Derivar a Asesor | 3 | B | pendiente |
+| F2:Q20 | Derivar a Asesor | 4, 6 | B | pendiente |
+| F2:Q21 | Fin | — | B | pendiente |
+| T1:R1 | Recordatorio | detector de inactividad | B | pendiente |
+| T1:R2 | Recordatorio | franja y ventana | B | pendiente |
+| T1:R3 | Recordatorio | mensaje con 2 botones | B | pendiente |
+| T1:R4 | Recordatorio | respuesta | B | pendiente |
+| T1:R5 | Recordatorio | retoma | B | pendiente |
+| T1:R6 | Recordatorio + `veh-bdc /lead` | no gestionado | A/B | pendiente |
+| T1:R7 | Recordatorio | cierre | B | pendiente |
+| T1:R8 | Fin | — | B | pendiente |
+Filas: **40**.
+
+## 10. Desvíos del plan
+| Qué | Plan decía | Se encontró | Decisión |
+|---|---|---|---|
+| Tono | Usted (spec) | Los textos existentes en DEV tutean («tu asistente», «te conecto») | Se pasan a usted (spec, SOW). Sin cambio de alcance |
+| Consentimiento | Nodo determinista P0 | DEV lo resolvía dentro del agente (`acepta_lopdp` en memoria) | Se saca del agente a nodos deterministas (reglas 12 y 17). Ya estaba en el plan |
+| Teléfono | `$user` del canal | Nodo «Código» con un número fijo (H-05) | Se reemplaza (T005) |
+| Reglas de calidad | — | `qualityRules` en off | Propuesta al TL (§3) |
+
+## 11. Pruebas por carril
+(se llena al cerrar cada carril)
+
+## 12. Pre-auditoría
+(se llena antes de la puerta)
+
+## 13. Bitácora por hito
+| Fecha | Hito | Commit | Chequeo del push | Publicación | Tareas | Notas |
+|---|---|---|---|---|---|---|
+| 2026-11-16 | Arranque F5: CLI 4.29.0, diseño de construcción | — | — | — | — | Espejo de DEV sin subir hasta corregir H-05 |
