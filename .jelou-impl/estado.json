@@ -547,6 +547,10 @@
     {
       "fecha": "2026-11-17",
       "evento": "Ventas corregido: Jelou Shop por MCP con search_and_send_products_webview y presentation=carousel (anuncio de #product-updates del 19/06/2026, contrato confirmado con marketplace inspect). Validación limpia. Falta push y publicación (los corre la persona) y la ronda por WhatsApp."
+    },
+    {
+      "fecha": "2026-11-17",
+      "evento": "Push y publicación de la corrección (carrusel del Shop vía MCP) corridos por la persona; publicación 01M7MXDTQZE934EJZQCPMYT718; chequeo posterior al push 0 hallazgos."
     }
   ],
   "puntos": {
@@ -805,7 +809,7 @@
       "fase": 5,
       "que": "El carrusel del Shop (search_and_send_products_webview con presentation=carousel, app Jelou Shop por MCP) llega por WhatsApp desde Ventas, también con 1 tarjeta (KEYTON)",
       "prueba": "Ronda por WhatsApp en el canal DEV: «ver catálogo» de KEYTON y de LYNK & CO",
-      "estado": "pendiente (corrección construida y validada en local; falta push y publicación)",
+      "estado": "pendiente: publicado en DEV (01M7MXDTQZE934EJZQCPMYT718), falta la ronda por WhatsApp",
       "resultado": "2026-11-17: push OK y chequeo 0. En el tester, search_products respondió «No hay una tienda registrada»; el agente usó el respaldo (Consultar modelos) y respondió en texto. Falta publicar DEV y probar por WhatsApp para saber si es el tester o la asociación tienda-canal. | 2026-11-17 14:02–14:03 UTC, WhatsApp DEV: en el canal real search_products SÍ encuentra la tienda (lo del tester era limitación del tester) y devuelve los 5 LYNK & CO, pero solo como datos para el agente (sin imágenes y sin enviar mensaje). No hay carrusel. El agente respondió «Catálogo LYNK & CO enviado» porque el prompt decía que la tool envía el catálogo visual (defecto del prompt, D-30)."
     }
   ],
