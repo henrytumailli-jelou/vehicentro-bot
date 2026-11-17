@@ -218,15 +218,29 @@
     }
   ],
   "skills": {
-    "verificadas_en": "2026-11-16",
+    "verificadas_en": "2026-11-17",
     "cli_version": "4.29.0",
     "disponibles": [
       "jelou",
       "jelou-project",
-      "jelou-company-migration",
-      "jelou-sow-studio (library, rev b5ac7678)"
+      "jelou-functions",
+      "jelou-databases",
+      "jelou-graph",
+      "jelou-whatsapp",
+      "jelou-build-workflows",
+      "jelou-test-workflows",
+      "jelou-logs",
+      "jelou-scan-workflows",
+      "jelou-audit-workflows",
+      "jelou-bot-testing",
+      "jelou-conversational-ui",
+      "jelou-company-migration"
     ],
     "en_library_sin_cargar": [
+      "jelou-configure-advisors (T011 / V-03: operador PMA y nodo CONNECT)",
+      "jelou-qa-whatsapp (rondas manuales por WhatsApp; trae scripts)",
+      "jelou-lint (pre-auditoría F5 / F7)",
+      "jelou-sow-studio",
       "jelou-sow-docs",
       "jelou-it-ticket"
     ],
@@ -500,6 +514,10 @@
     {
       "fecha": "2026-11-16",
       "evento": "Resumen de avance (docs/04-implementacion/05-construccion/avance-2026-11-17.md) enviado por DM de Slack al Tech Lead (D. B.) para su reunión con el cliente del 17/11. Enviado desde la sesión de Slack de J. S., «de parte de Henry», con confirmación del implementador."
+    },
+    {
+      "fecha": "2026-11-17",
+      "evento": "Traspaso por vacaciones del implementador (H. T.). Entorno local preparado en otra máquina: clon en ../vehicentro-bot (main) y worktree ../vehicentro-bot-sow-hu (docs); CLI 4.26.1 → 4.29.0; skills del CLI reinstaladas; 13/13 pruebas unitarias de veh-bdc en verde con el Deno del CLI (2.1.4). Falta el perfil dev-vehicentro (lo crea la persona con `! jelou login --profile dev-vehicentro`). Se retoma en F5: confirmar el carrusel por WhatsApp y seguir con T009/T010."
     }
   ],
   "puntos": {
@@ -686,6 +704,11 @@
       "fecha": "2026-11-16",
       "tipo": "plantilla",
       "descripcion": "$bot no existe dentro de una tool (ni en producción): usar $user.botId. Las tools heredadas de DEV lo usaban y fallaban sin error visible. Proponer a capacidades-jelou.md §1.7."
+    },
+    {
+      "fecha": "2026-11-17",
+      "tipo": "plantilla",
+      "descripcion": "Al traspasar el proyecto, CONTINUIDAD.md seguía en F4 (16/11) aunque estado.json ya estaba en F5, y recursos[veh-bdc].nota dice secretos BDC pendientes aunque V-02 confirmó el token. Proponer que el sync refresque CONTINUIDAD.md en cada hito."
     }
   ],
   "por_verificar": [
