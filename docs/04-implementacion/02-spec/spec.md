@@ -81,6 +81,7 @@ El prospecto escribe libremente (o con el mensaje predeterminado del anuncio) y 
 2. **Dado** que el modelo tiene imágenes en la API, **entonces** el bot envía **al menos 1 imagen** del modelo junto con la respuesta.
 3. **Dado** cualquier respuesta del catálogo, **entonces** el bot ofrece los botones **Ver catálogo**, **Cotizar** y **Agencias** (F2:Q3).
 4. **Dado** que toca **Ver catálogo**, **entonces** se abre el webview de Jelou Shop con el catálogo de la marca activa (F2:Q4) y, al volver, el bot ofrece cotizar.
+   *(D-30, 17/11: el catálogo de Jelou Shop se muestra como **carrusel del Shop** en el chat —tool nativa `search_products`— con los modelos de la marca activa, foto y precio, y el bot ofrece cotizar.)*
 5. **Dado** que pide comparar dos modelos de la misma marca, **entonces** el bot responde con las diferencias de precio y ficha de ambos, con datos de la API.
 6. **Dado** que cambia de marca durante la conversación, **entonces** el bot responde con el catálogo de la nueva marca y, antes de cotizar, vuelve a consultar si tiene asesor en esa marca (HU-03).
 7. **Dado** que pregunta algo que el catálogo no cubre (financiamiento, repuestos, otro país), **entonces** el bot dice que no tiene ese dato y ofrece un asesor (RN-05).
@@ -256,7 +257,7 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 - **S-01 (tercero) — resuelto en F5:** V-01 mostró que el BDC no asigna asesor al momento del registro (con TESTCLARO). Se usa 4.4 antes del registro (D-28).
 - **S-02:** en pruebas no se envían `id_agencias` ni `id_asesor` (documentación del cliente); la asignación con asesor real y el efecto de 4.4 en el reparto se prueban en la UAT con el cliente (A-09).
 - **S-03:** franja sin recordatorios 21:00–07:59 (el SOW dice «sin envíos nocturnos» sin horas). Se confirma en la UAT.
-- **S-04:** el catálogo del webview de Jelou Shop tiene los mismos modelos y precios que la API 4.2 (RN-05). Si difieren, el usuario vería dos precios. Responsable: implementador + cliente; se verifica en F3.
+- **S-04** *(D-30: se garantiza cargando el Shop desde la API 4.2 y, después, con una sincronización cada hora)*: el catálogo del webview de Jelou Shop tiene los mismos modelos y precios que la API 4.2 (RN-05). Si difieren, el usuario vería dos precios. Responsable: implementador + cliente; se verifica en F3.
 - **S-05:** el nombre para el lead se toma del **nombre del perfil de WhatsApp**; si viene vacío, se registra «Cliente WhatsApp». No se pregunta (D-15: no se agregan preguntas fuera de alcance).
 - **S-06 (plataforma):** Meta entrega el origen del anuncio (click-to-WhatsApp); qué entrega TikTok se confirma en F3 (Q-9).
 - **S-07 (insumo pendiente):** `id_conexion` de producción por marca — responsable: cliente — fecha: antes de F8 — `insumos_pendientes` C-02 · HU-06, HU-07. Mientras tanto, `TESTCLARO` (D-13).

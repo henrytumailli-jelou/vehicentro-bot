@@ -4,7 +4,7 @@
   "cliente": "Vehicentro",
   "slug": "vehicentro",
   "segmento": "enterprise",
-  "perfil_cli": "dev-vehicentro",
+  "perfil_cli": "vehicentro",
   "company_id": "13744",
   "company_name": "EC-02-113-01 Vehicentro",
   "brains": {
@@ -333,6 +333,12 @@
       "ver": "docs/00-cliente/decisiones.md D-29",
       "decidio": "implementador",
       "nota": "Mensaje provisional en lugar del CONNECT hasta tener operador de prueba (V-03)."
+    },
+    {
+      "fecha": "2026-11-17",
+      "ver": "docs/00-cliente/decisiones.md D-30; plan.md «Enmienda 2026-11-17»",
+      "decidio": "quien retoma el proyecto (pedido explícito)",
+      "nota": "Catálogo en Jelou Shop cargado desde la API 4.2 y carrusel del Shop (search_products) en Ventas; reemplaza D-27. Precio y ficha escritos siguen del BDC. Sincronización horaria con Function después. Ratificación del TL en la puerta de F5."
     }
   ],
   "insumos_pendientes": [
@@ -518,6 +524,10 @@
     {
       "fecha": "2026-11-17",
       "evento": "Traspaso por vacaciones del implementador (H. T.). Entorno local preparado en otra máquina: clon en ../vehicentro-bot (main) y worktree ../vehicentro-bot-sow-hu (docs); CLI 4.26.1 → 4.29.0; skills del CLI reinstaladas; 13/13 pruebas unitarias de veh-bdc en verde con el Deno del CLI (2.1.4). Falta el perfil dev-vehicentro (lo crea la persona con `! jelou login --profile dev-vehicentro`). Se retoma en F5: confirmar el carrusel por WhatsApp y seguir con T009/T010."
+    },
+    {
+      "fecha": "2026-11-17",
+      "evento": "D-30: catálogo del BDC (10 modelos) cargado en Jelou Shop con scripts/shop-catalogo; Sample Product desactivado; búsqueda del Shop comprobada por marca. Ventas modificado en local (search_products en lugar de «Enviar carrusel modelos») y validado sin errores; el push quedó bloqueado por el permiso del agente y lo hace una persona."
     }
   ],
   "puntos": {
@@ -709,6 +719,11 @@
       "fecha": "2026-11-17",
       "tipo": "plantilla",
       "descripcion": "Al traspasar el proyecto, CONTINUIDAD.md seguía en F4 (16/11) aunque estado.json ya estaba en F5, y recursos[veh-bdc].nota dice secretos BDC pendientes aunque V-02 confirmó el token. Proponer que el sync refresque CONTINUIDAD.md en cada hito."
+    },
+    {
+      "fecha": "2026-11-17",
+      "tipo": "plantilla",
+      "descripcion": "capacidades-jelou.md no menciona la tool nativa search_products (carrusel del Shop) ni el límite de 512 KB por imagen del Shop; la doc pública no dice que search_products dibuje carrusel. Proponer a §1 (Catálogo) y §1.7."
     }
   ],
   "por_verificar": [
@@ -755,6 +770,13 @@
       "que": "Interior de las 5 tools de la organización (jelou tool pull) para pasar sus llamadas a veh-bdc",
       "estado": "parcial",
       "resultado": "2026-11-16: «Consultar marcas» y «Verificar cliente» traídas con jelou tool pull; «Consultar marcas» pasada a veh-bdc (v1.0.2). Faltan las otras 3 tools."
+    },
+    {
+      "id": "V-08",
+      "fase": 5,
+      "que": "La tool nativa search_products envía el carrusel del Shop por WhatsApp desde el agente de Ventas, también con 1 sola tarjeta (KEYTON)",
+      "prueba": "Ronda por WhatsApp en el canal DEV: «ver catálogo» de KEYTON y de LYNK & CO",
+      "estado": "pendiente (falta el push de Ventas)"
     }
   ],
   "equipo": {
@@ -840,6 +862,24 @@
       "tipo": "workflow de prueba (se borra al terminar F5)",
       "alcance": "proyecto DEV",
       "creado": "2026-11-16"
+    },
+    {
+      "recurso": "Catálogo Jelou Shop (VEH-*)",
+      "tipo": "catálogo del Shop",
+      "alcance": "company (compartido con el brain de producción, que no lo usa)",
+      "creado": "2026-11-17",
+      "detalle": "10 productos, 4 categorías por marca, 43 fotos; «Sample Product» desactivado; fotos de prueba de VEH-82 (2) y VEH-152 (1) borradas con confirmación",
+      "autorizo": "quien retoma el proyecto (17/11)"
+    }
+  ],
+  "perfil_cli_nota": "2026-11-17: en la máquina de quien retoma el perfil se creó como «vehicentro» (antes «dev-vehicentro», máquina de H. T.).",
+  "fases_reabiertas": [
+    {
+      "fase": 3,
+      "fecha": "2026-11-17",
+      "motivo": "D-30 cambia la herramienta de catálogo del plan (F5 no decide herramientas)",
+      "entregable": "plan.md con enmienda D-30; spec.md HU-05 c4 y S-04 anotados",
+      "estado": "enmienda escrita; ratifica el TL"
     }
   ]
 }

@@ -58,8 +58,10 @@ Sin mock: todos los servicios del BDC existen y tienen contrato confirmado.
 | Recordatorio por inactividad (o Function `veh-recordatorios` con cron si V-04 falla) | config / Function | `jelou-build-workflows` / `jelou-functions` | B | por ejecución | proyecto / org | |
 | Workflows de prueba de V-03 y V-04 (se borran al terminar) | workflow | `jelou-build-workflows` | B | — | proyecto DEV | |
 | `qualityRules: basico` | ajuste de la company | `jelou-settings` | — | — | **company (todos los proyectos)** | |
+| Catálogo de Jelou Shop: 10 productos `VEH-*`, 4 categorías (marcas), 43 fotos; «Sample Product» desactivado (D-30) | catálogo del Shop | `jelou-shop` | B | incluido en el plan ENTERPRISE (sin límite de productos) | **company** (lo comparte el brain de producción, que no lo usa) | 2026-11-17 |
+| Function de sincronización BDC → Shop con job cada hora (D-30, **después**) | Function + cron | `jelou-functions` | B | por ejecución | organización | |
 
-**No se toca:** EC-02-113-01 Vehicentro, EC Vehicentro Cobranzas, CO Vehicentro, Jelou Shop, los workflows Repuestos, Talleres y Crédito Directo (solo pierden la entrada desde el router).
+**No se toca:** EC-02-113-01 Vehicentro, EC Vehicentro Cobranzas, CO Vehicentro, (Jelou Shop: desde D-30 solo su catálogo), los workflows Repuestos, Talleres y Crédito Directo (solo pierden la entrada desde el router).
 
 ## 5. Orden y carriles
 Un solo implementador; los carriles ordenan.
@@ -201,6 +203,22 @@ Filas: **40**.
 | Acceso a Datum desde los workflows | Nodos `DATUM` | Las bases v2 no se leen con el nodo `DATUM`: se usan nodos `HTTP` a `https://<slug>.jelou.cloud/api` con `x-api-key` = `{{$secret.DATUM_APIKEY_VEH_FASE1}}` | Mismo recurso aprobado; cambia el nodo. Sin cambio de alcance |
 | Rutas de `veh-bdc` | `GET /modelos/:id_marca`, etc. | `app()` genera rutas por herramienta: `/estado`, `/marcas`, `/modelos`, `/agencias`, `/asesor`, `/existe-asesor`, `/lead` con los parámetros en el cuerpo | Ajuste de forma, mismo contrato |
 
+### D-30 — Catálogo en Jelou Shop (2026-11-17, F3 reabierta)
+| Qué | Plan decía | Ahora | Decisión |
+|---|---|---|---|
+| Catálogo `F2:Q4` | Carrusel propio con la tool «Enviar carrusel modelos» (D-27) | Carrusel del Shop con la tool nativa `search_products` sobre el catálogo cargado desde la API 4.2 | Pedido de quien retoma el proyecto (17/11). Vuelve a cumplir el SOW. Ratifica el TL en la puerta |
+
+**Carga del catálogo** (`scripts/shop-catalogo/` en `main`; se corre a mano hasta que exista la Function horaria):
+1. `extraer.py`: lee `/marcas` y `/modelos` de `veh-bdc` con una API key de la organización (la del perfil del CLI; no se imprime ni se guarda). Solo lectura.
+2. `cargar.py`: upsert por SKU (`VEH-<id_modelo>`), categoría = marca, nombre con la marca si el modelo no la trae («KEYTON FURGONETA M70L EV», «SINOTRUK U70 FULL»), precio USD sin impuesto aparte, stock ilimitado, descripción = características + datos de la ficha + marca y segmento. Fotos en orden (la 1 es la portada), reducidas a menos de 512 KB (límite del Shop) y saltando las que ya están (nombre de archivo `<SKU>-<nn>`). Si una foto falla, se detiene ese producto para no desordenar la portada.
+3. Resultado del 17/11: 10 productos (KEYTON 1, LYNK & CO 5, SINOTRUK AUTOS 2, SINOTRUK CAMIONETAS 2), 43 fotos, portada = foto 1 en los 10. Segunda corrida: 10 «updated», 0 fotos duplicadas.
+4. Búsqueda del Shop comprobada: «keyton» → 1, «lynk & co» → 5, «sinotruk camionetas» → 2 (sin mezclar marcas), «pick up 4x4» → 1. «furgoneta eléctrica» → 0: el BDC no trae características del modelo KEYTON (pedirlas al cliente o dejar que el agente busque por marca).
+
+**Ventas — cambio nodo por nodo** (solo el nodo `AI_TASK` «Agente Ventas»):
+- `connections.tools`: sale «Enviar carrusel modelos» (8425); entra la nativa `{name: "search_products", external: false}`. Se quedan `send_interactive_message`, «Consultar modelos Vehicentro» y «Consultar marcas Vehicentro».
+- Prompt, sección Herramientas: `search_products` con `product` = marca activa (+ modelo o segmento si lo pidió) y `top_k` 10; cada producto trae SKU `VEH-<id_modelo>`, de ahí sale el `id_modelo` del `end_function`. Si no devuelve productos: respuesta con «Consultar modelos» y botones. El resto del prompt (guardrails, botones Ver catálogo / Cotizar / Agencias, `end_function`) no cambia.
+- La tool 8425 queda en la organización sin usar (producción no la usa); se retira al cerrar F5.
+
 ### Desvío temporal D-29
 | Qué | Plan decía | Hoy | Decisión |
 |---|---|---|---|
@@ -268,6 +286,7 @@ Hallazgo extra: la tool vieja «Verificador Campañas» también usaba `$bot.id`
 | 2026-11-16 | Carril A: base `veh-fase1` (4 colecciones, API key en secreto) y `veh-bdc` desplegada; 12 pruebas unitarias OK | main `veh-bdc` | — | despliegue de Function | T014 (falta cerrar con V-01/V-02) | Secretos del BDC pendientes |
 
 | 2026-11-16 | D-28 en `veh-bdc` (4.4 antes del lead) | main `0aef523` | — | despliegue de Function | — | Spec v0.3 (HU-06 c5–c6, RF-007) |
+| 2026-11-17 | D-30: catálogo del BDC cargado en Jelou Shop (10 productos, 43 fotos); «Sample Product» desactivado | main `scripts/shop-catalogo` | — | — (catálogo del Shop, sin publicación) | T026 | Retoma otra persona (vacaciones de H. T.) |
 
 ### Prueba manual del implementador sobre la versión anterior de DEV (2026-11-16, 20:51–20:53 hora de Ecuador)
 Conversación por WhatsApp en el canal DEV (número de prueba del implementador, enmascarado). Ejecución de Bienvenida `GwHgZm1CpjVi0480hpVfG`.
