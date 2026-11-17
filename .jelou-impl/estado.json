@@ -221,14 +221,21 @@
       "fase": 5,
       "tipo": "defecto",
       "descripcion": "Ventas (D-30): el agente afirma «Catálogo enviado» sin enviar nada; search_products solo devuelve datos. Prompt incorrecto + supuesto de plataforma no confirmado antes de construir.",
-      "estado": "corregido en local, por verificar"
+      "estado": "cerrado (carrusel del Shop vía MCP verificado por WhatsApp 17/11)"
     },
     {
       "id": "H-07",
       "fase": 5,
       "tipo": "defecto",
       "descripcion": "Ventas: el aviso de pedido del Shop (type SUCCESS, al elegir un modelo en el carrusel) se trataba como tema ajeno y la conversación no avanzaba. Corregido en local: pasa a cotizar con id_modelo del SKU.",
-      "estado": "corregido en local, por verificar"
+      "estado": "cerrado (verificado por WhatsApp 17/11 14:18 UTC: pedido del Shop → cotizar → mensaje provisional D-29)"
+    },
+    {
+      "id": "H-08",
+      "fase": 5,
+      "tipo": "observación (regla 12)",
+      "descripcion": "El menú de intención tras elegir la marca (Conocer vehículos / Cotizar o comprar / Repuestos / Talleres / Crédito / Hablar con un asesor) lo arma el agente de IA de bienvenida en cada conversación: no es determinista, puede variar el texto y las opciones. Conocer vehículos y Cotizar o comprar llevan al mismo lugar (Ventas); Repuestos, Talleres, Crédito y Asesor llegan hoy al mensaje provisional de D-29.",
+      "estado": "abierto: decidir con el TL"
     }
   ],
   "skills": {
@@ -566,6 +573,10 @@
     {
       "fecha": "2026-11-17",
       "evento": "H-07 publicado en DEV por la persona (01M7MXXEFQ831Q7RJJ7D73CXJ5); chequeo posterior al push 0 hallazgos."
+    },
+    {
+      "fecha": "2026-11-17",
+      "evento": "Ronda por WhatsApp 14:18 UTC: carrusel del Shop + pedido → cotizar → mensaje provisional, OK (H-06, H-07 cerrados). KEYTON (1 tarjeta) sin probar. H-08: menú de intención generado por IA."
     }
   ],
   "puntos": {
