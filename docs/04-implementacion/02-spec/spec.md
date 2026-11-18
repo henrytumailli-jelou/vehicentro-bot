@@ -1,7 +1,7 @@
 # Spec funcional — Vehicentro · Fase 1
 
-Archivo: `docs/04-implementacion/02-spec/spec.md` · Fase 2 · **v0.3 (D-28 aplicado en F5)**
-SOW de origen: `01-sow/sow.json` v1.3 (aprobado por el cliente el 05/11/2026) + `docs/00-cliente/decisiones.md` D-12..D-26 · Fecha: 2026-11-16
+Archivo: `docs/04-implementacion/02-spec/spec.md` · Fase 2 · **v0.4 (D-28 y D-30 aplicados en F5)**
+SOW de origen: `01-sow/sow.json` v1.3 (aprobado por el cliente el 05/11/2026) + `docs/00-cliente/decisiones.md` D-12..D-30 · Fecha: 2026-11-18
 
 > Qué ve y necesita la persona, no cómo se construye (eso va en F3). Los ids de historia,
 > regla e integración son los del SOW. Los pasos se escriben `<flujo>:<paso>` (F1 = Flujo_1,
@@ -19,9 +19,9 @@ Anuncio Meta/TikTok → F1:P1 entrada → origen guardado (F1:P2)
    └─ Comercial → F1:P4–P5 celular (si llega BSUID) → F1:P6–P7 ¿ya tiene asesor en esa marca? (4.5)
         ├─ Sí → datos del asesor y fin (F1:P8)
         └─ No → F1:P12 contexto de la marca → Flujo_2
-Flujo_2: F2:Q1–Q3 catálogo y comparación (4.2) · F2:Q4 webview de Shop
+Flujo_2: F2:Q1–Q3 catálogo y comparación (4.2) · F2:Q4 carrusel del Shop (D-30)
  → F2:Q5–Q6 cédula → F2:Q7 ciudad → F2:Q8–Q9 agencia (4.3)
- → F2:Q10 registro del lead (POST) y consulta del asesor asignado (4.5) → F2:Q11 quién lo atiende → F2:Q12 asignación en PMA
+ → F2:Q10 asesor de la agencia (4.4) y registro del lead (POST) (D-28) → F2:Q11 quién lo atiende → F2:Q12 asignación en PMA
 Transversal T1: recordatorios por abandono (R1–R8), agrupación de mensajes, cierre ante interacción negativa
 Contingencia: F2:Q20 ante cualquier API que no responde → PMA
 ```
@@ -72,7 +72,7 @@ El prospecto escribe libremente (o con el mensaje predeterminado del anuncio) y 
 
 ### HU-05 — Consulta de catálogo y comparación (Prioridad: P1) 🎯 MVP
 
-**Flujo:** Flujo_2 · **Pasos:** F2:Q1, F2:Q2, F2:Q3, F2:Q4 · **Ejecución:** IA (agente de catálogo) · **Integración:** INT-3 (4.2 Modelos) · **Capacidad:** catálogo (webview existente de Jelou Shop, D-22)
+**Flujo:** Flujo_2 · **Pasos:** F2:Q1, F2:Q2, F2:Q3, F2:Q4 · **Ejecución:** IA (agente de catálogo) · **Integración:** INT-3 (4.2 Modelos) · **Capacidad:** catálogo de Jelou Shop cargado desde la API 4.2, mostrado como carrusel del Shop (D-30)
 
 **Prueba independiente:** un usuario pregunta el precio y el motor de un modelo de KEYTON y recibe el precio y los datos de la ficha que devuelve la API, con el botón para ver el catálogo.
 
@@ -80,8 +80,7 @@ El prospecto escribe libremente (o con el mensaje predeterminado del anuncio) y 
 1. **Dado** que pregunta por un modelo, precio o característica, **entonces** el bot responde **solo con datos de la API 4.2** de la marca activa (precio en USD, ficha técnica, características) y nunca inventa un precio, un modelo ni una característica (RN-05).
 2. **Dado** que el modelo tiene imágenes en la API, **entonces** el bot envía **al menos 1 imagen** del modelo junto con la respuesta.
 3. **Dado** cualquier respuesta del catálogo, **entonces** el bot ofrece los botones **Ver catálogo**, **Cotizar** y **Agencias** (F2:Q3).
-4. **Dado** que toca **Ver catálogo**, **entonces** se abre el webview de Jelou Shop con el catálogo de la marca activa (F2:Q4) y, al volver, el bot ofrece cotizar.
-   *(D-30, 17/11: el catálogo de Jelou Shop se muestra como **carrusel del Shop** en el chat —tool nativa `search_products`— con los modelos de la marca activa, foto y precio, y el bot ofrece cotizar.)*
+4. **Dado** que toca **Ver catálogo**, **entonces** el bot envía el **carrusel del Shop** con los modelos de la marca activa (foto y precio; tool `search_and_send_products_webview` de la app Jelou Shop con `presentation: "carousel"`, D-30) y ofrece cotizar. Si el usuario elige un modelo en el Shop («realizar pedido»), el aviso `SUCCESS` del Shop cuenta como la elección del modelo y pasa a cotizar con ese `id_modelo` (H-07); no se habla de carrito ni de pago.
 5. **Dado** que pide comparar dos modelos de la misma marca, **entonces** el bot responde con las diferencias de precio y ficha de ambos, con datos de la API.
 6. **Dado** que cambia de marca durante la conversación, **entonces** el bot responde con el catálogo de la nueva marca y, antes de cotizar, vuelve a consultar si tiene asesor en esa marca (HU-03).
 7. **Dado** que pregunta algo que el catálogo no cubre (financiamiento, repuestos, otro país), **entonces** el bot dice que no tiene ese dato y ofrece un asesor (RN-05).
@@ -91,11 +90,11 @@ El prospecto escribe libremente (o con el mensaje predeterminado del anuncio) y 
 
 ### HU-06 — Cotización con agencia y registro del lead (Prioridad: P1) 🎯 MVP
 
-**Flujo:** Flujo_2 · **Pasos:** F2:Q5, F2:Q6, F2:Q7, F2:Q8, F2:Q9, F2:Q10, F2:Q11, F2:Q12 · **Ejecución:** determinista · **Integraciones:** INT-4 (4.3 Agencias), INT-6 (POST de lead), INT-1 (4.5 Existe asesor) · **Escritura a un sistema del cliente:** sí (lead en el BDC)
+**Flujo:** Flujo_2 · **Pasos:** F2:Q5, F2:Q6, F2:Q7, F2:Q8, F2:Q9, F2:Q10, F2:Q11, F2:Q12 · **Ejecución:** determinista · **Integraciones:** INT-4 (4.3 Agencias), 4.4 (Asesor por agencia), INT-6 (POST de lead), INT-1 (4.5, solo para el resultado incierto) · **Escritura a un sistema del cliente:** sí (lead en el BDC)
 
-El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda registrado en el BDC con un asesor que lo atiende en PMA (D-07, D-23).
+El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda registrado en el BDC con un asesor que lo atiende en PMA (D-07, D-28).
 
-**Prueba independiente:** un usuario de prueba elige un modelo, toca Cotizar, da una cédula válida, elige ciudad y agencia, y el lead aparece en el BDC (conexión `TESTCLARO`) y la conversación queda asignada en PMA al asesor que devuelve 4.5.
+**Prueba independiente:** un usuario de prueba elige un modelo, toca Cotizar, da una cédula válida, elige ciudad y agencia, y el lead aparece en el BDC (conexión `TESTCLARO`) y la conversación queda asignada en PMA al asesor que devuelve 4.4 para esa agencia. En pruebas internas 4.4 no se llama sin acuerdo del cliente (A-09): la conversación va a la cola general.
 
 **Criterios de aceptación:**
 1. **Dado** que toca **Cotizar**, **entonces** el bot pide la cédula (**10 dígitos**); la cédula **solo** se pide en este punto (RN-06).
@@ -104,7 +103,7 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 4. **Dado** que elige una ciudad, **entonces** el bot muestra **solo las agencias de la marca en esa ciudad**, con nombre, dirección y horario, como lista interactiva (F2:Q9).
 5. **Dado** que elige una agencia y la marca y el modelo son conocidos, **entonces** se obtiene el asesor de esa agencia (4.4) y se registra el lead en el BDC (F2:Q10) con: nombres, celular, cédula, modelo, ciudad, unas `notas` y, en producción, la agencia y el asesor (`id_agencias`, `id_asesor`; D-28) (máximo **1000** caracteres) con la marca, los modelos consultados, la agencia elegida y el origen de la campaña (D-14). No se preguntan forma de pago ni entrada (D-15).
 6. **Dado** que el lead se registró (201), **entonces** el asesor que atiende es el que devolvió 4.4 para la agencia elegida (D-28). Si 4.4 no devolvió asesor, el lead entra sin asesor y la conversación va a la cola general de PMA.
-7. **Dado** que 4.5 devuelve un asesor, **entonces** el bot informa «Le atenderá {nombre del asesor} de la agencia {agencia}» (F2:Q11) y asigna la conversación en PMA **al usuario de PMA con el correo de ese asesor**, con marca, modelos consultados, agencia, ciudad y origen (F2:Q12).
+7. **Dado** que hay asesor (de 4.4, o de 4.5 en el resultado incierto), **entonces** el bot informa «Le atenderá {nombre del asesor} de la agencia {agencia}» (F2:Q11) y asigna la conversación en PMA **al usuario de PMA con el correo de ese asesor**, con marca, modelos consultados, agencia, ciudad y origen (F2:Q12).
 8. **Dado** que el correo del asesor no existe como usuario de PMA, **entonces** la conversación va a la cola general de PMA con el mismo contexto (RN-08).
 9. **Dado** que el usuario **ya tenía asesor** en esa marca (HU-03 o una consulta anterior), **entonces** no se registra un lead nuevo: se informa su asesor y se asigna en PMA.
 
@@ -243,7 +242,7 @@ El prospecto decide cotizar, deja su cédula, elige ciudad y agencia, y queda re
 - **Viaje** (Datum): flujo, pasos, punto de abandono, derivación a PMA.
 - **Lead**: fuente de verdad en el **BDC de Vehicentro** (POST); copia en Datum con origen, marca, modelo, agencia, ciudad, intención, asesor asignado y estado (registrado, no gestionado, derivado).
 - **Asesor**: fuente de verdad en el BDC (4.5 / 4.4); se usa su correo para PMA.
-- **Catálogo**: fuente de verdad en la API 4.2; el webview de Jelou Shop muestra su propio catálogo (ver supuesto S-04).
+- **Catálogo**: fuente de verdad en la API 4.2; Jelou Shop tiene una copia (SKU `VEH-<id_modelo>`) que se carga desde la API y se sincroniza cada hora (D-30, supuesto S-04).
 
 ## Criterios de éxito (propuestos; se revisan en F9)
 - **CE-001**: ≥ **90 %** de las conversaciones con intención Comercial terminan con la marca identificada (por el router o la lista).
@@ -287,7 +286,8 @@ Pasos de fin (F1:P21, F2:Q21) pertenecen a la HU del paso que los precede. Todos
 |---|---|---|---|
 | F1:P2 | Registro del origen en el BDC (INT-6) | Se guarda en Datum; va al BDC en `notas` del lead | INT-6 es el ingreso de lead (A-02, D-14) |
 | F1:P4–P7 | Antes de identificar la marca | Después de F1:P9 | 4.5 exige la marca (A-03) |
-| F2:Q10 | Servicio que devuelve el correo del asesor (INT-5) | POST de lead + consulta 4.5 | INT-5 no existe (A-01, D-23) |
+| F2:Q10 | Servicio que devuelve el correo del asesor (INT-5) | 4.4 (asesor de la agencia) + POST de lead; 4.5 solo si el POST es incierto | INT-5 no existe (A-01); V-01 falló (D-28) |
+| F2:Q4 | Ecommerce WebView de Jelou Shop | Carrusel del Shop en el chat, catálogo cargado desde 4.2 | D-30 |
 | T1:R6 | Envío de «datos disponibles» | Solo si hay modelo y celular; si no, solo Datum | Campos obligatorios del lead (A-06) |
 
 ## Cambios frente al SOW por la constitución

@@ -8,7 +8,7 @@ Entrada: `03-plan/plan.md` v0.1 (aprobado 2026-11-16) · `01-sow/sow.json` v1.3 
 ## 1. Puerta de entrada: insumos del cliente
 | Servicio | Insumo de pruebas | Entregado | Acceso confirmado con | Insumo de producción (F8) | Estado |
 |---|---|---|---|---|---|
-| BDC (OAuth) | Client ID y Secret | sí (D-20) | `veh-bdc /health` → token (V-02) | — (mismo servidor) | **entregado, sin cargar**: lo carga una persona como secreto de `veh-bdc` |
+| BDC (OAuth) | Client ID y Secret | sí (D-20) | `veh-bdc /estado` → token (V-02, 16/11) | — (mismo servidor) | **cargado** (V-02 confirmado) |
 | BDC lead | `TESTCLARO` | sí (doc 11/11) | POST de prueba (V-01) | `id_conexion` por marca ([C] `1dfg0rkn7d3`) | entregado (pruebas) |
 | Términos | links + versión | no ([C] `1dfg0rkn7d2`) | abrir los links | el mismo | **pendiente**: P0 se construye con un link marcado `PROVISIONAL` en configuración; no pasa la puerta de F5 sin el link real |
 | PMA | teleasesores con correo | no ([C] `1dfg0rkn7d4`) | V-03 con un operador de prueba | los reales | pendiente (se exige antes de la UAT) |
@@ -33,7 +33,7 @@ Sin mock: todos los servicios del BDC existen y tienen contrato confirmado.
 | V-04 | Recordatorio por inactividad nativo (4 envíos, franja) | configuración en DEV con 1 min | pendiente | |
 | V-05 | Agrupación de mensajes de 2 s | 3 mensajes seguidos | pendiente | |
 | V-06 | Origen Meta / TikTok en el mensaje de entrada | anuncio de prueba | pendiente | |
-| V-07 | Interior de las 5 tools | `jelou tool pull` | pendiente | |
+| V-07 | Interior de las 5 tools | `jelou tool pull` | parcial: «Consultar marcas», «Consultar modelos» y «Enviar carrusel» pasadas a `veh-bdc`; «Verificador Campañas» ya no se usa | no |
 
 ## 3. Pasos humanos (pedidos de una vez)
 | Paso | Quién | Comando o ruta | Estado |
@@ -151,28 +151,28 @@ Contexto en la nota del handoff: marca, intención, modelos consultados, agencia
 Pasos del SOW: **37** (F1: 15, F2: 14, T1: 8) + P0 por agente entrante (F1, F2, T1) = **40 filas**.
 | Paso | Recurso | Nodo o ruta | Carril | Estado |
 |---|---|---|---|---|
-| F1:P0 | Bienvenida | 4–6 | B | pendiente |
-| F2:P0 | Bienvenida (Ventas solo se alcanza después del P0 de F1) | 4–6 | B | pendiente |
-| T1:P0 | No aplica pedirlo en el recordatorio (QA-C07); se cubre con F1:P0 | — | B | pendiente |
-| F1:P1 | Bienvenida | 1 | B | pendiente |
-| F1:P2 | Bienvenida + Datum `viajes` | 3 | B | pendiente |
-| F1:P3 | Bienvenida | 5 | B | pendiente |
-| F1:P4 | Bienvenida | 2, 11 | B | pendiente |
-| F1:P5 | Bienvenida | 12 | B | pendiente |
-| F1:P6 | Bienvenida + `veh-bdc /existe-asesor` | 13 | A/B | pendiente |
-| F1:P7 | Bienvenida | 13 (ramas) | B | pendiente |
-| F1:P8 | Bienvenida | 13 → mensaje | B | pendiente |
-| F1:P9 | Bienvenida (`AI_TASK`) | 7–9 | B | pendiente |
-| F1:P10 | Bienvenida | 10 | B | pendiente |
-| F1:P11 | Bienvenida | 10 (respuesta) | B | pendiente |
-| F1:P12 | Bienvenida → Ventas | 14 | B | pendiente |
-| F1:P13 | Bienvenida | 16 | B | pendiente |
-| F1:P20 | Derivar a Asesor | 15 → 1–6 | B | pendiente |
-| F1:P21 | Fin | — | B | pendiente |
-| F2:Q1 | Ventas (`AI_TASK`) | 2 | B | pendiente |
-| F2:Q2 | Tool «Consultar modelos» → `veh-bdc /modelos` | 2 | A/B | pendiente |
-| F2:Q3 | Ventas | 2–4 | B | pendiente |
-| F2:Q4 | Tool «Enviar carrusel modelos» (D-27) | 4 → carrusel | B | pendiente |
+| F1:P0 | Bienvenida | 4–6 | B | hecho |
+| F2:P0 | Bienvenida (Ventas solo se alcanza después del P0 de F1) | 4–6 | B | hecho |
+| T1:P0 | No aplica pedirlo en el recordatorio (QA-C07); se cubre con F1:P0 | — | B | hecho |
+| F1:P1 | Bienvenida | 1 | B | hecho |
+| F1:P2 | Bienvenida + Datum `viajes` | 3 | B | hecho |
+| F1:P3 | Bienvenida | 5 | B | hecho |
+| F1:P4 | Bienvenida | 2, 11 | B | hecho |
+| F1:P5 | Bienvenida | 12 | B | hecho |
+| F1:P6 | Bienvenida + `veh-bdc /existe-asesor` | 13 | A/B | hecho |
+| F1:P7 | Bienvenida | 13 (ramas) | B | hecho |
+| F1:P8 | Bienvenida | 13 → mensaje | B | hecho |
+| F1:P9 | Bienvenida (`AI_TASK`) | 7–9 | B | hecho |
+| F1:P10 | Bienvenida | 10 | B | hecho |
+| F1:P11 | Bienvenida | 10 (respuesta) | B | hecho |
+| F1:P12 | Bienvenida → Ventas | 14 | B | hecho |
+| F1:P13 | Bienvenida | 16 | B | hecho |
+| F1:P20 | Derivar a Asesor | 15 → 1–6 | B | provisional (D-29) |
+| F1:P21 | Fin | — | B | hecho |
+| F2:Q1 | Ventas (`AI_TASK`) | 2 | B | hecho |
+| F2:Q2 | Tool «Consultar modelos» → `veh-bdc /modelos` | 2 | A/B | hecho |
+| F2:Q3 | Ventas | 2–4 | B | hecho |
+| F2:Q4 | Ventas + MCP Jelou Shop (D-30) | 2 → carrusel del Shop | B | hecho (falta KEYTON, V-08) |
 | F2:Q5 | Ventas | 5 | B | pendiente |
 | F2:Q6 | Ventas | 5 (respuesta) | B | pendiente |
 | F2:Q7 | Ventas | 7 | B | pendiente |
@@ -206,7 +206,7 @@ Filas: **40**.
 ### D-30 — Catálogo en Jelou Shop (2026-11-17, F3 reabierta)
 | Qué | Plan decía | Ahora | Decisión |
 |---|---|---|---|
-| Catálogo `F2:Q4` | Carrusel propio con la tool «Enviar carrusel modelos» (D-27) | Carrusel del Shop con la tool nativa `search_products` sobre el catálogo cargado desde la API 4.2 | Pedido de quien retoma el proyecto (17/11). Vuelve a cumplir el SOW. Ratifica el TL en la puerta |
+| Catálogo `F2:Q4` | Carrusel propio con la tool «Enviar carrusel modelos» (D-27) | Carrusel del Shop con `search_and_send_products_webview` (MCP, `presentation: carousel`) sobre el catálogo cargado desde la API 4.2 (primero se intentó la nativa `search_products`, ver corrección abajo) | Pedido de quien retoma el proyecto (17/11). Vuelve a cumplir el SOW. Ratifica el TL en la puerta |
 
 **Carga del catálogo** (`scripts/shop-catalogo/` en `main`; se corre a mano hasta que exista la Function horaria):
 1. `extraer.py`: lee `/marcas` y `/modelos` de `veh-bdc` con una API key de la organización (la del perfil del CLI; no se imprime ni se guarda). Solo lectura.

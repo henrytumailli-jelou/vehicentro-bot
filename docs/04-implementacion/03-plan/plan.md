@@ -1,10 +1,10 @@
 # Plan técnico — Vehicentro · Fase 1
 
-Archivo: `docs/04-implementacion/03-plan/plan.md` · Fase 3 · **Borrador v0.1**
-Entrada: `02-spec/spec.md` v0.2 · `01-sow/sow.json` v1.3 · `docs/00-cliente/decisiones.md` D-01..D-27 · Fecha: 2026-11-16
+Archivo: `docs/04-implementacion/03-plan/plan.md` · Fase 3 · **v0.2 (aprobado v0.1 el 16/11; enmiendas D-28 y D-30 en F5)**
+Entrada: `02-spec/spec.md` v0.4 · `01-sow/sow.json` v1.3 · `docs/00-cliente/decisiones.md` D-01..D-30 · Fecha: 2026-11-18
 
 ## Resumen
-Se ajusta lo que ya existe en el brain **DEV Vehicentro** (cambio mínimo) para cumplir la spec: el workflow de entrada «Bienvenida y Enrutamiento» incorpora el consentimiento (P0) y el orden marca → asesor; «Ventas» pasa a ser el Flujo_2 (catálogo con **carrusel en el chat**, cotización, registro del lead y asignación en PMA); «Derivar a Asesor» concentra los handoff. Todas las llamadas al BDC pasan por **una Function-adaptador** (`veh-bdc`) que maneja el OAuth, clasifica las respuestas y protege el registro del lead contra duplicados. Datum guarda consentimiento, viaje y leads. Al terminar, se promueve a **EC-02-113-01 Vehicentro** (F8).
+Se ajusta lo que ya existe en el brain **DEV Vehicentro** (cambio mínimo) para cumplir la spec: el workflow de entrada «Bienvenida y Enrutamiento» incorpora el consentimiento (P0) y el orden marca → asesor; «Ventas» pasa a ser el Flujo_2 (catálogo con el **carrusel del Shop**, D-30; cotización, asesor por 4.4, registro del lead y asignación en PMA, D-28); «Derivar a Asesor» concentra los handoff. Todas las llamadas al BDC pasan por **una Function-adaptador** (`veh-bdc`) que maneja el OAuth, clasifica las respuestas y protege el registro del lead contra duplicados. Datum guarda consentimiento, viaje y leads. Al terminar, se promueve a **EC-02-113-01 Vehicentro** (F8).
 
 ## Contexto técnico
 | Campo | Valor |
@@ -20,15 +20,15 @@ Se ajusta lo que ya existe en el brain **DEV Vehicentro** (cambio mínimo) para 
 | Integraciones | APIs BDC 4.1–4.5 y POST de lead, vía Function `veh-bdc` |
 | Handoff | `CONNECT` en «Derivar a Asesor»: asignación directa al operador por correo; cola general de respaldo |
 | WhatsApp Flows | no |
-| Webviews / Sites | **no** (D-27: carrusel en el chat en lugar del webview de Shop) |
+| Webviews / Sites | Página de producto de Jelou Shop (se abre desde el carrusel); no se desarrolla un webview propio (D-22, D-30) |
 | KYC / Pagos / Firma / Voz | no |
-| Catálogo | API 4.2 vía tool «Enviar carrusel modelos» (ya existe). Jelou Shop queda instalado y sin usar |
-| Apps de marketplace | Jelou Shop instalada (no se usa) |
+| Catálogo | Jelou Shop cargado desde la API 4.2 (`scripts/shop-catalogo/`, luego Function horaria) y mostrado con `search_and_send_products_webview` (`presentation: "carousel"`) por MCP (D-30). Precio y ficha escritos: `veh-bdc` en vivo |
+| Apps de marketplace | Jelou Shop (MCP conectado al agente de Ventas) |
 
 ## Revisión de la constitución
 | # | Regla | ¿Aplica? | ¿Cumple el diseño? | Nota |
 |---|---|---|---|---|
-| 1 | El SOW manda | sí | **con un cambio** | D-27 cambia el Ecommerce WebView por carrusel en el chat (decisión del implementador). Ver «Registro de complejidad» |
+| 1 | El SOW manda | sí | sí | D-30 vuelve al catálogo de Jelou Shop que pide el SOW (D-27 queda reemplazada) |
 | 3 | `--profile` explícito | sí | sí | `dev-vehicentro` en todo comando |
 | 4 | Credenciales fuera del chat y de los workflows | sí | sí | Client ID y Secret como secretos de la Function `veh-bdc`; los carga una persona |
 | 5 | Cero datos personales en repo/ClickUp/Slack | sí | sí | Barrido del `sync`; el espejo de DEV se revisa en F5 |
@@ -101,12 +101,12 @@ Se ajusta lo que ya existe en el brain **DEV Vehicentro** (cambio mínimo) para 
 | `F1:P12` Contexto de marca | HU-04 | Determinista | — | `SKILL` → Ventas | — |
 | `F1:P13` Sin interés | HU-04/08 | IA (detecta) + determinista (cierre) | Mensaje | Agente de bienvenida | — |
 | `F1:P20` Derivación | HU-04/09 | Determinista | Handoff | `SKILL` → Derivar a Asesor | `CONNECT` |
-| `F2:Q1–Q3` Catálogo y comparación | HU-05 | IA | Conversación + **carrusel** + botones | `AI_TASK` de Ventas con tools «Consultar modelos» y «Enviar carrusel modelos» | Agente de catálogo |
-| `F2:Q4` Ver catálogo | HU-05 | Determinista | **Carrusel en el chat** (D-27) | Tool «Enviar carrusel modelos» | — |
+| `F2:Q1–Q3` Catálogo y comparación | HU-05 | IA | Conversación + **carrusel** + botones | `AI_TASK` de Ventas con tools «Consultar modelos», «Consultar marcas» y MCP de Jelou Shop | Agente de catálogo |
+| `F2:Q4` Ver catálogo | HU-05 | IA (llama la tool) | **Carrusel del Shop** (D-30) | `search_and_send_products_webview` (`presentation: "carousel"`) | Jelou Shop |
 | `F2:Q5–Q6` Cédula | HU-06 | Determinista | Pregunta + validación (10 dígitos) | Nodos | — |
 | `F2:Q7` Ciudad | HU-06 | Determinista | Lista interactiva (paginada > 10) | `veh-bdc` 4.3 + nodo de lista | — |
 | `F2:Q8–Q9` Agencia | HU-06 | Determinista | Lista con dirección y horario | `veh-bdc` 4.3 + nodo de lista | — |
-| `F2:Q10` Lead + asesor | HU-06 | Determinista | — | `veh-bdc` `/lead` (POST + 4.5) | Function + Datum `leads` |
+| `F2:Q10` Lead + asesor | HU-06 | Determinista | — | `veh-bdc` `/lead` (4.4 → POST; 4.5 solo si incierto, D-28) | Function + Datum `leads` |
 | `F2:Q11` Quién lo atiende | HU-06 | Determinista | Mensaje | Nodo de mensaje | — |
 | `F2:Q12` Asignación en PMA | HU-06 | Determinista | Handoff | `SKILL` → Derivar a Asesor (operador por correo) | `CONNECT` |
 | `F2:Q20` Contingencia | HU-09 | Determinista | Mensaje + handoff | Rama de error de cada llamada | `CONNECT` |
@@ -233,8 +233,8 @@ Ninguna además del SOW (no se pidieron pruebas de seguridad ni matriz de riesgo
 | HU-01 | Bienvenida + tool «Verificador Campañas» | — | `viajes` | `jelou-build-workflows` |
 | HU-04 | Bienvenida (`AI_TASK`) + tool «Consultar marcas» | `veh-bdc` 4.1 | `usuarios` | `jelou-build-workflows` |
 | HU-03 | Bienvenida + tool «Verificar cliente» | `veh-bdc` 4.5 | `usuarios` | `jelou-build-workflows` |
-| HU-05 | Ventas (`AI_TASK`) + tools «Consultar modelos» y «Enviar carrusel modelos» | `veh-bdc` 4.2 | `viajes` | `jelou-build-workflows` |
-| HU-06 | Ventas → Derivar a Asesor | `veh-bdc` 4.3, `/lead` | `leads`, `usuarios` | `jelou-build-workflows`, `jelou-functions` |
+| HU-05 | Ventas (`AI_TASK`) + tool «Consultar modelos» + MCP Jelou Shop | `veh-bdc` 4.2; Function de sincronización del Shop (T027) | `viajes` | `jelou-build-workflows`, `jelou-shop`, `jelou-functions` |
+| HU-06 | Ventas → Derivar a Asesor | `veh-bdc` 4.3, 4.4, `/lead` | `leads`, `usuarios` | `jelou-build-workflows`, `jelou-functions` |
 | HU-09 | Ramas de error en Bienvenida y Ventas → Derivar a Asesor | `veh-bdc` (clasificación) | `viajes` | `jelou-build-workflows` |
 | HU-08 | Configuración del bot + prompts | — | — | `jelou-build-workflows` |
 | HU-07 | Recordatorio por inactividad (o Function con cron) | `veh-bdc` `/lead` | `leads`, `viajes` | `jelou-build-workflows` / `jelou-functions` |
@@ -248,7 +248,7 @@ Contrato confirmado: documentación del cliente del 11/11/2026 (`02-apis/`). La 
 | `GET /agencias/:id_marca?ciudad=` | 4.3 | agencias; `ciudades[]` sin repetir | ídem | confirmado |
 | `GET /asesor/:id_agencia/:id_marca` | 4.4 (respaldo) | asesor con correo | ídem | confirmado |
 | `GET /existe-asesor/:id_marca?cedula=&celular=` | 4.5 | asesor o `vacio` | ídem | confirmado |
-| `POST /lead` | POST `botwa/{id_conexion}` + 4.5 | entrada: marca, celular, cédula, nombre, id_modelo, id_agencia, ciudad, notas, clave_lead · salida: `{tipo, asesor?}` | ídem | confirmado (`TESTCLARO`) |
+| `POST /lead` | 4.4 (solo con `BDC_ENVIAR_ASESOR=true`) → POST `botwa/{id_conexion}`; 4.5 si el POST es incierto (D-28) | entrada: marca, celular, cédula, nombre, id_modelo, id_agencia, ciudad, notas, clave_lead · salida: `{tipo, asesor?}` | ídem | confirmado (`TESTCLARO`) |
 
 **Fallas** (`§1.3`): sin respuesta → lectura: 1 reintento; escritura: no se reintenta, se verifica con 4.5 · `401` → token nuevo y repetir 1 vez · `400` → `negocio` (error de datos; alerta interna) · `500` → 1 reintento en lecturas · `status: error` con 200 → `negocio`, no se reintenta en bucle · `data: []` → `vacio`. El usuario nunca ve el código ni el mensaje técnico.
 
@@ -268,15 +268,16 @@ Las reglas van **al inicio** del prompt. Los nodos de Repuestos, Talleres y Cré
 ## Riesgos
 | Riesgo | Impacto | Mitigación | Responsable |
 |---|---|---|---|
-| El BDC no asigna asesor de la agencia elegida al recibir el lead (V-01) | Asesor equivocado | Respaldo con 4.4 | Implementador |
+| El BDC no asigna asesor al recibir el lead (V-01, ocurrió) | Asesor equivocado | Resuelto con D-28: 4.4 antes del POST | Implementador |
 | Pruebas y producción comparten servidor | Leads de prueba en el CRM | `TESTCLARO`; limpieza a cargo del cliente (supuesto del SOW) | Cliente |
 | Consentimiento implícito (H-01) | F6 no pasa | Decisión del Tech Lead con el cliente | Tech Lead |
-| D-27 (carrusel en vez de webview) no informado al cliente | Observación en la UAT | Avisar al PM y al partner antes de la UAT | Implementador / PM |
+| El avance del 17/11 enviado al TL anunciaba D-27 (carrusel en vez del webview); D-30 lo revirtió | El cliente recibe un mensaje contradictorio | Avisar al TL que D-27 ya no aplica y que se cumple el SOW | Implementador |
+| El catálogo del Shop queda viejo frente al BDC hasta tener la sincronización horaria | Precio distinto en el carrusel y en la respuesta escrita (RN-05) | T027; mientras tanto, correr el script cuando el cliente cambie el catálogo | Implementador |
 | Tools de la organización cambiadas | Otro proyecto las use en el futuro | Versionar las tools; producción no las usa hoy | Implementador |
 | Esfuerzo (348 h) frente al cronograma (126 h) | Retraso | Aprobado por TL y PM | PM |
 
 ## Registro de complejidad
 | Violación | Por qué hace falta | Alternativa descartada |
 |---|---|---|
-| Regla 1: el Ecommerce WebView del SOW se reemplaza por carrusel en el chat (D-27) | El catálogo de Jelou Shop está vacío; cargarlo y mantenerlo sincronizado con la API suma trabajo y riesgo de dos precios. El tool de carrusel ya existe y usa la API directamente | Cargar Shop desde la API (+3 SP y sincronización); que el cliente cargue Shop (riesgo de precios distintos, RN-05) |
+| ~~Regla 1: Ecommerce WebView reemplazado por carrusel en el chat (D-27)~~ | Cerrada con D-30 (17/11): se carga el Shop desde la API (+3 SP T026, +3 SP T027 sincronización) | — |
 | Regla 17 (H-01) | Pendiente de la decisión del Tech Lead con el cliente | — |

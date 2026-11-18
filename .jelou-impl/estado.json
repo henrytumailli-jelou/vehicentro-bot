@@ -101,7 +101,9 @@
       "T022": "1dfg0rkn7db",
       "T023": "1dfg0rkn7dc",
       "T024": "1dfg0rkn7dd",
-      "T025": "1dfg0rkn7de"
+      "T025": "1dfg0rkn7de",
+      "T026": null,
+      "T027": null
     },
     "tareas_c": {
       "terminos": "1dfg0rkn7d2",
@@ -265,7 +267,8 @@
       "jelou-sow-docs",
       "jelou-it-ticket"
     ],
-    "faltan": []
+    "faltan": [],
+    "nota_maquina": "2026-11-18: esta máquina tiene CLI 4.26.1 y no tiene el perfil vehicentro; la lista de disponibles es de la máquina anterior."
   },
   "aprobaciones": [
     {
@@ -286,7 +289,8 @@
       "fase": 5,
       "tema": "Inventario de recursos de construcción y qualityRules basico",
       "fecha": "2026-11-16",
-      "aprobo": "tech-lead (D. B.)"
+      "aprobo": "tech-lead (D. B.)",
+      "fuente": "comunicada por el implementador (16/11)"
     }
   ],
   "bloqueos": [],
@@ -297,10 +301,10 @@
     "fecha_firma": "2026-11-05",
     "entrega_comprometida": "2026-11-06",
     "nota_aprobacion": "Correo del 05/11/2026 de A. F. informando que el cliente aprobó el Brief v1.3.",
-    "nota_version": "Se trabaja con el v1.3 aprobado; no habrá v1.3.1. Las aclaraciones van en docs/00-cliente/decisiones.md D-12..D-22."
+    "nota_version": "Se trabaja con el v1.3 aprobado; no habrá v1.3.1. Las aclaraciones van en docs/00-cliente/decisiones.md D-12..D-30."
   },
   "plan": {
-    "sow_version": null
+    "sow_version": "1.3"
   },
   "uat": {
     "aprobado_por": null,
@@ -382,8 +386,8 @@
       "id": "C-03",
       "insumo": "Credenciales OAuth (client id/secret) cargadas con jelou secret, nunca por chat",
       "responsable": "Cliente + implementador",
-      "estado": "entregado",
-      "nota": "El cliente entregó las credenciales (D-20). Falta cargarlas como secreto; hoy la organización no tiene secretos (2026-11-16)."
+      "estado": "cerrado",
+      "nota": "El cliente entregó las credenciales (D-20) y están cargadas como secretos de veh-bdc: V-02 confirmó el token OAuth el 16/11."
     },
     {
       "id": "C-04",
@@ -540,7 +544,7 @@
     },
     {
       "fecha": "2026-11-16",
-      "evento": "Resumen de avance (docs/04-implementacion/05-construccion/avance-2026-11-17.md) enviado por DM de Slack al Tech Lead (D. B.) para su reunión con el cliente del 17/11. Enviado desde la sesión de Slack de J. S., «de parte de Henry», con confirmación del implementador."
+      "evento": "Resumen de avance (docs/04-implementacion/05-construccion/avance-2026-11-17.md) enviado por DM de Slack al Tech Lead (D. B.) para su reunión con el cliente del 17/11. Enviado desde la sesión de Slack de J. S., «de parte de H. T.», con confirmación del implementador."
     },
     {
       "fecha": "2026-11-17",
@@ -577,13 +581,17 @@
     {
       "fecha": "2026-11-17",
       "evento": "Ronda por WhatsApp 14:18 UTC: carrusel del Shop + pedido → cotizar → mensaje provisional, OK (H-06, H-07 cerrados). KEYTON (1 tarjeta) sin probar. H-08: menú de intención generado por IA."
+    },
+    {
+      "fecha": "2026-11-18",
+      "evento": "Docs alineados con D-28 y D-30: spec v0.4, plan v0.2, tareas (T026 y T027 nuevas, 90 SP), cobertura de construccion.md, CONTINUIDAD.md y BRIEF.md. estado.json: C-03 cerrado, V-08 parcial, notas al día. T026/T027 por crear en ClickUp."
     }
   ],
   "puntos": {
     "sow_horas": 126,
-    "estimado_sp": 84,
-    "estimado_horas": 336,
-    "diferencia_pct": 151,
+    "estimado_sp": 90,
+    "estimado_horas": 360,
+    "diferencia_pct": 170,
     "revisado_por": "tech-lead (D. B.)",
     "estado": "aprobada por el Tech Lead (v2, 87 SP / 348 h). Se escribe en ClickUp al crear las T### en F4.",
     "archivo": "docs/04-implementacion/04-tareas/estimacion-preliminar.md",
@@ -732,11 +740,21 @@
         "id": "F10",
         "clickup": "1dfg0rkjr67",
         "sp": 2
+      },
+      {
+        "id": "T026",
+        "clickup": null,
+        "sp": 3
+      },
+      {
+        "id": "T027",
+        "clickup": null,
+        "sp": 3
       }
     ],
     "fecha_aprobacion": "2026-11-16",
     "fuente_aprobacion": "comunicada por el implementador",
-    "nota": "F0–F8 sin estabilización: 79 SP / 316 h. Se descuentan los 3 SP del arranque ya hecho."
+    "nota": "F0–F8 sin estabilización: 85 SP / 340 h (+170 % contra 126 h). Incluye T026 y T027 (D-30, +6 SP, agregadas el 18/11, por aprobar el TL). La v2 aprobada (87 SP) contaba 3 SP de arranque ya hechos."
   },
   "fricciones": [
     {
@@ -804,17 +822,20 @@
     {
       "id": "V-03",
       "fase": 5,
-      "que": "CONNECT asigna a un operador por su correo"
+      "que": "CONNECT asigna a un operador por su correo",
+      "estado": "pendiente"
     },
     {
       "id": "V-04",
       "fase": 5,
-      "que": "Recordatorio por inactividad nativo con máximo 4 envíos y franja horaria"
+      "que": "Recordatorio por inactividad nativo con máximo 4 envíos y franja horaria",
+      "estado": "pendiente"
     },
     {
       "id": "V-05",
       "fase": 5,
-      "que": "Agrupación de mensajes de 2 s configurable"
+      "que": "Agrupación de mensajes de 2 s configurable",
+      "estado": "pendiente"
     },
     {
       "id": "V-06",
@@ -835,7 +856,7 @@
       "fase": 5,
       "que": "El carrusel del Shop (search_and_send_products_webview con presentation=carousel, app Jelou Shop por MCP) llega por WhatsApp desde Ventas, también con 1 tarjeta (KEYTON)",
       "prueba": "Ronda por WhatsApp en el canal DEV: «ver catálogo» de KEYTON y de LYNK & CO",
-      "estado": "carrusel LYNK & CO confirmado por WhatsApp (17/11 14:12 UTC); falta KEYTON (1 tarjeta) y la elección de modelo (H-07)",
+      "estado": "parcial: carrusel LYNK & CO y elección de modelo (H-07) confirmados por WhatsApp el 17/11; falta KEYTON (1 tarjeta)",
       "resultado": "2026-11-17: push OK y chequeo 0. En el tester, search_products respondió «No hay una tienda registrada»; el agente usó el respaldo (Consultar modelos) y respondió en texto. Falta publicar DEV y probar por WhatsApp para saber si es el tester o la asociación tienda-canal. | 2026-11-17 14:02–14:03 UTC, WhatsApp DEV: en el canal real search_products SÍ encuentra la tienda (lo del tester era limitación del tester) y devuelve los 5 LYNK & CO, pero solo como datos para el agente (sin imágenes y sin enviar mensaje). No hay carrusel. El agente respondió «Catálogo LYNK & CO enviado» porque el prompt decía que la tool envía el catálogo visual (defecto del prompt, D-30)."
     }
   ],
@@ -902,7 +923,7 @@
       "id": "func_01m7kg9fyreeb8e285xcgg5tz8",
       "alcance": "organización",
       "creado": "2026-11-16",
-      "nota": "secretos BDC_CLIENT_ID/SECRET pendientes de carga por una persona"
+      "nota": "Secretos BDC_CLIENT_ID/SECRET cargados (V-02 confirmado el 16/11). D-28 desplegado."
     },
     {
       "recurso": "qualityRules=basico",

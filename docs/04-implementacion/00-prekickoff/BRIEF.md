@@ -1,6 +1,6 @@
 # Brief — Vehicentro · Fase 1: Consulta de catálogo y agencias
 
-Fecha: 2026-11-16 (actualizado a v1.3) · Perfil CLI: `dev-vehicentro` (company 13744) · Repo: `JelouLatam/vehicentro` (`vehicentro-sow-hu`) — **no existe (B-01)**
+Fecha: 2026-11-16 (actualizado a v1.3; notas al 18/11) · Company 13744 · Repo: privado `vehicentro-bot` (B-01 cerrado; ver CONTINUIDAD.md) · Las preguntas P1–P9 de abajo se respondieron en decisiones.md D-12..D-30, salvo P1 (C-02), P4 (A-09) y P8 (H-01)
 Tarea ClickUp: https://app.clickup.com/t/86e2aact9 (F0: https://app.clickup.com/t/1dfg0rkjr5x)
 
 ## Fuentes
@@ -22,8 +22,8 @@ Migrar desde un proveedor externo a Jelou la atención por WhatsApp de las marca
 | # | Caso de uso | Fuente |
 |---|---|---|
 | 1 | Flujo_1 · Bienvenida: origen de la campaña, aviso de términos, AI Router de marca e intención, asesor ya asignado (por marca y celular); Repuestos y Talleres → PMA | SOW v1.3 F-U1..F-U3 |
-| 2 | Flujo_2 · Catálogo: agente de IA sobre la API de modelos, comparación y cambio de marca, **webview existente de Jelou Shop** | F-U4 |
-| 3 | Flujo_2 · Cotización: cédula, ciudad, agencia, asesor de la agencia, ingreso del lead y asignación en PMA por correo del asesor | F-U5, F-A1 (D-07) |
+| 2 | Flujo_2 · Catálogo: agente de IA sobre la API de modelos, comparación y cambio de marca, **carrusel de Jelou Shop** cargado desde la API (D-30) | F-U4 |
+| 3 | Flujo_2 · Cotización: cédula, ciudad, agencia, asesor de la agencia (4.4), ingreso del lead y asignación en PMA por correo del asesor | F-U5, F-A1 (D-07, D-28) |
 | 4 | Transversal · Hasta 4 recordatorios en 24 h sin envíos nocturnos; agotados, lead como no gestionado | F-U6 |
 | 5 | Transversal · Agrupación de mensajes y cierre ante interacción negativa | F-U7 |
 | 6 | Transversal · Trazabilidad en Datum: usuarios, viaje, leads y evidencia de términos | F-A2 |
@@ -40,7 +40,7 @@ Repuestos y agendamiento en taller (solo se derivan), OCR, campañas HSM, coment
 | 4.4 Asesor por agencia | Asignación | Documentada |
 | 4.5 Existe asesor (marca, cédula, celular) | Asesor ya asignado | Documentada |
 | 5 Ingreso de lead (POST) | Registro del prospecto | Documentada; **faltan los `id_conexion` por marca (C-02)** |
-| Credenciales OAuth | Todas | **Pendientes (C-03)**, se cargan con `jelou secret` |
+| Credenciales OAuth | Todas | Entregadas y cargadas en `veh-bdc` (C-03 cerrado, V-02) |
 
 Pruebas y producción comparten servidor; la asignación con asesor solo se prueba con el cliente (A-09).
 
