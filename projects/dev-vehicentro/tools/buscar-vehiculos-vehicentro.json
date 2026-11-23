@@ -1,0 +1,237 @@
+{
+  "toolId": 9170,
+  "workflowId": 75323,
+  "toolName": "Buscar vehículos Vehicentro",
+  "toolDescription": "Busca vehículos de Vehicentro en todas las marcas por nombre, modelo o características (eléctrico, híbrido, 4x4, 7 pasajeros, pick up, diésel). Devuelve marca, id_marca, id_modelo, sku, precio, etiquetas y coincidencia.",
+  "triggerType": "DEFAULT",
+  "ownership": "OWNED",
+  "inputs": [
+    {
+      "name": "consulta",
+      "id": "zTwbn-16aEEzTiBfWH_3i",
+      "displayName": "Consulta",
+      "description": "Lo que el cliente busca, en sus palabras: nombre o modelo (ej: 'bolden 4x4', 'lynk 08') o características (ej: 'eléctrico', '7 pasajeros', 'pick up diésel'). Vacío devuelve todo el catálogo.",
+      "type": "STRING",
+      "required": false,
+      "defaultValue": null,
+      "configuration": null,
+      "position": 0
+    },
+    {
+      "name": "id_marca",
+      "id": "Xz1_4cOTxzEm1MhSKqBeK",
+      "displayName": "ID marca",
+      "description": "Opcional. ID numérico de una marca para limitar la búsqueda a esa marca. Vacío busca en todas.",
+      "type": "STRING",
+      "required": false,
+      "defaultValue": null,
+      "configuration": null,
+      "position": 1
+    }
+  ],
+  "outputs": [
+    {
+      "name": "failed",
+      "id": "JvPsiR0yA-NawVocVIkM4",
+      "displayName": "Error búsqueda",
+      "type": "FAILED",
+      "required": true,
+      "schema": null,
+      "position": 0
+    },
+    {
+      "name": "success",
+      "id": "mFvMh6eFgVMQUzQhHUz1T",
+      "displayName": "Resultados",
+      "type": "SUCCESS",
+      "required": true,
+      "schema": null,
+      "position": 0
+    }
+  ],
+  "nodes": [
+    {
+      "id": "11sZ5Shsoli9fxa4CzPVL",
+      "title": "Start",
+      "type": "START",
+      "position": [
+        100,
+        50
+      ]
+    },
+    {
+      "id": "3yKRxd7ZGA5tVvzYY6jrJ",
+      "title": "Buscar en veh-bdc",
+      "type": "HTTP",
+      "configuration": {
+        "url": "https://veh-bdc.fn.jelou.ai/buscar",
+        "body": {
+          "type": "application/json",
+          "content": "{\"consulta\": \"{{$context.consulta}}\", \"id_marca\": \"{{$context.id_marca}}\"}",
+          "enabled": true
+        },
+        "method": "POST",
+        "output": "buscarResponse",
+        "headers": [
+          {
+            "id": "h_ct_bus",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "timeout": 25000,
+          "sslCertificate": true
+        },
+        "authentication": {
+          "type": "bearer",
+          "token": "{{$secret.JELOU_FN_INVOKE_KEY}}",
+          "enabled": true
+        }
+      },
+      "position": [
+        940,
+        50
+      ]
+    },
+    {
+      "id": "Co1msqyuKtlqQj1uVQG6V",
+      "title": "Code Error",
+      "type": "CODE",
+      "configuration": {
+        "content": "$output.set('failed', { ok: false, total: 0, resultados: [], error: 'Error interno al buscar vehículos.' });",
+        "memoryVersion": "v2"
+      },
+      "position": [
+        1780,
+        230
+      ]
+    },
+    {
+      "id": "fgPzJ4vb73d3OOyHqB-_5",
+      "title": "Fin éxito",
+      "type": "END",
+      "configuration": {
+        "outputId": "mFvMh6eFgVMQUzQhHUz1T"
+      },
+      "position": [
+        2200,
+        410
+      ]
+    },
+    {
+      "id": "I79YeI9J39jF7vG6EVB--",
+      "title": "Preparar búsqueda",
+      "type": "CODE",
+      "configuration": {
+        "content": "function readInput(name) {\n  try { return String($input.get(name) ?? '').trim(); } catch (e) { return ''; }\n}\n// Se quitan comillas y barras para que el texto no rompa el cuerpo JSON del HTTP.\nconst consulta = readInput('consulta').replace(/[\"\\\\\\n\\r\\t]/g, ' ').slice(0, 200);\nconst idMarca = readInput('id_marca').replace(/[^0-9]/g, '');\n$context.set('consulta', consulta);\n$context.set('id_marca', idMarca);",
+        "memoryVersion": "v2"
+      },
+      "position": [
+        520,
+        50
+      ]
+    },
+    {
+      "id": "KOnKAg1W3YtNJ0QAUAA1z",
+      "title": "Armar resultados",
+      "type": "CODE",
+      "configuration": {
+        "content": "const response = $context.getHttpResponse('buscarResponse');\nlet payload = {};\ntry {\n  payload = response.json();\n} catch (e) {\n  throw new Error('Respuesta inválida de veh-bdc');\n}\n// veh-bdc responde {ok, tipo, data}. 'vacio' es una respuesta válida: no hay coincidencias.\nif (payload.tipo !== 'ok' && payload.tipo !== 'vacio') {\n  throw new Error('Búsqueda no disponible: ' + String(payload.tipo || 'error'));\n}\nconst data = payload.data || {};\nconst resultados = (data.resultados || []).slice(0, 12).map(function (r) {\n  return {\n    marca: r.marca,\n    id_marca: r.id_marca != null ? String(r.id_marca) : '',\n    id_modelo: r.id_modelo != null ? String(r.id_modelo) : '',\n    sku: r.sku,\n    nombre: r.nombre,\n    segmento: r.segmento,\n    precio: r.precio,\n    moneda: r.moneda || 'USD',\n    etiquetas: r.etiquetas || [],\n    coincidencia: r.coincidencia\n  };\n});\nconst exactas = resultados.filter(function (r) { return r.coincidencia === 'exacta'; });\nconst marcasExactas = Array.from(new Set(exactas.map(function (r) { return r.id_marca; })));\n$output.set('success', {\n  ok: true,\n  tipo: payload.tipo,\n  consulta: $context.get('consulta') || null,\n  total: resultados.length,\n  total_exactas: exactas.length,\n  marcas: data.marcas || [],\n  marcas_exactas: marcasExactas,\n  resultados: resultados,\n  message: resultados.length\n    ? ('Se encontraron ' + exactas.length + ' coincidencia(s) exacta(s) y ' + (resultados.length - exactas.length) + ' relacionada(s).')\n    : 'No hay vehículos que coincidan con esa búsqueda.'\n});",
+        "memoryVersion": "v2"
+      },
+      "position": [
+        1360,
+        410
+      ]
+    },
+    {
+      "id": "lQtd-hLudWUhspo-8mvFX",
+      "title": "Registrar error HTTP",
+      "type": "CODE",
+      "configuration": {
+        "content": "$output.set('failed', { ok: false, total: 0, resultados: [], error: 'No pude buscar vehículos en este momento.' });",
+        "memoryVersion": "v2"
+      },
+      "position": [
+        1360,
+        50
+      ]
+    },
+    {
+      "id": "WMGA8LJmWqWmZHIXaFguv",
+      "title": "Fin error",
+      "type": "END",
+      "configuration": {
+        "outputId": "JvPsiR0yA-NawVocVIkM4"
+      },
+      "position": [
+        2200,
+        50
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "-vjJ-SHgs1C73LIMRCQJP",
+      "sourceId": "KOnKAg1W3YtNJ0QAUAA1z",
+      "targetId": "fgPzJ4vb73d3OOyHqB-_5",
+      "branch": "success"
+    },
+    {
+      "id": "8Q22sgj3u-4u5aKsgwxqV",
+      "sourceId": "3yKRxd7ZGA5tVvzYY6jrJ",
+      "targetId": "lQtd-hLudWUhspo-8mvFX",
+      "branch": "failed"
+    },
+    {
+      "id": "AYyQsgoRlEkKbLJ1hQCer",
+      "sourceId": "lQtd-hLudWUhspo-8mvFX",
+      "targetId": "Co1msqyuKtlqQj1uVQG6V",
+      "branch": "failed"
+    },
+    {
+      "id": "b3CPcI90JknJCJGsIjZ5Y",
+      "sourceId": "3yKRxd7ZGA5tVvzYY6jrJ",
+      "targetId": "KOnKAg1W3YtNJ0QAUAA1z",
+      "branch": "success"
+    },
+    {
+      "id": "C32fa-fFPHba_Gp_uxmT6",
+      "sourceId": "lQtd-hLudWUhspo-8mvFX",
+      "targetId": "WMGA8LJmWqWmZHIXaFguv",
+      "branch": "success"
+    },
+    {
+      "id": "DjvmXY_TlusRH97cszuww",
+      "sourceId": "I79YeI9J39jF7vG6EVB--",
+      "targetId": "3yKRxd7ZGA5tVvzYY6jrJ",
+      "branch": "success"
+    },
+    {
+      "id": "hiqWVfOiQp3C5Tbt555u3",
+      "sourceId": "KOnKAg1W3YtNJ0QAUAA1z",
+      "targetId": "Co1msqyuKtlqQj1uVQG6V",
+      "branch": "failed"
+    },
+    {
+      "id": "TqRDgl4I4tvHiWa-sQMRS",
+      "sourceId": "Co1msqyuKtlqQj1uVQG6V",
+      "targetId": "WMGA8LJmWqWmZHIXaFguv",
+      "branch": "success"
+    },
+    {
+      "id": "wbwdqkONKa0qG8Hu1n0WA",
+      "sourceId": "11sZ5Shsoli9fxa4CzPVL",
+      "targetId": "I79YeI9J39jF7vG6EVB--",
+      "branch": "default"
+    },
+    {
+      "id": "XWDoZvM_Q0Lz1LF9sTTTn",
+      "sourceId": "I79YeI9J39jF7vG6EVB--",
+      "targetId": "Co1msqyuKtlqQj1uVQG6V",
+      "branch": "failed"
+    }
+  ]
+}

@@ -9,8 +9,8 @@ workflows:
     channel: WHATSAPP
     default: true
     description: "Da la bienvenida, identifica la marca y la intención del prospecto y lo enruta a Ventas o a un asesor"
-    hash: "sha256:d8d24fd2df8fdd3e8f62e900997c34e767f22c4144d5d0bdd483b02026b83afd"
-    lastPulledAt: "2026-11-23T14:42:30.032Z"
+    hash: "sha256:27b51469b124bbe53005dbe42b4f6468991bf7723602402107908fccaf893ba2"
+    lastPulledAt: "2026-11-23T15:04:15.730Z"
     name: "Bienvenida y Enrutamiento"
     skillId: 46693
     workflowId: 64836
@@ -70,12 +70,24 @@ workflows:
     workflowId: 75020
   workflows/ventas.whatsapp.json:
     channel: WHATSAPP
-    hash: "sha256:7406983a5b82ee4a339c55dd20a21eaf792b4838137d5f940cac34dc8f479b69"
-    lastPulledAt: "2026-11-23T14:43:19.535Z"
+    hash: "sha256:7a06ce442bd2adfbf011ce5d3e0ce2205c1c8ea3e1d326840bae704295cb219e"
+    lastPulledAt: "2026-11-23T15:07:20.411Z"
     name: Ventas
     skillId: 46694
     workflowId: 64837
 tools:
+  buscar-vehiculos-vehicentro:
+    contractHash: "sha256:dcbcdb4aa1cac1b58a51c459d94fc8015128ff96d80d07ea15cce1e6c2978651"
+    envelopeHash: "sha256:ba689db6da11460032680cfcbaf4caefa9b9b72d4f347aaad389b47cdc38d0f6"
+    hash: "sha256:24b54c761c43a24d9827240decf497c70e261c7f7bd9821fc5054b9df1aaf281"
+    lastPulledAt: "2026-11-23T15:00:34.311Z"
+    latestVersion: 1.0.0
+    metaHash: "sha256:8781363f3fbb87b5d3d25caf23f346fd2a89444d74bd8ef5de01cd9e4eea97df"
+    name: "Buscar vehículos Vehicentro"
+    ownership: OWNED
+    toolId: 9170
+    versionIndex: 1
+    workflowId: 75323
   consultar-marcas-vehicentro:
     contractHash: "sha256:0e37e56911f8af004650f85b78623c2d0bfb8b6b065014ee1d9ddd99d35bb61e"
     envelopeHash: "sha256:9795a02984bd5d4fa3dc2d33e09b0fe451910e1ae044cd95815834bf71394e71"
@@ -92,7 +104,7 @@ tools:
     contractHash: "sha256:a66de246dc3be67b892958f83a27d1a4292e50de06bb40181d647abf2c6822a1"
     envelopeHash: "sha256:8d27eef4e2db53fc2eb359afe1a23373c1e2f6152b4fb73e7c399a69f4008b6c"
     hash: "sha256:973a022c79cb3cd150456a6824cbf5d7bf30caea9a7ab152ca14d9dd6bdc50cf"
-    lastPulledAt: "2026-11-17T04:19:38.382Z"
+    lastPulledAt: "2026-11-23T14:53:39.912Z"
     latestVersion: 1.0.1
     metaHash: "sha256:43e9d2b81c219302a03123164c6d488e4217c65ab2912a4b40437a12a802b6ff"
     name: "Consultar modelos Vehicentro"
