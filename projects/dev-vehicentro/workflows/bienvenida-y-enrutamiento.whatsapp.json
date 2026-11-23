@@ -458,14 +458,13 @@
       "id": "Fdy9n81HrFZoejA1cZW9-",
       "title": "Contexto inicial",
       "configuration": {
-        "title": "Contexto inicial",
         "content": "// El id de WhatsApp es el celular salvo con BSUID; nunca se fija a mano (H-05).\nconst uid = String($user.get('id') || '');\nconst dig = uid.replace(/\\D/g, '');\nlet cel = '';\nif (/^5939\\d{8}$/.test(dig)) cel = '0' + dig.slice(3);\nelse if (/^09\\d{8}$/.test(dig)) cel = dig;\n$memory.set('id_whatsapp', uid);\n$memory.set('celular_canal', cel);\n$memory.set('celular', cel);\n$memory.set('ahora_iso', new Date().toISOString());\n$memory.set('terminos_version', 'v1');\n// PROVISIONAL hasta recibir los links del cliente ([C] 1dfg0rkn7d2).\n$memory.set('link_terminos', '[link de términos pendiente]');\n$memory.set('link_politica', '[link de política de datos pendiente]');",
         "memoryVersion": "v2"
       },
       "type": "CODE",
       "position": [
-        206,
-        296
+        113,
+        567
       ]
     },
     {
@@ -538,8 +537,8 @@
       "title": "Start",
       "type": "START",
       "position": [
-        -124,
-        290
+        -213,
+        558
       ]
     },
     {
