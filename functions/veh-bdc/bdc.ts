@@ -33,7 +33,12 @@ const res = (tipo: Tipo, data: any = null, mensaje?: string): Resultado<any> => 
 let cache: { token: string; vence: number } | null = null;
 export const _resetToken = () => {
   cache = null;
+  catalogoCache = null;
 };
+
+// Catálogo de todas las marcas para la búsqueda; 10 min por instancia.
+// deno-lint-ignore no-explicit-any
+let catalogoCache: { data: any[]; vence: number } | null = null;
 
 export function normalizarCelular(valor: string | null | undefined): string | null {
   const d = String(valor ?? "").replace(/\D/g, "");
@@ -154,6 +159,70 @@ export class Bdc {
         videos: String(m.videos ?? "").split(",").map((s) => s.trim()).filter(Boolean),
       }));
     return items.length ? res("ok", items) : res("vacio", []);
+  }
+
+  // Catálogo completo (todas las marcas) con índice de búsqueda; 10 min en memoria.
+  async catalogo(): Promise<Resultado<ModeloCatalogo[]>> {
+    if (catalogoCache && catalogoCache.vence > Date.now()) return res("ok", catalogoCache.data);
+    const ms = await this.marcas();
+    if (ms.tipo !== "ok") return { ...ms, data: null } as Resultado<ModeloCatalogo[]>;
+    const porMarca = await Promise.all(
+      (ms.data ?? []).map(async (mk) => ({ mk, r: await this.get<Record<string, unknown>>(`botwa_modelos/${mk.id}`) })),
+    );
+    if (porMarca.some((x) => x.r.tipo !== "ok" && x.r.tipo !== "vacio")) return res("indisponible", null, "modelos sin respuesta");
+    const data: ModeloCatalogo[] = [];
+    for (const { mk, r } of porMarca) {
+      for (const m of r.data ?? []) {
+        const ficha = parsearFicha(m.json_ficha_tecnica, 100_000);
+        const tf = textoFicha(ficha);
+        const nombre = String(m.nombre_modelo ?? "");
+        const segmento = String(m.nombre_segmento ?? "");
+        const carac = String(m.caracteristicas ?? "");
+        const imgs = String(m.imagenes ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+        data.push({
+          id_modelo: Number(m.id_modelo),
+          sku: `VEH-${m.id_modelo}`,
+          nombre,
+          marca: mk.nombre,
+          id_marca: mk.id,
+          segmento,
+          precio: Number(m.precio_venta),
+          moneda: String(m.moneda ?? "USD"),
+          etiquetas: etiquetas(nombre, segmento, carac, tf),
+          caracteristicas: carac.slice(0, 300),
+          imagen: imgs[0] ?? null,
+          texto: `${sinAcentos(`${nombre} ${mk.nombre} ${segmento} ${carac}`)} | ${tf}`,
+        });
+      }
+    }
+    catalogoCache = { data, vence: Date.now() + 10 * 60_000 };
+    return data.length ? res("ok", data) : res("vacio", []);
+  }
+
+  // Busca en todas las marcas (o en una) por nombre, modelo, segmento o características.
+  // Sin términos útiles devuelve todo el catálogo. coincidencia: «exacta» = cada término está
+  // en el nombre o en una etiqueta; «relacionada» = alguno solo aparece en la ficha o no aparece.
+  async buscar(consulta: string, idMarca?: number) {
+    const c = await this.catalogo();
+    if (c.tipo !== "ok") return { ...c, data: null };
+    const base = (c.data ?? []).filter((m) => !idMarca || m.id_marca === idMarca);
+    const terminos = terminosConsulta(consulta ?? "");
+    const filas = base
+      .map((m) => {
+        const ps = terminos.length ? puntosPorTermino(m, terminos) : [3];
+        return { m, p: ps.reduce((a, b) => a + b, 0), exacta: ps.every((x) => x >= 3) };
+      })
+      .filter((x) => x.p > 0)
+      .sort((a, b) => Number(b.exacta) - Number(a.exacta) || b.p - a.p || a.m.precio - b.m.precio);
+    const resultados = filas.map(({ m, exacta }) => {
+      const { texto: _t, ...pub } = m;
+      return { ...pub, coincidencia: exacta ? "exacta" : "relacionada" };
+    });
+    const marcas = [...new Set(resultados.map((r) => r.marca))];
+    this.cfg.log?.("bdc_buscar", { terminos: terminos.length, resultados: resultados.length, marcas: marcas.length });
+    return resultados.length
+      ? res("ok", { terminos, marcas, resultados })
+      : res("vacio", { terminos, marcas: [], resultados: [] });
   }
 
   async agencias(idMarca: number, ciudad?: string) {
@@ -280,30 +349,206 @@ function asesor(a: Record<string, unknown>): Asesor {
   };
 }
 
-// La ficha llega como texto con JSON adentro; se parsea y se recorta para el agente.
-export function parsearFicha(v: unknown, max = 1500): unknown {
+// La ficha llega como texto con JSON adentro y con escapes de Markdown (`info\_base`, `\[`),
+// que rompen JSON.parse. Se quitan los escapes, se parsea, se compacta (valores repetidos
+// por versión → uno; «No especificado» fuera) y se recorta por secciones completas.
+export function parsearFicha(v: unknown, max = 4000): unknown {
   if (v == null || v === "") return null;
   let obj: unknown = v;
   if (typeof v === "string") {
+    const limpio = v.replace(/\\([_\[\]*#\-])/g, "$1");
     try {
-      obj = JSON.parse(v);
+      obj = JSON.parse(limpio);
     } catch {
-      return String(v).slice(0, max);
+      return limpio.slice(0, max);
     }
   }
-  const s = JSON.stringify(obj);
-  return s.length <= max ? obj : JSON.parse(JSON.stringify(recortar(obj, max)));
+  const c = compactar(obj);
+  return JSON.stringify(c).length <= max ? c : recortar(c, max);
 }
 
+const NO_DATO = /^(no especificado|n\/a|-|)$/i;
+
+function compactar(o: unknown): unknown {
+  if (Array.isArray(o)) {
+    const vals = o.map(compactar).filter((x) => x != null && !(typeof x === "string" && NO_DATO.test(x.trim())));
+    const unicos = [...new Set(vals.map((x) => JSON.stringify(x)))].map((x) => JSON.parse(x));
+    if (!unicos.length) return null;
+    return unicos.length === 1 ? unicos[0] : unicos;
+  }
+  if (o && typeof o === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(o as Record<string, unknown>)) {
+      const c = compactar(v);
+      if (c != null && !(typeof c === "string" && NO_DATO.test(c.trim()))) out[k] = c;
+    }
+    return Object.keys(out).length ? out : null;
+  }
+  return o;
+}
+
+// Recorta por secciones de primer nivel y, dentro de «especificaciones», por subsección.
 function recortar(o: unknown, max: number): unknown {
   if (typeof o !== "object" || o === null) return o;
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(o as Record<string, unknown>)) {
-    out[k] = v;
-    if (JSON.stringify(out).length > max) {
-      delete out[k];
-      break;
+    if (v && typeof v === "object" && !Array.isArray(v)) {
+      const sub: Record<string, unknown> = {};
+      out[k] = sub;
+      for (const [k2, v2] of Object.entries(v as Record<string, unknown>)) {
+        sub[k2] = v2;
+        if (JSON.stringify(out).length > max) {
+          delete sub[k2];
+          return out;
+        }
+      }
+    } else {
+      out[k] = v;
+      if (JSON.stringify(out).length > max) {
+        delete out[k];
+        return out;
+      }
     }
   }
   return out;
+}
+
+// Texto plano de la ficha para buscar (claves y valores, sin acentos).
+export function textoFicha(f: unknown): string {
+  const partes: string[] = [];
+  const rec = (o: unknown, k = "") => {
+    if (o == null) return;
+    if (Array.isArray(o)) o.forEach((x) => rec(x, k));
+    else if (typeof o === "object") for (const [kk, vv] of Object.entries(o as Record<string, unknown>)) rec(vv, kk);
+    else partes.push(`${k.replace(/_/g, " ")} ${o}`);
+  };
+  rec(f);
+  return sinAcentos(partes.join(" | "));
+}
+
+// ---------- Búsqueda en todo el catálogo (nombre, marca, segmento o características) ----------
+
+export interface ModeloCatalogo {
+  id_modelo: number;
+  sku: string;
+  nombre: string;
+  marca: string;
+  id_marca: number;
+  segmento: string;
+  precio: number;
+  moneda: string;
+  etiquetas: string[];
+  caracteristicas: string;
+  imagen: string | null;
+  texto: string; // índice de búsqueda; no se devuelve al agente
+}
+
+// Etiquetas derivadas del nombre, las características y la ficha.
+export function etiquetas(nombre: string, segmento: string, caracteristicas: string, ficha: string): string[] {
+  const n = sinAcentos(`${nombre} ${caracteristicas}`);
+  const todo = `${n} ${ficha}`;
+  const t = new Set<string>();
+  const enchufable = /\bphev\b|enchufable/.test(todo);
+  if (enchufable) t.add("híbrido enchufable");
+  else if (/hibrid/.test(todo)) t.add("híbrido");
+  if (!enchufable && !/hibrid/.test(todo) &&
+    (/\bev\b|100\s*% electric|electrico\b/.test(n) || (/bateria/.test(ficha) && /autonomia/.test(ficha) && !/combustible|gasolina|diesel/.test(ficha)))) {
+    t.add("eléctrico");
+  }
+  if (/\bdiesel\b/.test(todo)) t.add("diésel");
+  else if (!t.has("eléctrico") && /gasolina|octanaje|combustible/.test(todo)) t.add("gasolina");
+  // Tracción: el nombre manda; si no la dice, la ficha.
+  if (/4x4|awd|4wd/.test(sinAcentos(nombre))) t.add("4x4");
+  else if (/4x2/.test(sinAcentos(nombre))) t.add("4x2");
+  else if (/4x4|awd|4wd|traccion (total|integral)/.test(todo)) t.add("4x4");
+  else if (/traccion (en las )?ruedas delanteras|4x2/.test(todo)) t.add("4x2");
+  if (/7 pasajeros|3 filas|tres filas/.test(todo)) t.add("7 pasajeros");
+  // Transmisión: el nombre (MT/AT) manda; si no, solo los campos de transmisión de la ficha
+  // (el «aire acondicionado automático» no cuenta).
+  const nom = sinAcentos(nombre);
+  const transmision = (ficha.match(/(?:^|\| )[^|]*(?:transmision|caja)[^|]*/g) ?? []).join(" ");
+  if (/\bmt\b|manual/.test(nom)) t.add("manual");
+  else if (/\bat\b|automatic/.test(nom)) t.add("automático");
+  else if (/automatic|\bdct\b|\bcvt\b|\bdht\b|\bat\b/.test(transmision)) t.add("automático");
+  else if (/manual/.test(transmision)) t.add("manual");
+  const seg = sinAcentos(segmento);
+  if (seg) t.add(seg.replace("pick up", "pick-up"));
+  return [...t];
+}
+
+// Sinónimos: cada término de la consulta se expande a lo que puede aparecer en el catálogo.
+const SINONIMOS: Record<string, string[]> = {
+  electrico: ["electrico", "ev", "bateria"],
+  electrica: ["electrico", "ev", "bateria"],
+  ev: ["electrico", "ev"],
+  hibrido: ["hibrido", "phev", "enchufable"],
+  hibrida: ["hibrido", "phev", "enchufable"],
+  phev: ["phev", "enchufable"],
+  "4x4": ["4x4", "awd", "4wd", "traccion total", "traccion integral"],
+  "4x2": ["4x2"],
+  camioneta: ["pick-up", "pick up", "suv"],
+  pickup: ["pick-up", "pick up"],
+  furgoneta: ["van", "furgoneta"],
+  van: ["van", "furgoneta"],
+  carga: ["van", "furgoneta", "pick-up", "carga"],
+  familia: ["7 pasajeros", "3 filas", "suv"],
+  familiar: ["7 pasajeros", "3 filas", "suv"],
+  diesel: ["diesel"],
+  gasolina: ["gasolina"],
+  automatico: ["automatico", "dct", "cvt"],
+  automatica: ["automatico", "dct", "cvt"],
+  manual: ["manual"],
+};
+const VACIAS = new Set(
+  ("quiero un una unos unas el la los las de del que sea con para por me gustaria busco buscando tienen tiene hay algun alguna " +
+    "carro carros auto autos vehiculo vehiculos modelo modelos ver info informacion precio precios cuanto cuesta y o en mas mejor " +
+    "busco necesito interesa interesado hola buenas favor porfa algo tipo").split(" "),
+);
+
+export function terminosConsulta(consulta: string): string[] {
+  const q = sinAcentos(consulta).replace(/[^\p{L}\p{N}%\s-]/gu, " ");
+  const out: string[] = [];
+  // «7 pasajeros» y «3 filas» como frase.
+  for (const m of q.matchAll(/(\d+)\s*(pasajeros|puestos|asientos|filas)/g)) out.push(`${m[1]} ${m[2] === "filas" ? "filas" : "pasajeros"}`);
+  const enFrase = new Set(out.map((x) => x.split(" ")[0]));
+  // Los números de 2+ cifras («02», «08», «70») son parte del nombre del modelo; los de 1 cifra no.
+  for (const w of q.split(/\s+/)) {
+    if (!w || VACIAS.has(w) || enFrase.has(w) || /^(pasajeros|puestos|asientos|filas)$/.test(w)) continue;
+    if (/^\d$/.test(w)) continue;
+    out.push(w);
+  }
+  return [...new Set(out)];
+}
+
+// Términos de característica: solo cuentan en el nombre o en las etiquetas (la ficha está llena de
+// «eléctrico» en elevavidrios o dirección). RELACIONADOS da la coincidencia parcial que sí tiene sentido.
+const RELACIONADOS: Record<string, string[]> = {
+  electrico: ["hibrido enchufable"],
+  electrica: ["hibrido enchufable"],
+  ev: ["hibrido enchufable"],
+  "4x4": ["pick-up"],
+};
+
+// Términos cortos («ev», «at», «02») solo cuentan como palabra completa.
+function contiene(texto: string, termino: string): boolean {
+  if (termino.length > 3) return texto.includes(termino);
+  const e = termino.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^a-z0-9])${e}($|[^a-z0-9])`).test(texto);
+}
+
+// Por término: nombre o marca = 4, etiqueta = 3, solo en la ficha o las características = 1, nada = 0.
+export function puntosPorTermino(m: ModeloCatalogo, terminos: string[]): number[] {
+  const nombre = sinAcentos(`${m.nombre} ${m.marca}`);
+  const tags = sinAcentos(m.etiquetas.join(" | "));
+  return terminos.map((t) => {
+    const esCaracteristica = t in SINONIMOS || /^\d+ (pasajeros|filas)$/.test(t);
+    let p = 0;
+    for (const a of (SINONIMOS[t] ?? [t]).map((x) => x.trim())) {
+      if (contiene(nombre, a)) p = Math.max(p, 4);
+      else if (contiene(tags, a)) p = Math.max(p, 3);
+      else if (!esCaracteristica && contiene(m.texto, a)) p = Math.max(p, 1);
+    }
+    if (!p && (RELACIONADOS[t] ?? []).some((r) => contiene(tags, r))) p = 1;
+    return p;
+  });
 }
