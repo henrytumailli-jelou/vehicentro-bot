@@ -749,6 +749,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "T027 construida como ruta `sincronizarShop` de veh-bdc con cron diario 06:00 America/Guayaquil (D-35), no como Function aparte: reutiliza el cliente y los secretos del BDC y no crea otro recurso de organización. API del Shop por el gateway (x-api-key) con el id de la tienda. main 7088bd3; 42 pruebas en verde. Falta: la persona crea la clave de API con permiso de ecommerce, la carga como secreto SHOP_API_KEY (--from-file) y despliega; luego se revisa la primera corrida."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "La persona cargó SHOP_API_KEY (--from-file) y desplegó veh-bdc: deploy_01m8724gqce9btkn8qzd6zm5nx activo; cron sincronizarShop registrado (0 6 * * * America/Guayaquil, synced, sin disparos aún). La primera corrida la dispara la persona o el cron del 25/11 06:00."
     }
   ],
   "puntos": {
