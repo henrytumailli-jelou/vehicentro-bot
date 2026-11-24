@@ -142,6 +142,19 @@
                 "operator": "equal"
               }
             ]
+          },
+          {
+            "id": "c_sin_modelo",
+            "name": "Sin modelo",
+            "terms": [
+              {
+                "id": "c_sin_modelo_t",
+                "type": "string",
+                "value1": "{{$memory.cot_estado}}",
+                "value2": "sin_modelo",
+                "operator": "equal"
+              }
+            ]
           }
         ]
       },
@@ -199,7 +212,7 @@
         "conditions": [
           {
             "id": "c_cotizar",
-            "name": "Cotizar con marca y modelo",
+            "name": "Cotizar con marca",
             "terms": [
               {
                 "id": "c_cot_t1",
@@ -212,12 +225,6 @@
                 "id": "c_cot_t2",
                 "type": "string",
                 "value1": "{{$memory.id_marca_ventas}}",
-                "operator": "is_not_empty"
-              },
-              {
-                "id": "c_cot_t3",
-                "type": "string",
-                "value1": "{{$memory.id_modelo}}",
                 "operator": "is_not_empty"
               }
             ],
@@ -654,7 +661,7 @@
       "title": "Preparar cotización",
       "configuration": {
         "title": "Preparar cotización",
-        "content": "// T009: un lead por marca y conversación (RF-008); el celular lo asegura Bienvenida.\nconst marca = String($memory.get('id_marca_ventas', '') || '').replace(/\\D/g, '');\nconst cel = String($memory.get('celular', '') || '').replace(/\\D/g, '');\nconst celOk = /^09\\d{8}$/.test(cel) || /^5939\\d{8}$/.test(cel);\nconst previos = $memory.getJson('leads_registrados', {}) || {};\n$memory.set('cedula_intentos', '0');\n$memory.set('motivo_derivacion', 'cotizacion');\nlet estado = 'nuevo';\nif (!celOk) {\n  estado = 'cerrar';\n  $memory.set('motivo_derivacion', 'sin_celular');\n  $memory.set('mensaje_cierre', 'Para continuar con su cotización, un asesor continuará con usted por este chat.');\n} else if (previos[marca]) {\n  const p = previos[marca];\n  estado = 'cerrar';\n  $memory.set('asesor_nombre', String(p.asesor || ''));\n  $memory.set('asesor_correo', String(p.correo || ''));\n  $memory.set('agencia_elegida', String(p.agencia || ''));\n  $memory.set('mensaje_cierre', p.asesor\n    ? `Su cotización ya está registrada. Le atenderá ${p.asesor} de la agencia ${p.agencia}. En breve continuará con usted por este chat.`\n    : 'Su cotización ya está registrada. Un asesor continuará con usted por este chat.');\n}\n$memory.set('cot_estado', estado);",
+        "content": "// T009: un lead por marca y conversación (RF-008); el celular lo asegura Bienvenida.\nconst marca = String($memory.get('id_marca_ventas', '') || '').replace(/\\D/g, '');\nconst cel = String($memory.get('celular', '') || '').replace(/\\D/g, '');\nconst celOk = /^09\\d{8}$/.test(cel) || /^5939\\d{8}$/.test(cel);\nconst previos = $memory.getJson('leads_registrados', {}) || {};\n$memory.set('cedula_intentos', '0');\n$memory.set('motivo_derivacion', 'cotizacion');\nlet estado = 'nuevo';\nif (!celOk) {\n  estado = 'cerrar';\n  $memory.set('motivo_derivacion', 'sin_celular');\n  $memory.set('mensaje_cierre', 'Para continuar con su cotización, un asesor continuará con usted por este chat.');\n} else if (previos[marca]) {\n  const p = previos[marca];\n  estado = 'cerrar';\n  $memory.set('asesor_nombre', String(p.asesor || ''));\n  $memory.set('asesor_correo', String(p.correo || ''));\n  $memory.set('agencia_elegida', String(p.agencia || ''));\n  $memory.set('mensaje_cierre', p.asesor\n    ? `Su cotización ya está registrada. Le atenderá ${p.asesor} de la agencia ${p.agencia}. En breve continuará con usted por este chat.`\n    : 'Su cotización ya está registrada. Un asesor continuará con usted por este chat.');\n}\nif (estado === 'nuevo' && !String($memory.get('id_modelo', '') || '').trim()) {\n  // Cotizar sin modelo elegido: sigue la derivación de siempre (motivo cotizacion).\n  estado = 'sin_modelo';\n}\n$memory.set('cot_estado', estado);",
         "memoryVersion": "v2"
       },
       "type": "CODE",
@@ -1311,6 +1318,12 @@
       "sourceId": "_RXaKpVWjVNO-9A5aBN3D",
       "targetId": "zeQ_HzY6FMbjYSBsva-H2",
       "branch": "expire"
+    },
+    {
+      "id": "pAqAMmXSF2gxulzGZjKrw",
+      "sourceId": "34vSd3s1yBfcZ6i-UO8o8",
+      "targetId": "MMVRrOLd62_bxTk0F24-G",
+      "branch": "condition:c_sin_modelo"
     },
     {
       "id": "Pey4_aFk8NcIr1HTg8Jeq",
