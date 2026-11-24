@@ -28,7 +28,7 @@ Formato: `[ID] [P?] [HU?] [SP:n] Descripción — dónde`. `[C]` = insumo del cl
 - [x] T007 [HU-05] [SP:3] Agente de catálogo con guardrails, comparación y cambio de marca — `projects/dev-vehicentro/workflows/ventas.whatsapp.json` + tool «Consultar modelos»
 - [x] T008 [P] [HU-05] [SP:3] Catálogo visual en el chat (primero carrusel propio D-27, reemplazado por T026) — tool «Enviar carrusel modelos» (8425, se retira al cerrar F5)
 - [x] T026 [HU-05] [SP:3] **(nueva, D-30)** Catálogo del BDC cargado en Jelou Shop (`scripts/shop-catalogo/`) y carrusel del Shop en Ventas (`search_and_send_products_webview`, MCP); aviso `SUCCESS` del Shop → cotizar (H-07). Falta: KEYTON con 1 tarjeta (V-08)
-- [ ] T027 [P] [HU-05] [SP:3] **(nueva, D-30)** Function de sincronización BDC → Shop con cron cada hora (upsert por SKU, mismas reglas del script) — `functions/veh-shop-sync`
+- [ ] T027 [P] [HU-05] [SP:3] **(nueva, D-30)** Function de sincronización BDC → Shop con cron diario (D-35) (upsert por SKU, mismas reglas del script) — `functions/veh-shop-sync`
 - [ ] T009 [HU-06] [SP:3] Cédula, celular si falta, ciudades y agencias (listas paginadas) — `ventas.whatsapp.json`
 - [ ] T010 [HU-06] [SP:5] Asesor por 4.4 + lead (POST; `id_agencias`/`id_asesor` solo en producción) + Datum `leads` + idempotencia celular+marca + resultado incierto (4.5) (D-28) — `ventas.whatsapp.json` + `veh-bdc /lead`
 
@@ -73,7 +73,7 @@ Horas del SOW: 126 (21 días × 6 h) · F0 a F8 sin estabilización: 340 h · **
 |---|---|---|---|---|---|---|
 | T001 | 1dfg0rkn7ck | Jelou (H. T.) | 1 | | | hecho (espejo en main 55efa7b) |
 | T002 | 1dfg0rkn7cm | Jelou (H. T.) | 5 | | | hecho (D-28 en 0aef523) |
-| T003 | 1dfg0rkn7cn | Jelou (H. T.) | 3 | | | hecho (links provisionales, C-05) |
+| T003 | 1dfg0rkn7cn | Jelou (H. T.) | 3 | | | hecho (link definitivo D-31, 24/11) |
 | T004 | 1dfg0rkn7cp | Jelou (H. T.) | 3 | | | hecho; V-06 abierto (anuncio real) |
 | T005 | 1dfg0rkn7cq | Jelou (H. T.) | 5 | | | hecho |
 | T006 | 1dfg0rkn7cr | Jelou (H. T.) | 5 | | | hecho; H-08 abierto |
@@ -88,7 +88,7 @@ Horas del SOW: 126 (21 días × 6 h) · F0 a F8 sin estabilización: 340 h · **
 | T013 | 1dfg0rkn7cz | Jelou (H. T.) | 3 | | | to do |
 | T014 | 1dfg0rkn7d0 | Jelou (H. T.) | 2 | | | hecho |
 | T015 | 1dfg0rkn7d1 | Jelou (H. T.) | 2 | | | to do |
-| [C] términos | 1dfg0rkn7d2 | Cliente | — | — | — | waiting on client |
+| [C] términos | 1dfg0rkn7d2 | Cliente | — | — | — | complete (D-31, 24/11) |
 | [C] id_conexion | 1dfg0rkn7d3 | Cliente | — | — | — | waiting on client |
 | [C] teleasesores PMA | 1dfg0rkn7d4 | Cliente | — | — | — | waiting on client |
 | T016–T024 | 1dfg0rkn7d5 … 1dfg0rkn7dd | Jelou (H. T.) | 2 c/u | | | to do |

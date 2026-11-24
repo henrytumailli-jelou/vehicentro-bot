@@ -1,6 +1,6 @@
 # Vehicentro · Dónde quedamos (para continuar el trabajo)
 
-Actualizado: 2026-11-18 · Personas por rol o iniciales (regla 5). El detalle de cada punto está en los archivos enlazados; este documento es el mapa.
+Actualizado: 2026-11-24 · Personas por rol o iniciales (regla 5). El detalle de cada punto está en los archivos enlazados; este documento es el mapa.
 
 ## 1. El proyecto en una línea
 Bot de WhatsApp para Vehicentro (company **13744** «EC-02-113-01 Vehicentro»), Fase 1: bienvenida y enrutamiento por marca, catálogo (Jelou Shop) y agencias, registro del lead en el BDC del cliente y asignación al teleasesor en PMA. Va por **partner** (Claro).
@@ -18,8 +18,9 @@ Bot de WhatsApp para Vehicentro (company **13744** «EC-02-113-01 Vehicentro»),
 
 ## 3. Estado actual
 - **Fase: F5 (construcción).** Puertas F0–F4 aprobadas el 16/11 (TL D. B.; PM J. C.). F3 reabierta por D-30 (ratifica el TL en la puerta de F5).
-- **Hecho:** T001–T008, T014 y T026 (Flujo 1 completo; agente de catálogo; carrusel del Shop y elección de modelo verificados por WhatsApp el 17/11).
-- **Siguiente:** T009 (cédula, ciudad, agencia) y T010 (4.4 + lead), T011 (CONNECT real, reemplaza D-29), T013, T012, T027, T015.
+- **Hecho:** T001–T008, T014, T026, la búsqueda sin elegir marca (PR #1, 23/11) y T003 con el link definitivo (24/11, draft de DEV sin publicar) (Flujo 1 completo; agente de catálogo; carrusel del Shop y elección de modelo verificados por WhatsApp el 17/11).
+- **Siguiente:** T009 (cédula, ciudad, agencia) y T010 (4.4 + lead; revisar D-33), T011 (CONNECT real, reemplaza D-29), `id_conexion` por marca en `veh-bdc` (D-32), T027 (sincronización diaria, D-35), T013, T012, T015.
+- **Fechas comprometidas con el cliente (correo 05/11):** pruebas asistidas 02–03/12 · producción 08/12. Seguimiento con el cliente los martes 11:00–11:30.
 - **Repo:** `main` = espejo de DEV + `functions/veh-bdc` + `scripts/shop-catalogo`; `vehicentro-sow-hu` = docs y estado.
 
 ## 4. Decisiones vigentes (detalle en `docs/00-cliente/decisiones.md`)
@@ -33,6 +34,9 @@ Bot de WhatsApp para Vehicentro (company **13744** «EC-02-113-01 Vehicentro»),
 | D-25 | Un solo asistente para las 4 marcas |
 | **D-28** | Asesor por **4.4 antes del lead**; `id_agencias`/`id_asesor` solo en producción. Reemplaza D-23 y D-26 |
 | D-29 | «Derivar a Asesor» provisional (mensaje fijo) hasta V-03; **bloquea la puerta de F5** |
+| D-31 | Un solo link para términos y política (`vehicentro.com/politicaprivacidad`), versión v1 |
+| D-32 | `id_conexion` de producción = `codigo` de `botwa_marcas` por marca |
+| D-34 / D-35 | Pruebas de lead con `id_agencias`/`id_asesor` en null · catálogo sincronizado una vez al día |
 | **D-30** | Catálogo en **Jelou Shop** cargado desde 4.2 y carrusel del Shop (MCP). Reemplaza D-27 |
 
 ## 5. Pendientes y riesgos abiertos
@@ -40,9 +44,10 @@ Bot de WhatsApp para Vehicentro (company **13744** «EC-02-113-01 Vehicentro»),
 |---|---|---|
 | H-01 | Consentimiento implícito del SOW vs. botones construidos (regla 17); bloquea F6 | TL con el cliente |
 | H-08 | Menú de intención armado por la IA (no determinista) | TL |
-| C-05 | Links de términos y política + versión (hoy provisionales) | Cliente |
 | C-06 / V-03 | Teleasesores en PMA con el correo del BDC; operador de prueba para el CONNECT | Cliente / implementador |
-| A-09 | Cómo probar 4.4 sin mover el reparto real de leads | Cliente |
+| C-07 | Características de KEYTON (prometidas para el 19/11, sin confirmar) | Cliente |
+| C-09 | Personas del cliente para las pruebas del 02–03/12 | Cliente |
+| H-09 | Modelo de respaldo deprecado (gpt-4.1-mini) en Bienvenida | Implementador |
 | C-02 | `id_conexion` de producción por marca (antes de F8) | Cliente |
 | V-06 | Origen desde un anuncio real de Meta; TikTok sin documentación | Cliente / implementador |
 | V-08 | Carrusel de KEYTON (1 tarjeta) | Implementador |

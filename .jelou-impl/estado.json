@@ -238,6 +238,13 @@
       "tipo": "observación (regla 12)",
       "descripcion": "El menú de intención tras elegir la marca (Conocer vehículos / Cotizar o comprar / Repuestos / Talleres / Crédito / Hablar con un asesor) lo arma el agente de IA de bienvenida en cada conversación: no es determinista, puede variar el texto y las opciones. Conocer vehículos y Cotizar o comprar llevan al mismo lugar (Ventas); Repuestos, Talleres, Crédito y Asesor llegan hoy al mensaje provisional de D-29.",
       "estado": "abierto: decidir con el TL"
+    },
+    {
+      "id": "H-09",
+      "fase": 5,
+      "tipo": "pre-auditoría",
+      "descripcion": "«Bienvenida y Enrutamiento»: el fallbackModel del nodo de IA 7HdIuUx5gNTsbm-z_tiUu usa openai/gpt-4.1-mini, que el CLI marcó deprecado en el push del 24/11. Cambiarlo antes de la puerta de F5.",
+      "estado": "abierto"
     }
   ],
   "skills": {
@@ -364,6 +371,12 @@
       "ver": "docs/00-cliente/decisiones.md D-30; plan.md «Enmienda 2026-11-17»",
       "decidio": "quien retoma el proyecto (pedido explícito)",
       "nota": "Catálogo en Jelou Shop cargado desde la API 4.2 y carrusel del Shop (search_products) en Ventas; reemplaza D-27. Precio y ficha escritos siguen del BDC. Sincronización horaria con Function después. Ratificación del TL en la puerta de F5."
+    },
+    {
+      "fecha": "2026-11-24",
+      "ver": "docs/00-cliente/decisiones.md D-31..D-36",
+      "decidio": "cliente (correo 18/11 y minuta del partner) + implementador",
+      "nota": "Respuestas del cliente a los 6 pedidos del 17/11 y acuerdos de la minuta del 18/11."
     }
   ],
   "insumos_pendientes": [
@@ -378,8 +391,8 @@
       "id": "C-02",
       "insumo": "id_conexion por marca para el ingreso de lead (A-08)",
       "responsable": "Cliente",
-      "estado": "parcial",
-      "nota": "Se usa TESTCLARO; faltan los id_conexion de producción por marca antes del go-live (D-13).",
+      "estado": "entregado; falta implementar",
+      "nota": "Se usa TESTCLARO en pruebas. 2026-11-18: el cliente indica que el id_conexion de producción es el `codigo` que devuelve botwa_marcas por marca (D-32). Falta adaptar veh-bdc (hoy BDC_ID_CONEXION fijo) antes del go-live.",
       "clickup_tarea": "1dfg0rkn7d3"
     },
     {
@@ -394,30 +407,59 @@
       "insumo": "Confirmar marcas (4 u 8), origen de campaña en el lead, prueba de asignación sin afectar el reparto, límites y disponibilidad, puerto 9443/IP (A-02, A-09, A-10, A-14, A-17)",
       "responsable": "Cliente",
       "estado": "cerrado",
-      "nota": "Respondido en D-12, D-14, D-19. Queda abierto solo cómo probar la asignación con asesor sin afectar el reparto (A-09)."
+      "nota": "Respondido en D-12, D-14, D-19. Queda abierto solo cómo probar la asignación con asesor sin afectar el reparto (A-09). 2026-11-18: A-09 respondido (D-34): consultar asesores no afecta el reparto; los POST de prueba van con id_agencias e id_asesor en null; la asignación real se prueba en conjunto."
     },
     {
       "id": "C-05",
       "insumo": "Links de términos y política de datos + versión",
       "responsable": "Cliente",
-      "estado": "pendiente",
+      "estado": "cerrado",
       "modo": "esperar",
       "contrato": "no aplica",
       "hu": [
         "HU-02"
       ],
-      "clickup_tarea": "1dfg0rkn7d2"
+      "clickup_tarea": "1dfg0rkn7d2",
+      "nota": "2026-11-18 (correo del cliente): un solo link para términos y política de datos; el implementador confirmó el 24/11 que vale para ambos (D-31). El cliente no indicó versión: se usa v1. En el draft de DEV desde el 24/11."
     },
     {
       "id": "C-06",
       "insumo": "Teleasesores como operadores de PMA con el correo del BDC",
       "responsable": "Cliente / Jelou",
-      "estado": "pendiente",
+      "estado": "por verificar",
       "modo": "esperar",
       "hu": [
         "HU-06"
       ],
-      "clickup_tarea": "1dfg0rkn7d4"
+      "clickup_tarea": "1dfg0rkn7d4",
+      "nota": "2026-11-18: el cliente indica que los teleasesores están creados en la bandeja de Jelou con el mismo correo del BDC y que el POST del lead devuelve el correo del asesor como variable de salida (D-33; documento actualizado adjunto al correo, sin revisar aún). La minuta del 18/11 deja «crear usuarios asesores en PMA» pendiente de definir qué usuarios. Se verifica en V-03."
+    },
+    {
+      "id": "C-07",
+      "insumo": "Características del modelo KEYTON (el BDC no las envía)",
+      "responsable": "Cliente",
+      "estado": "pendiente",
+      "nota": "Comprometido para el 19/11 (correo del 18/11); el partner lo volvió a pedir el 23/11, sin respuesta.",
+      "hu": [
+        "HU-05"
+      ]
+    },
+    {
+      "id": "C-08",
+      "insumo": "Anuncio de prueba en Meta (y TikTok si aplica) para verificar el origen de campaña",
+      "responsable": "Cliente",
+      "estado": "pendiente",
+      "nota": "Acordado para una fase posterior, sin fecha (minuta 18/11, D-36). No bloquea la construcción.",
+      "hu": [
+        "HU-03"
+      ]
+    },
+    {
+      "id": "C-09",
+      "insumo": "Personas del cliente para las pruebas asistidas (02–03/12)",
+      "responsable": "Cliente",
+      "estado": "pendiente",
+      "nota": "Pedido en el correo del 05/11; sin respuesta en los correos revisados al 24/11. Necesario para agendar la UAT (F6)."
     }
   ],
   "golive": {
@@ -585,6 +627,18 @@
     {
       "fecha": "2026-11-18",
       "evento": "Docs alineados con D-28 y D-30: spec v0.4, plan v0.2, tareas (T026 y T027 nuevas, 90 SP), cobertura de construccion.md, CONTINUIDAD.md y BRIEF.md. estado.json: C-03 cerrado, V-08 parcial, notas al día. T026/T027 por crear en ClickUp."
+    },
+    {
+      "fecha": "2026-11-23",
+      "evento": "PR #1 (M. S.): búsqueda de vehículos sin elegir marca — ruta /buscar en veh-bdc (23 pruebas), tool «Buscar vehículos Vehicentro» (9170, v1.0.0) usada por Bienvenida y Ventas; ficha técnica del BDC parseada. Cubre el acuerdo de la minuta del 18/11. Pendiente: confirmar carrusel y botones por WhatsApp tras una búsqueda."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "Retoma H. T. tras vacaciones. PR #1 mergeado a main (a571235). Revisados los correos del 18 y 23/11: C-05 cerrado; C-02, C-04 y C-06 actualizados; C-07 a C-09 nuevos; D-31 a D-36."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "T003: link definitivo (D-31) en «Bienvenida y Enrutamiento», una sola línea en el mensaje de consentimiento. main 50c3d72; push al draft de DEV verificado por el servidor; chequeo del push 0 hallazgos (8 workflows); espejo tras pull c038c6b (solo orden de claves). Desvío de proceso: se editó sin `jelou pull` previo (regla 6) y sin --profile explícito; se mitigó con `jelou status --check-remote` sin deriva antes del push. Publicación en DEV pendiente: la hace la persona (el modo de permisos del agente la bloqueó)."
     }
   ],
   "puntos": {
@@ -801,6 +855,20 @@
       "fecha": "2026-11-17",
       "tipo": "plantilla",
       "descripcion": "jelou-conversational-ui §1/§3 dice que la tool nativa search_products dibuja un carrusel de productos; en WhatsApp (CLI 4.29, 17/11) solo devuelve datos al agente (sin imágenes ni mensaje). Proponer la corrección a esa skill y a capacidades-jelou.md."
+    },
+    {
+      "fecha": "2026-11-24",
+      "fase": 5,
+      "tipo": "comando",
+      "detalle": "Tras mergear en git un PR que cambia jelou.lock, `jelou push` falla con LOCKFILE_INTEGRITY_FAILED hasta correr `jelou lockfile accept --yes` (en modo agente exige --yes). El spec no lo menciona en F5.",
+      "pr": null
+    },
+    {
+      "fecha": "2026-11-24",
+      "fase": 5,
+      "tipo": "cli",
+      "detalle": "CLI 4.34.1 instalado; 4.35.0 disponible. La actualización global (npm -g) y `jelou project publish` quedaron bloqueadas por el modo de permisos del agente: las hace la persona. novedades_cli.py no se corrió.",
+      "pr": null
     }
   ],
   "por_verificar": [
