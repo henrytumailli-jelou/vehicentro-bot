@@ -382,6 +382,7 @@ Lo que el tester no muestra: el carrusel del Shop (la tool MCP falla con `send_m
 | 2026-11-24 | T027: `sincronizarShop` en veh-bdc, cron diario 06:00 (Guayaquil) | main `7088bd3` | — | desplegado `deploy_01m8724gqce9btkn8qzd6zm5nx`; cron registrado (sin disparos aún) | T027 | 42 pruebas en verde. Desactiva, nunca borra; no toca la tienda si el BDC o el Shop no responden |
 | 2026-11-24 | H-15: carrusel por categoría de la marca | main (ver git log) | 0 hallazgos (8 workflows) | publicado en DEV por la persona: `01M873M153XAV58688RKAC97H5` (15:43 UTC) | T026 | Ronda 15:34 UTC; tester: category = queries = marca |
 | 2026-11-24 | T013 (1/2): agrupar mensajes 2 s en los agentes de Bienvenida y Ventas (V-05) | main (ver git log) | 0 hallazgos (8 workflows) | publicado en DEV por la persona: `01M874FFRS4MT2P0ZYFQMS42GM` (15:58 UTC) | T013 | Nativo del AI Agent (messageGrouping); no se usa el acumulador del bot |
+| 2026-11-24 | D-39: espera de agrupación 10 s | main (ver git log) | 0 hallazgos (8 workflows) | draft de DEV; **sin publicar** | T013 | Antes 2 s |
 
 ### Prueba manual del implementador sobre la versión anterior de DEV (2026-11-16, 20:51–20:53 hora de Ecuador)
 Conversación por WhatsApp en el canal DEV (número de prueba del implementador, enmascarado). Ejecución de Bienvenida `GwHgZm1CpjVi0480hpVfG`.

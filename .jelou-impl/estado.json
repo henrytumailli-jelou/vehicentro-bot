@@ -426,6 +426,12 @@
       "ver": "docs/00-cliente/decisiones.md D-33 (corregida), D-37, D-38",
       "decidio": "implementador",
       "nota": "Documento de APIs del 18/11: el POST devuelve resultado/id_prospecto/id_usuario; LISTAS_NEGRAS → cola general con mensaje neutro; 4.5 después de la cédula."
+    },
+    {
+      "fecha": "2026-11-24",
+      "ver": "docs/00-cliente/decisiones.md D-39",
+      "decidio": "implementador",
+      "nota": "Espera para agrupar mensajes 10 s (D-05 decía ~2 s, ajustable en pruebas)."
     }
   ],
   "insumos_pendientes": [
@@ -780,6 +786,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "La persona publicó DEV con T013 parte 1 (agrupar mensajes 2 s): id de publicación 01M874FFRS4MT2P0ZYFQMS42GM (15:58 UTC). Sigue la prueba por WhatsApp."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "D-39: agrupar mensajes con 10 s en los agentes de Bienvenida y Ventas (antes 2 s). Push al draft verificado, chequeo 0; falta publicar."
     }
   ],
   "puntos": {
