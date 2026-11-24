@@ -246,6 +246,13 @@
       "descripcion": "«Bienvenida y Enrutamiento»: el fallbackModel del nodo de IA 7HdIuUx5gNTsbm-z_tiUu usa openai/gpt-4.1-mini, que el CLI marcó deprecado en el push del 24/11. Cambiarlo antes de la puerta de F5. El mismo fallback está en Crédito Directo, Repuestos y Talleres. El plan fija que los modelos se revisan en T015 (costos): se resuelve ahí, no se cambia en F5 sin esa revisión.",
       "estado": "abierto",
       "se_resuelve_en": "T015"
+    },
+    {
+      "id": "H-10",
+      "fase": 5,
+      "tipo": "pre-auditoría",
+      "descripcion": "«Agente Ventas»: la conexión MCP del Shop (D-30) no trae `appName` (lint AI_TASK_MCP_ENTRY_WRONG_SHAPE de jelou-build-workflows). Funcionó por WhatsApp el 17/11; se completa con `jelou marketplace list --installed-only` antes de la puerta de F5.",
+      "estado": "abierto"
     }
   ],
   "skills": {
@@ -378,6 +385,12 @@
       "ver": "docs/00-cliente/decisiones.md D-31..D-36",
       "decidio": "cliente (correo 18/11 y minuta del partner) + implementador",
       "nota": "Respuestas del cliente a los 6 pedidos del 17/11 y acuerdos de la minuta del 18/11."
+    },
+    {
+      "fecha": "2026-11-24",
+      "ver": "docs/00-cliente/decisiones.md D-33 (corregida), D-37, D-38",
+      "decidio": "implementador",
+      "nota": "Documento de APIs del 18/11: el POST devuelve resultado/id_prospecto/id_usuario; LISTAS_NEGRAS → cola general con mensaje neutro; 4.5 después de la cédula."
     }
   ],
   "insumos_pendientes": [
@@ -644,6 +657,18 @@
     {
       "fecha": "2026-11-24",
       "evento": "D-32: veh-bdc envía el lead a la conexión de la marca con BDC_CONEXION_POR_MARCA=true (fail-closed sin código); sin la variable no cambia (TESTCLARO). PR #2 abierto; despliegue pendiente: el modo de permisos del agente bloqueó `jelou functions deploy`. H-09 queda para T015."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "Desde hoy un solo implementador (H. T.): el código se trabaja directo en main, sin PRs. D-32 integrado en main (b72a6ac)."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "veh-bdc lee la respuesta del POST del lead (OK / LISTAS_NEGRAS, id_prospecto, id_usuario; ERROR-MESSAGE enmascarado): main 2e13c2e, 31 pruebas en verde. Sin desplegar (lo despliega la persona)."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "T009/T010 construidos en Ventas (24 nodos: cédula, 4.5 por marca, ciudades paginadas y agencias en listas dinámicas, POST /lead, Datum leads, cierre): main 2888ee9; push al draft de DEV verificado (71 ops); chequeo del push 0. Lista dinámica confirmada en la documentación (nodo Lista, opciones desde variable) y en un workflow de otro cliente. Falta: desplegar veh-bdc, publicar DEV y la ronda manual por WhatsApp (el tester no muestra listas)."
     }
   ],
   "puntos": {
@@ -873,6 +898,20 @@
       "fase": 5,
       "tipo": "cli",
       "detalle": "CLI actualizado a 4.35.0 por la persona el 24/11 (npm -g; el modo de permisos del agente lo bloqueó). Changelog 4.35.0 revisado a mano: voz Vapi, criterios de evaluación con propiedades, cta_url en canales web, fixes de knowledge y del ejemplo HTTP; nada cambia F5 de este proyecto. novedades_cli.py sigue sin leer `jelou --version` en Windows (fricción del 16/11). `jelou project publish` también quedó bloqueado para el agente: lo hace la persona.",
+      "pr": null
+    },
+    {
+      "fecha": "2026-11-24",
+      "fase": 5,
+      "tipo": "comando",
+      "detalle": "`jelou workflow validate --fix` (selection_key_normalization) reduce el payload.memory de una opción dinámica (iterable) a una sola clave con el id del ítem y `concat_memory_set_to_json` envuelve un texto concatenado en {value}. Con listas dinámicas hay que fijar responseVariable y leer {{$memory.x.value}}; ni el spec ni capacidades-jelou.md lo mencionan.",
+      "pr": null
+    },
+    {
+      "fecha": "2026-11-24",
+      "fase": 5,
+      "tipo": "plantilla",
+      "detalle": "capacidades-jelou.md no menciona las listas dinámicas (opción `iterable` + `{{$item.*}}`, documentadas en docs.jelou.ai/guides/nodos/lista); node-spec dice que su expansión «no está trazada». Proponer a §1.7.",
       "pr": null
     }
   ],

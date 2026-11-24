@@ -81,8 +81,8 @@ Horas del SOW: 126 (21 días × 6 h) · F0 a F8 sin estabilización: 340 h · **
 | T008 | 1dfg0rkn7cu | Jelou (H. T.) | 3 | | | hecho (reemplazado por T026) |
 | T026 | por crear | Jelou | 3 | | | hecho salvo KEYTON (V-08) |
 | T027 | por crear | Jelou | 3 | | | to do |
-| T009 | 1dfg0rkn7cv | Jelou (H. T.) | 3 | | | to do |
-| T010 | 1dfg0rkn7cw | Jelou (H. T.) | 5 | | | to do |
+| T009 | 1dfg0rkn7cv | Jelou (H. T.) | 3 | | | en curso (construido 24/11; falta ronda por WhatsApp) |
+| T010 | 1dfg0rkn7cw | Jelou (H. T.) | 5 | | | en curso (construido 24/11; falta desplegar veh-bdc y ronda por WhatsApp) |
 | T011 | 1dfg0rkn7cx | Jelou (H. T.) | 3 | | | en curso (D-29 provisional; falta V-03) |
 | T012 | 1dfg0rkn7cy | Jelou (H. T.) | 5 | | | to do |
 | T013 | 1dfg0rkn7cz | Jelou (H. T.) | 3 | | | to do |
