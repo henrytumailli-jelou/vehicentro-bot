@@ -497,7 +497,7 @@
       "id": "Fdy9n81HrFZoejA1cZW9-",
       "title": "Contexto inicial",
       "configuration": {
-        "content": "// El id de WhatsApp es el celular salvo con BSUID; nunca se fija a mano (H-05).\nconst uid = String($user.get('id') || '');\nconst dig = uid.replace(/\\D/g, '');\nlet cel = '';\nif (/^5939\\d{8}$/.test(dig)) cel = '0' + dig.slice(3);\nelse if (/^09\\d{8}$/.test(dig)) cel = dig;\n$memory.set('id_whatsapp', uid);\n$memory.set('celular_canal', cel);\n$memory.set('celular', cel);\n$memory.set('ahora_iso', new Date().toISOString());\n$memory.set('terminos_version', 'v1');\n// PROVISIONAL hasta recibir los links del cliente ([C] 1dfg0rkn7d2).\n$memory.set('link_terminos', '[link de términos pendiente]');\n$memory.set('link_politica', '[link de política de datos pendiente]');",
+        "content": "// El id de WhatsApp es el celular salvo con BSUID; nunca se fija a mano (H-05).\nconst uid = String($user.get('id') || '');\nconst dig = uid.replace(/\\D/g, '');\nlet cel = '';\nif (/^5939\\d{8}$/.test(dig)) cel = '0' + dig.slice(3);\nelse if (/^09\\d{8}$/.test(dig)) cel = dig;\n$memory.set('id_whatsapp', uid);\n$memory.set('celular_canal', cel);\n$memory.set('celular', cel);\n$memory.set('ahora_iso', new Date().toISOString());\n$memory.set('terminos_version', 'v1');\n// Términos y política: un solo link, confirmado por el cliente el 18-nov.\n$memory.set('link_terminos', 'https://vehicentro.com/politicaprivacidad');\n$memory.set('link_politica', 'https://vehicentro.com/politicaprivacidad');",
         "memoryVersion": "v2"
       },
       "type": "CODE",
@@ -613,7 +613,7 @@
         "messages": [
           {
             "id": "EqugImSkuwY99NMYBBjcC",
-            "text": "¡Hola! Soy el asistente virtual de Vehicentro. Antes de continuar, necesito su autorización para el tratamiento de sus datos personales (LOPDP).\n\nTérminos: {{$memory.link_terminos}}\nPolítica de datos: {{$memory.link_politica}}",
+            "text": "¡Hola! Soy el asistente virtual de Vehicentro. Antes de continuar, necesito su autorización para el tratamiento de sus datos personales (LOPDP).\n\nTérminos y política de datos: {{$memory.link_terminos}}",
             "type": "buttons",
             "options": [
               {
@@ -623,7 +623,10 @@
                 "payload": {
                   "type": "edge",
                   "skillId": "46693",
-                  "targetId": "qvxdY2XL-g5nQhfBjokIU"
+                  "targetId": "qvxdY2XL-g5nQhfBjokIU",
+                  "memory": {
+                    "selection_j5gy8idiuwl8tn2e7hm9g": "Acepto"
+                  }
                 }
               },
               {
@@ -633,7 +636,10 @@
                 "payload": {
                   "type": "edge",
                   "skillId": "46693",
-                  "targetId": "q-TTsR6P7I4JSmKdBO7Kj"
+                  "targetId": "q-TTsR6P7I4JSmKdBO7Kj",
+                  "memory": {
+                    "selection_j5gy8idiuwl8tn2e7hm9g": "No acepto"
+                  }
                 }
               },
               {
@@ -643,7 +649,10 @@
                 "payload": {
                   "type": "edge",
                   "skillId": "46693",
-                  "targetId": "CfrDI8DSYJBZpncoiaxD8"
+                  "targetId": "CfrDI8DSYJBZpncoiaxD8",
+                  "memory": {
+                    "selection_j5gy8idiuwl8tn2e7hm9g": "Hablar con asesor"
+                  }
                 }
               }
             ],

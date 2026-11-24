@@ -9,8 +9,8 @@ workflows:
     channel: WHATSAPP
     default: true
     description: "Da la bienvenida, identifica la marca y la intención del prospecto y lo enruta a Ventas o a un asesor"
-    hash: "sha256:27b51469b124bbe53005dbe42b4f6468991bf7723602402107908fccaf893ba2"
-    lastPulledAt: "2026-11-23T15:04:15.730Z"
+    hash: "sha256:db480720d37fc93b6ba3c66897abde07f49684df05333c62b0556da70e1e9467"
+    lastPulledAt: "2026-11-24T12:03:53.416Z"
     name: "Bienvenida y Enrutamiento"
     skillId: 46693
     workflowId: 64836
