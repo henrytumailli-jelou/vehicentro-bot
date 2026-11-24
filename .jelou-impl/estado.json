@@ -243,8 +243,9 @@
       "id": "H-09",
       "fase": 5,
       "tipo": "pre-auditoría",
-      "descripcion": "«Bienvenida y Enrutamiento»: el fallbackModel del nodo de IA 7HdIuUx5gNTsbm-z_tiUu usa openai/gpt-4.1-mini, que el CLI marcó deprecado en el push del 24/11. Cambiarlo antes de la puerta de F5.",
-      "estado": "abierto"
+      "descripcion": "«Bienvenida y Enrutamiento»: el fallbackModel del nodo de IA 7HdIuUx5gNTsbm-z_tiUu usa openai/gpt-4.1-mini, que el CLI marcó deprecado en el push del 24/11. Cambiarlo antes de la puerta de F5. El mismo fallback está en Crédito Directo, Repuestos y Talleres. El plan fija que los modelos se revisan en T015 (costos): se resuelve ahí, no se cambia en F5 sin esa revisión.",
+      "estado": "abierto",
+      "se_resuelve_en": "T015"
     }
   ],
   "skills": {
@@ -392,7 +393,7 @@
       "insumo": "id_conexion por marca para el ingreso de lead (A-08)",
       "responsable": "Cliente",
       "estado": "entregado; falta implementar",
-      "nota": "Se usa TESTCLARO en pruebas. 2026-11-18: el cliente indica que el id_conexion de producción es el `codigo` que devuelve botwa_marcas por marca (D-32). Falta adaptar veh-bdc (hoy BDC_ID_CONEXION fijo) antes del go-live.",
+      "nota": "Se usa TESTCLARO en pruebas. 2026-11-18: el cliente indica que el id_conexion de producción es el `codigo` que devuelve botwa_marcas por marca (D-32). Falta adaptar veh-bdc (hoy BDC_ID_CONEXION fijo) antes del go-live. 2026-11-24: implementado en veh-bdc detrás de BDC_CONEXION_POR_MARCA (PR #2, rama d32-conexion-por-marca, b72a6ac; 27 pruebas en verde). Códigos verificados en el rastro de la tool de marcas: KEY, LAT, SAT, SCM. Falta desplegar (la persona) y, en F8, configurar la variable en producción.",
       "clickup_tarea": "1dfg0rkn7d3"
     },
     {
@@ -639,6 +640,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "T003: link definitivo (D-31) en «Bienvenida y Enrutamiento», una sola línea en el mensaje de consentimiento. main 50c3d72; push al draft de DEV verificado por el servidor; chequeo del push 0 hallazgos (8 workflows); espejo tras pull c038c6b (solo orden de claves). Desvío de proceso: se editó sin `jelou pull` previo (regla 6) y sin --profile explícito; se mitigó con `jelou status --check-remote` sin deriva antes del push. Publicación en DEV pendiente: la hace la persona (el modo de permisos del agente la bloqueó)."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "D-32: veh-bdc envía el lead a la conexión de la marca con BDC_CONEXION_POR_MARCA=true (fail-closed sin código); sin la variable no cambia (TESTCLARO). PR #2 abierto; despliegue pendiente: el modo de permisos del agente bloqueó `jelou functions deploy`. H-09 queda para T015."
     }
   ],
   "puntos": {

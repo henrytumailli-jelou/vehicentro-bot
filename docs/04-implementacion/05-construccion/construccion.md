@@ -307,6 +307,7 @@ Aviso heredado del push (no bloquea): `ai_fallback_model` en «Agente Ventas» (
 | 2026-11-17 | H-07: el aviso de pedido del Shop pasa a cotizar | main `acf009a` | 0 hallazgos | publicado en DEV por la persona: `01M7MXXEFQ831Q7RJJ7D73CXJ5` (14:17 UTC) | T026 | Falta la ronda: elegir modelo + KEYTON |
 | 2026-11-23 | PR #1: búsqueda sin elegir marca (ruta `/buscar`, tool 9170) | main `e825685` (merge `a571235` el 24/11) | — | — | acuerdo de la minuta 18/11 | Falta confirmar carrusel y botones por WhatsApp tras una búsqueda |
 | 2026-11-24 | T003: link definitivo de términos y política (D-31), una sola línea | main `50c3d72`; espejo `c038c6b` | 0 hallazgos (8 workflows) | draft de DEV; **sin publicar** (lo publica la persona) | T003 | Editado sin `jelou pull` previo (regla 6); mitigado con `status --check-remote` sin deriva. H-09: modelo de respaldo deprecado |
+| 2026-11-24 | D-32: `id_conexion` por marca en `veh-bdc` (`BDC_CONEXION_POR_MARCA`) | rama `d32-conexion-por-marca` `b72a6ac` (PR #2) | — | **sin desplegar** (lo despliega la persona) | [C] id_conexion | 27 pruebas unitarias en verde; DEV no cambia sin la variable. H-09 pasa a T015 (el plan revisa los modelos ahí) |
 
 ### Prueba manual del implementador sobre la versión anterior de DEV (2026-11-16, 20:51–20:53 hora de Ecuador)
 Conversación por WhatsApp en el canal DEV (número de prueba del implementador, enmascarado). Ejecución de Bienvenida `GwHgZm1CpjVi0480hpVfG`.
