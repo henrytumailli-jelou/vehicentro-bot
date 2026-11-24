@@ -72,8 +72,8 @@ workflows:
     channel: WHATSAPP
     default: false
     description: "Atiende el catálogo de la marca: modelos, precios, fichas, comparación y carrusel; deriva a cotización o a un asesor"
-    hash: "sha256:bbd14c98ed979ab37e4794813db79d36f6b4a252f7a7b4a5e3805b675e6fe025"
-    lastPulledAt: "2026-11-24T12:53:45.351Z"
+    hash: "sha256:9d85af1b6c07fb8931e1b5b2d7c3a585900f91c59fbcec6b37f2a50d5b87b091"
+    lastPulledAt: "2026-11-24T13:14:14.627Z"
     name: Ventas
     skillId: 46694
     workflowId: 64837

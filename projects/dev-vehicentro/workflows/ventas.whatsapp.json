@@ -17,7 +17,7 @@
             "button": "Ver ciudades",
             "options": [
               {
-                "id": "opt_ciudad",
+                "id": "dynamic-button",
                 "type": "postback",
                 "title": "{{$item.nombre}}",
                 "payload": {
@@ -555,7 +555,7 @@
             "button": "Ver ciudades",
             "options": [
               {
-                "id": "opt_ciudad",
+                "id": "dynamic-button",
                 "type": "postback",
                 "title": "{{$item.nombre}}",
                 "payload": {
@@ -934,7 +934,7 @@
             "button": "Ver agencias",
             "options": [
               {
-                "id": "opt_agencia",
+                "id": "dynamic-button",
                 "type": "postback",
                 "title": "{{$item.titulo}}",
                 "payload": {
@@ -1091,12 +1091,6 @@
       "branch": "success"
     },
     {
-      "id": "-Jx45j1t99RpLWmKkhq-n",
-      "sourceId": "s9coSHr0DzjA2jl8gmpUw",
-      "targetId": "0vuYAMvvLLqr0dLtYt-6W",
-      "branch": "option:opt_agencia"
-    },
-    {
       "id": "-nH4pw4L0DrtcQHJdhS_U",
       "sourceId": "2jcDyil_f3mNH7BzKw7dz",
       "targetId": "iujSVM7gYCA2MKjscnLXh",
@@ -1127,6 +1121,12 @@
       "branch": "failed"
     },
     {
+      "id": "3TnKUF5zc-1_dC-Sh-gGa",
+      "sourceId": "_RXaKpVWjVNO-9A5aBN3D",
+      "targetId": "D7qFosqZiRfT_hk1Zvrtq",
+      "branch": "option:dynamic-button"
+    },
+    {
       "id": "6sd3-bAulDiiV4kmJOLlc",
       "sourceId": "uCALQLD3XDlbM6XYmwdVs",
       "targetId": "InROrejwmiaUv4WQDGbiG",
@@ -1149,6 +1149,12 @@
       "sourceId": "KiqtwfKxlGOZ08p0Z-d5R",
       "targetId": "qn_3IG9XZ_QEiLRaZ6Oj4",
       "branch": "exit"
+    },
+    {
+      "id": "ADfu973YH6la1WIMfiZhM",
+      "sourceId": "iujSVM7gYCA2MKjscnLXh",
+      "targetId": "D7qFosqZiRfT_hk1Zvrtq",
+      "branch": "option:dynamic-button"
     },
     {
       "id": "APrlGFV9uhxu3pGSDY7p3",
@@ -1191,6 +1197,12 @@
       "sourceId": "3dny_XZ7AOumv7nh3sDnD",
       "targetId": "qn_3IG9XZ_QEiLRaZ6Oj4",
       "branch": "exit"
+    },
+    {
+      "id": "dioLEyODufjHuKAOwWJgO",
+      "sourceId": "s9coSHr0DzjA2jl8gmpUw",
+      "targetId": "0vuYAMvvLLqr0dLtYt-6W",
+      "branch": "option:dynamic-button"
     },
     {
       "id": "DpSFiiyvMtjQcvVRuub5l",
@@ -1257,12 +1269,6 @@
       "sourceId": "d4w-mjoBxpvL7L7wii7kG",
       "targetId": "cVZbg6GCEAINPmb9tnxx1",
       "branch": "success"
-    },
-    {
-      "id": "L3pjN7F7u0UWo3PJDQNCp",
-      "sourceId": "iujSVM7gYCA2MKjscnLXh",
-      "targetId": "D7qFosqZiRfT_hk1Zvrtq",
-      "branch": "option:opt_ciudad"
     },
     {
       "id": "lGFXKj8LuvSXDFT12R8uh",
@@ -1359,12 +1365,6 @@
       "sourceId": "iujSVM7gYCA2MKjscnLXh",
       "targetId": "cSD8-SvrM1PTPlJOYiPwJ",
       "branch": "option:opt_mas_ciudades"
-    },
-    {
-      "id": "xBW1S44aVAoedHSqm7oJo",
-      "sourceId": "_RXaKpVWjVNO-9A5aBN3D",
-      "targetId": "D7qFosqZiRfT_hk1Zvrtq",
-      "branch": "option:opt_ciudad"
     },
     {
       "id": "y5JMOhDpajoK9tgvdFK_L",
