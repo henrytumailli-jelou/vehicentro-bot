@@ -260,6 +260,13 @@
       "tipo": "defecto",
       "descripcion": "Ventas: las listas dinámicas de ciudades y agencias tenían un id de opción propio; el motor guardaba la elección pero no seguía la arista y cerraba la ejecución. Corregido con el id `dynamic-button` (main e7a3677) y verificado en el draft el 24/11.",
       "estado": "cerrado (verificado en el draft con el tester 24/11)"
+    },
+    {
+      "id": "H-12",
+      "fase": 5,
+      "tipo": "defecto",
+      "descripcion": "Ronda por WhatsApp 24/11 (13:47 UTC): Bienvenida pasó LYNK & CO, pero el agente de Ventas buscó KEYTON porque su historial (messageHistory, 15) traía mensajes de conversaciones anteriores del chat; la cotización quedó para KEYTON. Apagado el historial en Ventas y Bienvenida (decisión del implementador) — main 27c57d3; verificado en el draft con el tester. La corrección automática de validate quiso reescribir los valores de los botones de consentimiento (acepto/no_acepto/asesor): se descartó.",
+      "estado": "corregido en el draft; falta publicar y repetir la ronda"
     }
   ],
   "skills": {
@@ -688,6 +695,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "La persona publicó DEV con H-11 corregido: id de publicación 01M86WK7M5RF90507KV3XPB4TZ (13:40 UTC). Sigue la ronda por WhatsApp (listas en pantalla y V-09)."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "Ronda por WhatsApp del implementador (13:47–13:52 UTC): consentimiento vigente (no se pidió), marca LYNK & CO, catálogo mostró KEYTON (H-12), pedido del Shop → cotizar → pedir cédula; el implementador escribió «salir» y Ventas se despidió. No se llegó a ciudades/agencias. H-12 corregido en el draft (27c57d3)."
     }
   ],
   "puntos": {
@@ -938,6 +949,13 @@
       "fase": 5,
       "tipo": "plantilla",
       "detalle": "Una opción dinámica (iterable) solo enruta si su id es `dynamic-button` (patrón de 59 de 64 listas dinámicas en los proyectos locales); con otro id el motor guarda la elección y termina la ejecución sin error. Ni node-spec, ni la documentación ni capacidades-jelou.md lo dicen; validate y el chequeo del push no lo detectan. Proponer a capacidades §1.7 y a jelou-build-workflows.",
+      "pr": null
+    },
+    {
+      "fecha": "2026-11-24",
+      "fase": 5,
+      "tipo": "comando",
+      "detalle": "`jelou workflow validate --fix` (selection_semantic_token_rewrite) reescribe los valores de condiciones y MEMORY de botones a los títulos de las opciones (acepto → Acepto) aunque el flujo ya funciona con los ids; se descartó a mano. En un workflow ya verificado conviene validar sin --fix y revisar appliedFixes.",
       "pr": null
     }
   ],
