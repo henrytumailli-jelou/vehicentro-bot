@@ -3,7 +3,8 @@ import { Bdc } from "./bdc.ts";
 
 // Adaptador del BDC de Vehicentro. Toda respuesta: {ok, tipo, data, mensaje?}
 // con tipo ok | vacio | negocio | indisponible | incierto.
-// Secretos: BDC_CLIENT_ID, BDC_CLIENT_SECRET. Configuración: BDC_BASE_URL, BDC_ID_CONEXION, BDC_ENVIAR_ASESOR.
+// Secretos: BDC_CLIENT_ID, BDC_CLIENT_SECRET. Configuración: BDC_BASE_URL, BDC_ID_CONEXION,
+// BDC_CONEXION_POR_MARCA, BDC_ENVIAR_ASESOR.
 
 type Ctx = { env: { get(k: string): string | undefined }; log: (...a: unknown[]) => void };
 
@@ -13,6 +14,8 @@ function bdc(ctx: Ctx) {
     clientId: ctx.env.get("BDC_CLIENT_ID") ?? "",
     clientSecret: ctx.env.get("BDC_CLIENT_SECRET") ?? "",
     idConexion: ctx.env.get("BDC_ID_CONEXION") ?? "TESTCLARO",
+    // Solo en producción (D-32): sin esta variable se sigue usando BDC_ID_CONEXION.
+    conexionPorMarca: ctx.env.get("BDC_CONEXION_POR_MARCA") === "true",
     // Solo en producción: con TESTCLARO no se envían id_agencias ni id_asesor (doc del cliente).
     enviarAsesor: ctx.env.get("BDC_ENVIAR_ASESOR") === "true",
     log: (m, e) => ctx.log(m, e ? JSON.stringify(e) : ""),

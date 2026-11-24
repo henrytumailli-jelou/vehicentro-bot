@@ -15,6 +15,8 @@ export interface Config {
   clientId: string;
   clientSecret: string;
   idConexion: string;
+  // Producción (D-32): el id_conexion es el `codigo` de botwa_marcas de cada marca.
+  conexionPorMarca?: boolean;
   enviarAsesor?: boolean;
   fetch?: typeof fetch;
   timeoutMs?: number;
@@ -138,7 +140,17 @@ export class Bdc {
   }
 
   marcas() {
-    return this.get<{ id: number; nombre: string }>("botwa_marcas");
+    return this.get<{ id: number; nombre: string; codigo?: string }>("botwa_marcas");
+  }
+
+  // id_conexion del POST del lead. Con conexionPorMarca y sin código de la marca no se
+  // registra en otra conexión: sale como negocio o indisponible (fail-closed).
+  async conexion(idMarca: number): Promise<Resultado<string>> {
+    if (!this.cfg.conexionPorMarca) return res("ok", this.cfg.idConexion);
+    const ms = await this.marcas();
+    if (ms.tipo !== "ok") return { ...ms, data: null } as Resultado<string>;
+    const codigo = String(ms.data!.find((m) => Number(m.id) === Number(idMarca))?.codigo ?? "").trim();
+    return codigo ? res("ok", codigo) : res("negocio", null, "marca sin id_conexion");
   }
 
   async modelos(idMarca: number, busqueda?: string) {
@@ -265,6 +277,11 @@ export class Bdc {
   async lead(l: LeadEntrada): Promise<Resultado<{ asesor: Asesor | null }>> {
     const cel = normalizarCelular(l.celular);
     if (!cel) return res("negocio", null, "celular inválido");
+    const cx = await this.conexion(l.id_marca);
+    if (cx.tipo !== "ok") {
+      this.cfg.log?.("bdc_lead_sin_conexion", { id_marca: l.id_marca, tipo: cx.tipo });
+      return { ...cx, data: null } as Resultado<{ asesor: Asesor | null }>;
+    }
     let asesorAgencia: Asesor | null = null;
     if (l.id_agencia != null) {
       const a = await this.asesorDeAgencia(Number(l.id_agencia), l.id_marca);
@@ -286,7 +303,7 @@ export class Bdc {
       if (!tok) return res("indisponible", null, "sin token");
       let r: Response;
       try {
-        r = await this.llamar(`${this.cfg.baseUrl}/api/conexiones/botwa/${this.cfg.idConexion}`, {
+        r = await this.llamar(`${this.cfg.baseUrl}/api/conexiones/botwa/${encodeURIComponent(cx.data!)}`, {
           method: "POST",
           headers: { Authorization: `Bearer ${tok}`, "Content-Type": "application/json" },
           body,

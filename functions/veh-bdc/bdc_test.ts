@@ -116,6 +116,44 @@ Deno.test("lead en producción: envía id_agencias e id_asesor de 4.4", async ()
   assertEquals(j.id_agencias, "2");
 });
 
+const marcasConCodigo = {
+  status: 200,
+  body: { status: "success", data: [{ id: 3, nombre: "KEYTON", codigo: "KEY" }, { id: 7, nombre: "LYNK & CO", codigo: "" }] },
+};
+const porMarca = (f: typeof fetch) => {
+  _resetToken();
+  return new Bdc({ baseUrl: "https://x", clientId: "a", clientSecret: "b", idConexion: "TESTCLARO", conexionPorMarca: true, fetch: f, timeoutMs: 1000 });
+};
+
+Deno.test("lead con conexión por marca (D-32): el POST va al codigo de botwa_marcas", async () => {
+  const { f, llamadas } = bdcFalso({ "oauth/token": token, botwa_marcas: marcasConCodigo, "botwa/KEY": { status: 201 } });
+  const r = await porMarca(f).lead({ id_marca: 3, celular: "0991234567", id_modelo: 82 });
+  assertEquals(r.tipo, "ok");
+  assertEquals(llamadas.filter((l) => l === "botwa/KEY").length, 1);
+  assert(!llamadas.some((l) => l.includes("TESTCLARO")));
+});
+
+Deno.test("lead con conexión por marca: marca sin codigo → negocio, sin POST", async () => {
+  const { f, llamadas } = bdcFalso({ "oauth/token": token, botwa_marcas: marcasConCodigo, "botwa/": { status: 201 } });
+  const r = await porMarca(f).lead({ id_marca: 7, celular: "0991234567", id_modelo: 82 });
+  assertEquals(r.tipo, "negocio");
+  assertEquals(llamadas.filter((l) => l === "botwa/").length, 0);
+});
+
+Deno.test("lead con conexión por marca: marcas sin respuesta → indisponible, sin POST", async () => {
+  const { f, llamadas } = bdcFalso({ "oauth/token": token, botwa_marcas: { status: 500 }, "botwa/": { status: 201 } });
+  const r = await porMarca(f).lead({ id_marca: 3, celular: "0991234567", id_modelo: 82 });
+  assertEquals(r.tipo, "indisponible");
+  assertEquals(llamadas.filter((l) => l === "botwa/").length, 0);
+});
+
+Deno.test("lead sin conexión por marca: sigue usando BDC_ID_CONEXION y no consulta marcas", async () => {
+  const { f, llamadas } = bdcFalso({ "oauth/token": token, "botwa/TESTCLARO": { status: 201 } });
+  const r = await nuevo(f).lead({ id_marca: 3, celular: "0991234567", id_modelo: 82 });
+  assertEquals(r.tipo, "ok");
+  assertEquals(llamadas.filter((l) => l === "botwa_marcas").length, 0);
+});
+
 Deno.test("lead sin respuesta: NO reenvía; 4.5 vacío → incierto", async () => {
   const { f, llamadas } = bdcFalso({
     "oauth/token": token,
