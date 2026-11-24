@@ -85,7 +85,7 @@ Horas del SOW: 126 (21 días × 6 h) · F0 a F8 sin estabilización: 340 h · **
 | T010 | 1dfg0rkn7cw | Jelou (H. T.) | 5 | 8 | | hecho (verificado por WhatsApp 24/11; V-09 b en pruebas conjuntas) |
 | T011 | 1dfg0rkn7cx | Jelou (H. T.) | 3 | | | en curso (D-29 provisional; falta V-03) |
 | T012 | 1dfg0rkn7cy | Jelou (H. T.) | 5 | | | to do |
-| T013 | 1dfg0rkn7cz | Jelou (H. T.) | 3 | | | to do |
+| T013 | 1dfg0rkn7cz | Jelou (H. T.) | 3 | | | en curso (agrupación 2 s activada 24/11; falta cierre ante interacción negativa) |
 | T014 | 1dfg0rkn7d0 | Jelou (H. T.) | 2 | | | hecho |
 | T015 | 1dfg0rkn7d1 | Jelou (H. T.) | 2 | | | to do |
 | [C] términos | 1dfg0rkn7d2 | Cliente | — | — | — | complete (D-31, 24/11) |

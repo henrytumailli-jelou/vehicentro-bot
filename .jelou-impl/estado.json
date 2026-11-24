@@ -772,6 +772,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "La persona publicó DEV con H-15: id de publicación 01M873M153XAV58688RKAC97H5 (15:43 UTC). Sigue la prueba por WhatsApp del carrusel de camionetas."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "T013 (parte 1): agrupación de mensajes de 2 s activada en los agentes de Bienvenida y Ventas (messageGrouping), V-05 resuelto. Push al draft verificado, chequeo 0. Falta publicar, la prueba por WhatsApp y la parte 2 de T013 (cierre ante interacción negativa). Mejora sugerida fuera del SOW: «Responder con reacción» del AI Agent (anuncio 23/11)."
     }
   ],
   "puntos": {
@@ -1088,7 +1092,8 @@
       "id": "V-05",
       "fase": 5,
       "que": "Agrupación de mensajes de 2 s configurable",
-      "estado": "pendiente"
+      "estado": "resuelto 2026-11-24",
+      "resultado": " 2026-11-24: existe nativo en el AI Agent («Agrupar mensajes», messageGrouping {enabled, windowSeconds 1-30}; anuncio #product-updates 13/11). Activado con 2 s en Bienvenida y Ventas (D-05); el acumulador a nivel de bot no se usa para no unir respuestas en pasos deterministas."
     },
     {
       "id": "V-06",
@@ -1223,6 +1228,14 @@
       "motivo": "D-30 cambia la herramienta de catálogo del plan (F5 no decide herramientas)",
       "entregable": "plan.md con enmienda D-30; spec.md HU-05 c4 y S-04 anotados",
       "estado": "enmienda escrita; ratifica el TL"
+    }
+  ],
+  "mejoras_sugeridas": [
+    {
+      "fecha": "2026-11-24",
+      "tema": "Responder con reacción (✅) a «gracias»/«ok» en el AI Agent: un mensaje de servicio menos en WhatsApp",
+      "origen": "#product-updates 23/11",
+      "estado": "propuesta, fuera del SOW"
     }
   ]
 }
