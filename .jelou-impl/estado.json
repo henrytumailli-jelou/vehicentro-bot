@@ -714,6 +714,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "Segunda ronda por WhatsApp (14:03–14:10 UTC): Lynk & Co correcto (H-12 resuelto), cédula → ciudades → Quito → agencia → lead registrado → cierre F2:Q11 → Derivar. H-13 (carrito del Shop con un producto anterior). V-09 (a) falló sin modelo; corregido en el draft y probado con el tester. Falta publicar."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "La persona publicó DEV con V-09: id de publicación 01M86ZQRVK8GBHMDF9FZJ5P5ZZ (14:35 UTC). Sigue la prueba corta por WhatsApp."
     }
   ],
   "puntos": {
