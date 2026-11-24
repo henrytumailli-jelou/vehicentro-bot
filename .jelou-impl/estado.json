@@ -776,6 +776,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "T013 (parte 1): agrupación de mensajes de 2 s activada en los agentes de Bienvenida y Ventas (messageGrouping), V-05 resuelto. Push al draft verificado, chequeo 0. Falta publicar, la prueba por WhatsApp y la parte 2 de T013 (cierre ante interacción negativa). Mejora sugerida fuera del SOW: «Responder con reacción» del AI Agent (anuncio 23/11)."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "La persona publicó DEV con T013 parte 1 (agrupar mensajes 2 s): id de publicación 01M874FFRS4MT2P0ZYFQMS42GM (15:58 UTC). Sigue la prueba por WhatsApp."
     }
   ],
   "puntos": {
