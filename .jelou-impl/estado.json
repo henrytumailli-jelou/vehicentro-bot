@@ -745,6 +745,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "Cuarta ronda por WhatsApp (14:52–15:00 UTC): SINOTRUK AUTOS → «cotizar» → clean_cart (carrito vacío) → carrusel → pedido de un producto (modelo 108) → cédula → Cuenca → agencia → lead registrado (prospecto devuelto, TESTCLARO, sin id_agencias/id_asesor) → Datum registrado → cierre → Derivar. H-12, H-13 y H-14 cerrados. T010 cerrada; V-09 (b) queda para las pruebas conjuntas con el cliente."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "T027 construida como ruta `sincronizarShop` de veh-bdc con cron diario 06:00 America/Guayaquil (D-35), no como Function aparte: reutiliza el cliente y los secretos del BDC y no crea otro recurso de organización. API del Shop por el gateway (x-api-key) con el id de la tienda. main 7088bd3; 42 pruebas en verde. Falta: la persona crea la clave de API con permiso de ecommerce, la carga como secreto SHOP_API_KEY (--from-file) y despliega; luego se revisa la primera corrida."
     }
   ],
   "puntos": {
@@ -1013,6 +1017,13 @@
       "tipo": "plantilla",
       "detalle": "T010: SP real 8 contra 5 estimados (un escalón y medio): las listas dinámicas, el historial de mensajes de los AI_TASK y el carrito persistente del Shop no están en capacidades-jelou.md y solo aparecieron en pruebas reales.",
       "pr": null
+    },
+    {
+      "fecha": "2026-11-24",
+      "fase": 5,
+      "tipo": "comando",
+      "detalle": "El .gitignore del repo (migración) ignora functions/: los archivos nuevos de una Function solo entran con `git add -f`, y `git add <ruta>` avisa «ignored» aunque el archivo ya esté versionado.",
+      "pr": null
     }
   ],
   "por_verificar": [
@@ -1144,7 +1155,7 @@
       "id": "func_01m7kg9fyreeb8e285xcgg5tz8",
       "alcance": "organización",
       "creado": "2026-11-16",
-      "nota": "Secretos BDC_CLIENT_ID/SECRET cargados (V-02 confirmado el 16/11). D-28 desplegado."
+      "nota": "Secretos BDC_CLIENT_ID/SECRET cargados (V-02 confirmado el 16/11). D-28 desplegado. 2026-11-24: ruta sincronizarShop con cron diario (T027); secreto nuevo SHOP_API_KEY (lo carga la persona)."
     },
     {
       "recurso": "qualityRules=basico",

@@ -28,7 +28,7 @@ Formato: `[ID] [P?] [HU?] [SP:n] Descripción — dónde`. `[C]` = insumo del cl
 - [x] T007 [HU-05] [SP:3] Agente de catálogo con guardrails, comparación y cambio de marca — `projects/dev-vehicentro/workflows/ventas.whatsapp.json` + tool «Consultar modelos»
 - [x] T008 [P] [HU-05] [SP:3] Catálogo visual en el chat (primero carrusel propio D-27, reemplazado por T026) — tool «Enviar carrusel modelos» (8425, se retira al cerrar F5)
 - [x] T026 [HU-05] [SP:3] **(nueva, D-30)** Catálogo del BDC cargado en Jelou Shop (`scripts/shop-catalogo/`) y carrusel del Shop en Ventas (`search_and_send_products_webview`, MCP); aviso `SUCCESS` del Shop → cotizar (H-07). Falta: KEYTON con 1 tarjeta (V-08)
-- [ ] T027 [P] [HU-05] [SP:3] **(nueva, D-30)** Function de sincronización BDC → Shop con cron diario (D-35) (upsert por SKU, mismas reglas del script) — `functions/veh-shop-sync`
+- [ ] T027 [P] [HU-05] [SP:3] **(nueva, D-30)** Sincronización BDC → Shop con cron diario (D-35) (upsert por SKU, mismas reglas del script) — ruta `sincronizarShop` de `functions/veh-bdc` (24/11: no se crea otra Function)
 - [ ] T009 [HU-06] [SP:3] Cédula, celular si falta, ciudades y agencias (listas paginadas) — `ventas.whatsapp.json`
 - [ ] T010 [HU-06] [SP:5] Asesor por 4.4 + lead (POST; `id_agencias`/`id_asesor` solo en producción) + Datum `leads` + idempotencia celular+marca + resultado incierto (4.5) (D-28) — `ventas.whatsapp.json` + `veh-bdc /lead`
 

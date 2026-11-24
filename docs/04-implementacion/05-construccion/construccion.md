@@ -154,6 +154,16 @@ Se retira el `HTTP` directo a `botwa_modelos` (pasa por la tool) y el nodo «Seg
 
 Cambios respecto del diseño anterior: (a) la consulta de asesor ya asignado se hace **después de la cédula y con la marca de la cotización** (D-38), porque en Ventas el cliente puede cambiar de marca; (b) la idempotencia dentro de la conversación va en memoria (`leads_registrados`) y entre conversaciones la cubre 4.5 (el BDC ya devuelve al asesor del lead anterior), así que no se consulta Datum antes del POST; (c) el celular lo asegura Bienvenida (fila 11-12); si llega vacío se deriva; (d) el POST ahora devuelve `id_prospecto`, `id_usuario` y `resultado` (D-33 corregida).
 
+**T027 · Sincronización BDC → Jelou Shop (2026-11-24, D-35)** — ruta `sincronizarShop` de `veh-bdc` (no se crea otra Function: reutiliza el cliente y los secretos del BDC).
+| Paso | Qué hace | Si falla |
+|---|---|---|
+| 1 | Cron `0 6 * * *` America/Guayaquil (también `POST /sincronizar-shop`) | — |
+| 2 | Marcas (4.1) y modelos (4.2) de cada marca; arma cada producto con las reglas de `cargar.py` | Una consulta sin respuesta o 0 modelos → termina sin tocar la tienda |
+| 3 | Lista los productos `VEH-*` del Shop (`POST /v2/apps/{app}/products/search`, con fotos y categorías) | Sin respuesta → termina sin tocar la tienda |
+| 4 | Calcula cambios: nuevo (con fotos por URL), cambió nombre/precio/descripción/categoría, sin fotos (manda fotos), ya no está en el BDC (status false) | — |
+| 5 | `POST /v2/apps/{app}/batch/products/upsert` solo con los cambios | Rechazo → log y resumen con tipo indisponible |
+Secretos: `SHOP_API_KEY` (clave de API de la company con permiso de ecommerce; la crea y la carga la persona). Configuración: id de la tienda como constante (`SHOP_APP_ID` la reemplaza).
+
 **Derivar a Asesor** (`projects/dev-vehicentro/workflows/derivar-a-asesor.whatsapp.json`)
 | # | Nodo | Qué hace | Salidas |
 |---|---|---|---|
@@ -369,6 +379,7 @@ Lo que el tester no muestra: el carrusel del Shop (la tool MCP falla con `send_m
 | 2026-11-24 | V-09: segunda cotización sin modelo reconocida | main (ver git log) | 0 hallazgos (8 workflows) | publicado en DEV por la persona: `01M86ZQRVK8GBHMDF9FZJ5P5ZZ` (14:35 UTC) | T010 | Ronda por WhatsApp 14:03 UTC: flujo completo OK con Lynk & Co; H-13 (carrito del Shop) abierto |
 | 2026-11-24 | H-14 y mitigación de H-13 en el prompt de Ventas | main (ver git log) | 0 hallazgos (8 workflows) | publicado en DEV por la persona: `01M870D0NG5XEJBGTCM5GXGRSG` (14:47 UTC) | T010 | Ronda 14:36 UTC: V-09 (a) OK por WhatsApp; tester: «cotizar» sin modelo envía el carrusel |
 | 2026-11-24 | H-13: clean_cart antes del primer carrusel y al recibir el pedido; H-10: conexión MCP completa | main (ver git log) | 0 hallazgos (8 workflows) | publicado en DEV por la persona: `01M870PM2PDS5M3QSFPMS79HBG` (14:52 UTC) | T010 | Tester: llama clean_cart y luego el carrusel |
+| 2026-11-24 | T027: `sincronizarShop` en veh-bdc, cron diario 06:00 (Guayaquil) | main `7088bd3` | — | **sin desplegar** (falta SHOP_API_KEY) | T027 | 42 pruebas en verde. Desactiva, nunca borra; no toca la tienda si el BDC o el Shop no responden |
 
 ### Prueba manual del implementador sobre la versión anterior de DEV (2026-11-16, 20:51–20:53 hora de Ecuador)
 Conversación por WhatsApp en el canal DEV (número de prueba del implementador, enmascarado). Ejecución de Bienvenida `GwHgZm1CpjVi0480hpVfG`.
