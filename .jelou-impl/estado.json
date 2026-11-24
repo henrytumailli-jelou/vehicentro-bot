@@ -669,6 +669,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "T009/T010 construidos en Ventas (24 nodos: cédula, 4.5 por marca, ciudades paginadas y agencias en listas dinámicas, POST /lead, Datum leads, cierre): main 2888ee9; push al draft de DEV verificado (71 ops); chequeo del push 0. Lista dinámica confirmada en la documentación (nodo Lista, opciones desde variable) y en un workflow de otro cliente. Falta: desplegar veh-bdc, publicar DEV y la ronda manual por WhatsApp (el tester no muestra listas)."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "La persona desplegó veh-bdc (deploy_01m86t8j4xe7y9gfb6pgnzgza0, activo; tool de marcas OK) y publicó DEV: id de publicación 01M86TBKVQ7EXAHZHEZCZSYDGN (13:01 UTC; todo el borrador: T003 link + T009/T010). Sigue la ronda manual por WhatsApp."
     }
   ],
   "puntos": {
