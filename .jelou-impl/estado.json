@@ -272,8 +272,15 @@
       "id": "H-13",
       "fase": 5,
       "tipo": "defecto (plataforma / configuración del Shop)",
-      "descripcion": "El carrito de Jelou Shop conserva lo que el cliente eligió en una conversación anterior: en la ronda del 24/11 (14:04 UTC) el pedido llegó con VEH-139 y VEH-161. El agente cotizó el modelo correcto (139), pero con dos productos en el pedido podría elegir otro. Revisar con jelou-shop cómo vaciar o no reutilizar el carrito (o tomar el último producto agregado).",
+      "descripcion": "El carrito de Jelou Shop conserva lo que el cliente eligió en una conversación anterior: en la ronda del 24/11 (14:04 UTC) el pedido llegó con VEH-139 y VEH-161. El agente cotizó el modelo correcto (139), pero con dos productos en el pedido podría elegir otro. Revisar con jelou-shop cómo vaciar o no reutilizar el carrito (o tomar el último producto agregado). Mitigación en el bot (24/11): con más de un producto en el aviso del Shop, el agente pregunta cuál cotizar. Sigue abierto revisar el carrito en el Shop (jelou-shop).",
       "estado": "abierto"
+    },
+    {
+      "id": "H-14",
+      "fase": 5,
+      "tipo": "defecto (prompt)",
+      "descripcion": "Ronda 24/11 14:40 UTC: «cotizar» (y «Agencias») sin modelo cerraban el agente de Ventas y el flujo derivaba sin cotizar. Prompt ajustado: sin modelo envía el carrusel y pregunta el modelo. Probado con el tester; falta publicar.",
+      "estado": "corregido en el draft"
     }
   ],
   "skills": {
@@ -718,6 +725,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "La persona publicó DEV con V-09: id de publicación 01M86ZQRVK8GBHMDF9FZJ5P5ZZ (14:35 UTC). Sigue la prueba corta por WhatsApp."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "Tercera ronda por WhatsApp (14:36–14:41 UTC): V-09 (a) OK; SINOTRUK AUTOS → Repuestos deriva (fuera de la Fase 1, como el diseño); «cotizar» sin modelo derivó sin cotizar (H-14), corregido en el draft junto con la mitigación de H-13 y probado con el tester. T009 cerrada en ClickUp."
     }
   ],
   "puntos": {
@@ -1039,7 +1050,7 @@
       "fase": 5,
       "que": "Un segundo intento de cotizar la misma marca no registra otro lead: (a) en la misma conversación (memoria `leads_registrados`) y (b) entre conversaciones (4.5 devuelve el asesor del lead anterior)",
       "prueba": "(a) ronda por WhatsApp: cotizar dos veces la misma marca; (b) pruebas conjuntas con el cliente con id_agencias/id_asesor (con TESTCLARO el BDC no asigna asesor y 4.5 vuelve vacío)",
-      "estado": "(a) corregido y probado en el draft; (b) pendiente con el cliente",
+      "estado": "(a) verificado por WhatsApp 24/11 14:36 UTC; (b) pendiente con el cliente",
       "resultado": "2026-11-24: el tester no permite (a) (el turno queda abierto tras el paso a Derivar y la memoria no pasa a otra sesión); (b) con TESTCLARO 4.5 vuelve vacío, como en V-01. 2026-11-24 14:10 UTC (WhatsApp): «Quiero cotizar link & co» sin modelo saltó la revisión y fue a Derivar. Corregido (main, «¿Cotizar?» solo exige acción y marca) y probado con el tester: responde «Su cotización ya está registrada…»."
     }
   ],
