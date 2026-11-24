@@ -1,10 +1,14 @@
 import { app, define, z } from "@jelou/functions";
 import { Bdc } from "./bdc.ts";
+import { Shop, sincronizar } from "./shop.ts";
 
 // Adaptador del BDC de Vehicentro. Toda respuesta: {ok, tipo, data, mensaje?}
 // con tipo ok | vacio | negocio | indisponible | incierto.
-// Secretos: BDC_CLIENT_ID, BDC_CLIENT_SECRET. Configuración: BDC_BASE_URL, BDC_ID_CONEXION,
-// BDC_CONEXION_POR_MARCA, BDC_ENVIAR_ASESOR.
+// Secretos: BDC_CLIENT_ID, BDC_CLIENT_SECRET, SHOP_API_KEY. Configuración: BDC_BASE_URL,
+// BDC_ID_CONEXION, BDC_CONEXION_POR_MARCA, BDC_ENVIAR_ASESOR, SHOP_APP_ID.
+
+// Tienda de Jelou Shop de la company 13744 (no es secreto; SHOP_APP_ID la reemplaza).
+const SHOP_APP_ID = "7188851b-e1dc-4c9d-aaed-a1fe89f45ef1";
 
 type Ctx = { env: { get(k: string): string | undefined }; log: (...a: unknown[]) => void };
 
@@ -89,6 +93,28 @@ export default app({
       }),
       config: { methods: ["POST"] },
       handler: (i, ctx) => bdc(ctx).lead(i),
+    }),
+    sincronizarShop: define({
+      description:
+        "Sincroniza el catálogo del BDC con Jelou Shop (T027): crea los modelos nuevos, actualiza nombre, precio y " +
+        "descripción, y desactiva los que ya no están. Corre a diario por cron; sin cambios si el BDC o el Shop no responden",
+      input: z.object({}),
+      // D-35: una vez al día es suficiente (precios ~mensuales).
+      config: { methods: ["POST"], cron: [{ expression: "0 6 * * *", timezone: "America/Guayaquil", name: "sync-shop" }] },
+      handler: (_i, ctx) => {
+        const apiKey = ctx.env.get("SHOP_API_KEY") ?? "";
+        if (!apiKey) {
+          ctx.log("shop_sync_sin_clave", "");
+          return { ok: false, tipo: "indisponible", data: null, mensaje: "falta SHOP_API_KEY" };
+        }
+        const shop = new Shop({
+          baseUrl: "https://gateway.jelou.ai/ecommerce",
+          appId: ctx.env.get("SHOP_APP_ID") ?? SHOP_APP_ID,
+          apiKey,
+          log: (m, e) => ctx.log(m, e ? JSON.stringify(e) : ""),
+        });
+        return sincronizar(bdc(ctx), shop, (m, e) => ctx.log(m, e ? JSON.stringify(e) : ""));
+      },
     }),
   },
 });
