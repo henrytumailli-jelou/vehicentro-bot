@@ -287,7 +287,7 @@
       "fase": 5,
       "tipo": "defecto (prompt)",
       "descripcion": "Ronda 24/11 15:34 UTC: «qué modelos tiene de camionetas» mostró una sola tarjeta: el agente pasó los modelos separados por coma en `queries` y el Shop devolvió uno (con 1 resultado WhatsApp no arma carrusel). Corregido: `category` = marca y `queries` = marca (filtro por categoría verificado con el CLI: VEH-118 y VEH-152). Tester OK; falta publicar.",
-      "estado": "corregido en el draft"
+      "estado": "publicado en DEV (01M873M153XAV58688RKAC97H5); falta la prueba por WhatsApp"
     }
   ],
   "skills": {
@@ -768,6 +768,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "Ronda 15:33 UTC: «cotizar la LYNK & CO 06 PRO» → cotización ya registrada (correcto: un lead por marca y conversación, RF-008). H-15 (carrusel con un solo modelo) corregido en el draft y probado con el tester."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "La persona publicó DEV con H-15: id de publicación 01M873M153XAV58688RKAC97H5 (15:43 UTC). Sigue la prueba por WhatsApp del carrusel de camionetas."
     }
   ],
   "puntos": {
