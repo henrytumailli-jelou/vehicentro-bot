@@ -125,6 +125,35 @@ Se quitan del flujo: `SKILL` Ir a Repuestos / Talleres / Crédito Directo y sus 
 | 11 | `CHANNEL_MESSAGE` F2:Q11 (nuevo) → `MEMORY` correo del asesor → `SKILL` Derivar a Asesor | | |
 Se retira el `HTTP` directo a `botwa_modelos` (pasa por la tool) y el nodo «Seguimiento post-carrusel» se integra en el agente. Los textos existentes en «tú» pasan a «usted».
 
+**Ventas · detalle de T009/T010 (2026-11-24, documento de APIs del 18/11, D-37, D-38)** — reemplaza las filas 5 a 11 de la tabla anterior; las demás siguen igual.
+| # | Nodo | Qué hace | Salidas | Memoria |
+|---|---|---|---|---|
+| 4 | `CONDITIONAL` «Acción post-ventas» (existe) | Sin cambios: `sin_interes` → despedida; el resto → 4b | | |
+| 4b | `CONDITIONAL` «¿Cotizar?» (nuevo) | `accion_ventas = cotizar` y hay `id_marca_ventas` e `id_modelo` | sí → 5a · no → 12 (como hoy) | |
+| 5a | `CODE` «Preparar cotización» (nuevo) | Clave `celular+marca`; si esta conversación ya registró lead en la marca (`leads_registrados`), arma el mensaje con su asesor; reinicia los intentos de cédula; sin celular válido → derivar | ya registrado → 11 · sin celular → 11 (motivo `sin_celular`) · nuevo → 5b | `cot_estado`, `cedula_intentos` |
+| 5b | `INPUT` «Pedir cédula» (nuevo; texto F2:Q5) | | respuesta → 5c · sin respuesta → «Tiempo agotado ventas» · salir → «Despedida ventas» | `cedula_ingresada` |
+| 5c | `CODE` «Validar cédula» (nuevo) | 10 dígitos (RN-06); cuenta intentos | → 5d | `cedula`, `cedula_ok`, `cedula_intentos` |
+| 5d | `CONDITIONAL` «¿Cédula válida?» (nuevo) | válida → 6 · 1.er error → 5e · 2.º error → 11 (motivo `cedula_invalida`) | | |
+| 5e | `INPUT` «Pedir cédula otra vez» (nuevo) | Mismas salidas que 5b | → 5c | |
+| 6 | `HTTP` «¿Ya tiene asesor en la marca? (4.5)» (nuevo, **después de la cédula, D-38**) → `veh-bdc /existe-asesor` con marca, celular y cédula | | ok/failed → 6b | `asesorCotResp` |
+| 6b | `CODE` «Leer asesor 4.5» (nuevo) | Con asesor: no se registra lead (criterio 9), arma F2:Q11 con su asesor. Sin asesor o la consulta falló: sigue | con asesor → 11 · sin asesor → 7 | `asesor_*` |
+| 7 | `HTTP` «Agencias de la marca (4.3)» (nuevo) → `veh-bdc /agencias` | | ok/failed → 7b | `agenciasResp` |
+| 7b | `CODE` «Preparar ciudades» (nuevo) | Ciudades de la marca en páginas de 9; guarda las agencias (`setJson`); vacío o caída → contingencia (RF-012) | hay ciudades → 7c · no → 11 (motivo `api_agencias`) | `ciudades_pagina`, `ciudades_hay_mas`, `agencias_marca` |
+| 7c | `CONDITIONAL` «¿Más de una página?» | | sí → 7d · no → 7e | |
+| 7d | Lista dinámica de ciudades + fila fija «Ver más ciudades» (nuevo; texto F2:Q7) | | ciudad → 8 · ver más → 7f | `ciudad_elegida` |
+| 7e | Lista dinámica de ciudades sin «Ver más» (nuevo) | | ciudad → 8 | `ciudad_elegida` |
+| 7f | `CODE` «Siguiente página de ciudades» (nuevo) | Avanza la página (vuelve a la primera al final) | → 7c | |
+| 8 | `CODE` «Agencias de la ciudad» (nuevo) | Filtra las agencias de la ciudad (máx. 10; título ≤ 24, dirección ≤ 72) | → 8b | `agencias_ciudad` |
+| 8b | Lista dinámica de agencias (nuevo; nombre y dirección, RF-006) | | agencia → 9 | `id_agencia_elegida`, `agencia_elegida` |
+| 9 | `CODE` «Armar lead» (nuevo) | `notas` ≤ 1000: marca, modelos consultados, agencia, ciudad y origen de campaña (D-14); sin forma de pago ni entrada (D-15); quita comillas y saltos | → 10 | `lead_*` |
+| 10 | `HTTP` «Registrar lead» (nuevo) → `veh-bdc /lead` (4.4 + POST; D-28, D-32) | El POST no se reintenta (AP-35); la Function verifica con 4.5 si es incierto | ok/failed → 10b | `leadResp` |
+| 10b | `CODE` «Leer resultado del lead» (nuevo) | `ok` con asesor → F2:Q11 · `ok` sin asesor → «un asesor de la agencia…» · `incierto` / falla → «Estamos confirmando su registro; un asesor continuará con usted por este chat» · `listas_negras` (D-37), rechazo o caída → mensaje neutro «Un asesor continuará con usted por este chat», cola general, motivo en el contexto · marca el lead de la conversación | → 10c | `mensaje_cierre`, `lead_estado`, `id_prospecto`, `leads_registrados` |
+| 10c | `HTTP` Datum `leads` crear (nuevo) | Estado `registrado` / `incierto` / `derivado`; sin cédula | ok/failed → 11 (no bloquea) | |
+| 11 | `CHANNEL_MESSAGE` «Cierre de cotización» (nuevo) | Envía `mensaje_cierre` (un solo mensaje) | → 12 | |
+| 12 | `MEMORY` «Pasar contexto a Derivar» (existe; **suma** asesor, agencia, ciudad, id de prospecto y estado del lead) → `SKILL` Derivar a Asesor (existe) | | | |
+
+Cambios respecto del diseño anterior: (a) la consulta de asesor ya asignado se hace **después de la cédula y con la marca de la cotización** (D-38), porque en Ventas el cliente puede cambiar de marca; (b) la idempotencia dentro de la conversación va en memoria (`leads_registrados`) y entre conversaciones la cubre 4.5 (el BDC ya devuelve al asesor del lead anterior), así que no se consulta Datum antes del POST; (c) el celular lo asegura Bienvenida (fila 11-12); si llega vacío se deriva; (d) el POST ahora devuelve `id_prospecto`, `id_usuario` y `resultado` (D-33 corregida).
+
 **Derivar a Asesor** (`projects/dev-vehicentro/workflows/derivar-a-asesor.whatsapp.json`)
 | # | Nodo | Qué hace | Salidas |
 |---|---|---|---|
