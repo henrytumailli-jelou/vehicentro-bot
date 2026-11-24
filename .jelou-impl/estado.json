@@ -281,6 +281,13 @@
       "tipo": "defecto (prompt)",
       "descripcion": "Ronda 24/11 14:40 UTC: «cotizar» (y «Agencias») sin modelo cerraban el agente de Ventas y el flujo derivaba sin cotizar. Prompt ajustado: sin modelo envía el carrusel y pregunta el modelo. Probado con el tester; falta publicar.",
       "estado": "cerrado 2026-11-24: verificado por WhatsApp 14:53 UTC («cotizar» sin modelo → carrusel)"
+    },
+    {
+      "id": "H-15",
+      "fase": 5,
+      "tipo": "defecto (prompt)",
+      "descripcion": "Ronda 24/11 15:34 UTC: «qué modelos tiene de camionetas» mostró una sola tarjeta: el agente pasó los modelos separados por coma en `queries` y el Shop devolvió uno (con 1 resultado WhatsApp no arma carrusel). Corregido: `category` = marca y `queries` = marca (filtro por categoría verificado con el CLI: VEH-118 y VEH-152). Tester OK; falta publicar.",
+      "estado": "corregido en el draft"
     }
   ],
   "skills": {
@@ -757,6 +764,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "Borrador de correo al partner (respuesta en el hilo del Brief v1.3 al pedido del 23/11): observaciones a la documentación del 18/11 (D-31..D-34), avance (búsqueda, cotización completa verificada por WhatsApp, sincronización diaria del Shop, ajustes) y pendientes del cliente (C-06, C-07, C-08, C-09). Lo revisa y envía la persona."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "Ronda 15:33 UTC: «cotizar la LYNK & CO 06 PRO» → cotización ya registrada (correcto: un lead por marca y conversación, RF-008). H-15 (carrusel con un solo modelo) corregido en el draft y probado con el tester."
     }
   ],
   "puntos": {
@@ -1031,6 +1042,13 @@
       "fase": 5,
       "tipo": "comando",
       "detalle": "El .gitignore del repo (migración) ignora functions/: los archivos nuevos de una Function solo entran con `git add -f`, y `git add <ruta>` avisa «ignored» aunque el archivo ya esté versionado.",
+      "pr": null
+    },
+    {
+      "fecha": "2026-11-24",
+      "fase": 5,
+      "tipo": "plantilla",
+      "detalle": "search_and_send_products_webview acepta `queries` separadas por coma, pero con varios nombres de modelo el Shop devolvió un solo producto; el filtro `category` sí es exacto. La descripción de la tool dice usar `category` «solo si el usuario lo pide». Proponer a capacidades §1.7 y a jelou-conversational-ui.",
       "pr": null
     }
   ],
