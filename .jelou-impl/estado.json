@@ -249,7 +249,7 @@
   ],
   "skills": {
     "verificadas_en": "2026-11-17",
-    "cli_version": "4.29.0",
+    "cli_version": "4.35.0",
     "disponibles": [
       "jelou",
       "jelou-project",
@@ -867,7 +867,7 @@
       "fecha": "2026-11-24",
       "fase": 5,
       "tipo": "cli",
-      "detalle": "CLI 4.34.1 instalado; 4.35.0 disponible. La actualización global (npm -g) y `jelou project publish` quedaron bloqueadas por el modo de permisos del agente: las hace la persona. novedades_cli.py no se corrió.",
+      "detalle": "CLI actualizado a 4.35.0 por la persona el 24/11 (npm -g; el modo de permisos del agente lo bloqueó). Changelog 4.35.0 revisado a mano: voz Vapi, criterios de evaluación con propiedades, cta_url en canales web, fixes de knowledge y del ejemplo HTTP; nada cambia F5 de este proyecto. novedades_cli.py sigue sin leer `jelou --version` en Windows (fricción del 16/11). `jelou project publish` también quedó bloqueado para el agente: lo hace la persona.",
       "pr": null
     }
   ],
