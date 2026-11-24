@@ -280,7 +280,7 @@
       "fase": 5,
       "tipo": "defecto (prompt)",
       "descripcion": "Ronda 24/11 14:40 UTC: «cotizar» (y «Agencias») sin modelo cerraban el agente de Ventas y el flujo derivaba sin cotizar. Prompt ajustado: sin modelo envía el carrusel y pregunta el modelo. Probado con el tester; falta publicar.",
-      "estado": "corregido en el draft"
+      "estado": "corregido y publicado en DEV (01M870D0NG5XEJBGTCM5GXGRSG); falta la prueba por WhatsApp"
     }
   ],
   "skills": {
@@ -729,6 +729,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "Tercera ronda por WhatsApp (14:36–14:41 UTC): V-09 (a) OK; SINOTRUK AUTOS → Repuestos deriva (fuera de la Fase 1, como el diseño); «cotizar» sin modelo derivó sin cotizar (H-14), corregido en el draft junto con la mitigación de H-13 y probado con el tester. T009 cerrada en ClickUp."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "La persona publicó DEV con H-14: id de publicación 01M870D0NG5XEJBGTCM5GXGRSG (14:47 UTC). Sigue la prueba corta por WhatsApp de «cotizar» sin modelo."
     }
   ],
   "puntos": {
