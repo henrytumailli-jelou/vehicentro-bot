@@ -93,4 +93,5 @@ Horas del SOW: 126 (21 días × 6 h) · F0 a F8 sin estabilización: 340 h · **
 | [C] teleasesores PMA | 1dfg0rkn7d4 | Cliente | — | — | — | waiting on client |
 | T016–T024 | 1dfg0rkn7d5 … 1dfg0rkn7dd | Jelou (H. T.) | 2 c/u | | | to do |
 | T025 | 1dfg0rkn7de | Jelou (H. T.) | 3 | | | to do |
+| T027 | 1dfg0rkq4wd | Jelou (H. T.) | 3 | | | en curso (código en main 7088bd3; falta SHOP_API_KEY y despliegue) |
 | F7 / F8 / F9 / F10 | 1dfg0rkjr64 / 65 / 66 / 67 | Jelou (H. T.) | 3 / 2 / 5 / 2 | | | to do |
