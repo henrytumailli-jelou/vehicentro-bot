@@ -753,6 +753,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "La persona cargó SHOP_API_KEY (--from-file) y desplegó veh-bdc: deploy_01m8724gqce9btkn8qzd6zm5nx activo; cron sincronizarShop registrado (0 6 * * * America/Guayaquil, synced, sin disparos aún). La primera corrida la dispara la persona o el cron del 25/11 06:00."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "Borrador de correo al partner (respuesta en el hilo del Brief v1.3 al pedido del 23/11): observaciones a la documentación del 18/11 (D-31..D-34), avance (búsqueda, cotización completa verificada por WhatsApp, sincronización diaria del Shop, ajustes) y pendientes del cliente (C-06, C-07, C-08, C-09). Lo revisa y envía la persona."
     }
   ],
   "puntos": {
