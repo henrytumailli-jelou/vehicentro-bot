@@ -154,6 +154,57 @@ Deno.test("lead sin conexión por marca: sigue usando BDC_ID_CONEXION y no consu
   assertEquals(llamadas.filter((l) => l === "botwa_marcas").length, 0);
 });
 
+Deno.test("lead 201 OK: devuelve id_prospecto e id_usuario del BDC", async () => {
+  const { f } = bdcFalso({
+    "oauth/token": token,
+    "botwa/TESTCLARO": { status: 201, body: { resultado: "OK", id_prospecto: "100", id_usuario: "200" } },
+  });
+  const r = await nuevo(f).lead({ id_marca: 3, celular: "0991234567", id_modelo: 82 });
+  assertEquals(r.tipo, "ok");
+  assertEquals(r.data?.id_prospecto, "100");
+  assertEquals(r.data?.id_usuario_bdc, "200");
+});
+
+Deno.test("lead 201 LISTAS_NEGRAS: negocio con motivo, sin consultar 4.5", async () => {
+  const { f, llamadas } = bdcFalso({
+    "oauth/token": token,
+    "botwa/TESTCLARO": { status: 201, body: { resultado: "LISTAS_NEGRAS" } },
+    botwa_existe_asesor: { status: 200, body: { status: "success", data: [] } },
+  });
+  const r = await nuevo(f).lead({ id_marca: 3, celular: "0991234567", id_modelo: 82 });
+  assertEquals(r.tipo, "negocio");
+  assertEquals(r.data?.motivo, "listas_negras");
+  assertEquals(llamadas.filter((l) => l === "botwa_existe_asesor").length, 0);
+});
+
+Deno.test("lead 201 con resultado desconocido: incierto, se verifica con 4.5 y no se reenvía", async () => {
+  const { f, llamadas } = bdcFalso({
+    "oauth/token": token,
+    "botwa/TESTCLARO": { status: 201, body: { resultado: "PENDIENTE" } },
+    botwa_existe_asesor: { status: 200, body: { status: "success", data: [] } },
+  });
+  const r = await nuevo(f).lead({ id_marca: 3, celular: "0991234567", id_modelo: 82 });
+  assertEquals(r.tipo, "incierto");
+  assertEquals(llamadas.filter((l) => l === "botwa/TESTCLARO").length, 1);
+  assertEquals(llamadas.filter((l) => l === "botwa_existe_asesor").length, 1);
+});
+
+Deno.test("lead 400: negocio; el log enmascara dígitos y correos de ERROR-MESSAGE", async () => {
+  const logs: Record<string, unknown>[] = [];
+  const f: typeof fetch = (u) =>
+    Promise.resolve(
+      String(u).includes("oauth/token")
+        ? new Response(JSON.stringify(token.body), { status: 200 })
+        : new Response(JSON.stringify({ resultado: "ERROR" }), { status: 400, headers: { "ERROR-MESSAGE": "cedula 1712345678 de a@b.com invalida" } }),
+    );
+  _resetToken();
+  const b = new Bdc({ baseUrl: "https://x", clientId: "a", clientSecret: "b", idConexion: "TESTCLARO", fetch: f, timeoutMs: 1000, log: (_m, e) => e && logs.push(e) });
+  const r = await b.lead({ id_marca: 3, celular: "0991234567", id_modelo: 82 });
+  assertEquals(r.tipo, "negocio");
+  const err = String(logs.find((e) => "error" in e)?.error);
+  assert(!/\d/.test(err) && !err.includes("@"), err);
+});
+
 Deno.test("lead sin respuesta: NO reenvía; 4.5 vacío → incierto", async () => {
   const { f, llamadas } = bdcFalso({
     "oauth/token": token,

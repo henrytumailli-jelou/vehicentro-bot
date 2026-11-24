@@ -74,7 +74,9 @@ export default app({
       handler: (i, ctx) => bdc(ctx).existeAsesor(i.id_marca, i.celular, i.cedula),
     }),
     lead: define({
-      description: "Pide el asesor de la agencia (4.4), registra el lead y devuelve el asesor",
+      description:
+        "Pide el asesor de la agencia (4.4), registra el lead y devuelve el asesor, id_prospecto e id_usuario_bdc; " +
+        "con LISTAS_NEGRAS sale tipo negocio y data.motivo = listas_negras",
       input: z.object({
         id_marca: idMarca,
         celular: z.string(),

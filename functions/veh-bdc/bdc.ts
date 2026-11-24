@@ -274,13 +274,14 @@ export class Bdc {
   // En producción (enviarAsesor) el lead lleva id_agencias e id_asesor; en pruebas
   // (TESTCLARO) no, como pide la documentación del cliente. El POST nunca se reintenta
   // salvo un 401 (no llegó a registrarse); con resultado incierto se verifica con 4.5.
-  async lead(l: LeadEntrada): Promise<Resultado<{ asesor: Asesor | null }>> {
+  // Doc 18/11: el 201 trae {resultado: OK | LISTAS_NEGRAS, id_prospecto, id_usuario}.
+  async lead(l: LeadEntrada): Promise<Resultado<LeadSalida>> {
     const cel = normalizarCelular(l.celular);
     if (!cel) return res("negocio", null, "celular inválido");
     const cx = await this.conexion(l.id_marca);
     if (cx.tipo !== "ok") {
       this.cfg.log?.("bdc_lead_sin_conexion", { id_marca: l.id_marca, tipo: cx.tipo });
-      return { ...cx, data: null } as Resultado<{ asesor: Asesor | null }>;
+      return { ...cx, data: null } as Resultado<LeadSalida>;
     }
     let asesorAgencia: Asesor | null = null;
     if (l.id_agencia != null) {
@@ -297,7 +298,8 @@ export class Bdc {
       direccion: l.ciudad ?? null,
       ...(conAsesor ? { id_agencias: String(asesorAgencia!.id_agencia), id_asesor: asesorAgencia!.id } : {}),
     });
-    let estado: "registrado" | "incierto" | "negocio" = "incierto";
+    let estado: "registrado" | "incierto" | "negocio" | "listas_negras" = "incierto";
+    let cuerpo: { resultado?: string; id_prospecto?: string; id_usuario?: string } = {};
     for (let intento = 0; intento < 2; intento++) {
       const tok = await this.token();
       if (!tok) return res("indisponible", null, "sin token");
@@ -317,17 +319,36 @@ export class Bdc {
         _resetToken();
         continue;
       }
-      if (r.status === 201 || r.status === 200) estado = "registrado";
-      else if (r.status === 400 || r.status === 404 || r.status === 401) estado = "negocio";
+      try {
+        cuerpo = await r.json();
+      } catch {
+        cuerpo = {};
+      }
+      const resultado = String(cuerpo.resultado ?? "").toUpperCase();
+      if (r.status === 201 || r.status === 200) {
+        // Sin cuerpo legible se confía en el 201; un resultado desconocido se verifica con 4.5.
+        estado = resultado === "LISTAS_NEGRAS" ? "listas_negras" : resultado === "OK" || !resultado ? "registrado" : "incierto";
+      } else if (r.status === 400 || r.status === 404 || r.status === 401) estado = "negocio";
       else estado = "incierto";
-      this.cfg.log?.("bdc_lead", { status: r.status, estado, con_asesor: conAsesor, asesor_4_4: !!asesorAgencia, celular: enmascarar(cel) });
+      this.cfg.log?.("bdc_lead", {
+        status: r.status,
+        estado,
+        resultado: resultado || null,
+        // El detalle de un 400 llega en ERROR-MESSAGE; puede nombrar datos del cliente.
+        error: r.status === 400 ? sinDigitos(r.headers.get("ERROR-MESSAGE")) : undefined,
+        con_asesor: conAsesor,
+        asesor_4_4: !!asesorAgencia,
+        celular: enmascarar(cel),
+      });
       break;
     }
+    if (estado === "listas_negras") return res("negocio", { asesor: null, motivo: "listas_negras" }, "cliente en listas negras");
     if (estado === "negocio") return res("negocio", null, "el BDC rechazó el lead");
-    if (estado === "registrado") return res("ok", { asesor: asesorAgencia });
+    const ids = { id_prospecto: cuerpo.id_prospecto ?? null, id_usuario_bdc: cuerpo.id_usuario ?? null };
+    if (estado === "registrado") return res("ok", { asesor: asesorAgencia, ...ids });
     // Incierto: no se reenvía. Si 4.5 ya devuelve asesor, el lead entró.
     const v = await this.existeAsesor(l.id_marca, cel, l.cedula);
-    return v.tipo === "ok" ? res("ok", { asesor: v.data as Asesor }) : res("incierto", { asesor: asesorAgencia });
+    return v.tipo === "ok" ? res("ok", { asesor: v.data as Asesor, ...ids }) : res("incierto", { asesor: asesorAgencia, ...ids });
   }
 }
 
@@ -341,6 +362,18 @@ export interface LeadEntrada {
   ciudad?: string | null;
   notas?: string | null;
 }
+
+export interface LeadSalida {
+  asesor: Asesor | null;
+  // id_prospecto: número del prospecto en el BDC; id_usuario_bdc: usuario del BDC que lo
+  // atiende (no trae correo: el correo sale de 4.4/4.5).
+  id_prospecto?: string | null;
+  id_usuario_bdc?: string | null;
+  motivo?: "listas_negras";
+}
+
+const sinDigitos = (v: string | null) =>
+  v ? v.replace(/\S+@\S+/g, "[correo]").replace(/\d/g, "#").slice(0, 160) : null;
 
 export interface Asesor {
   id: string;
