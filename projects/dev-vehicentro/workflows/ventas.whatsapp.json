@@ -417,7 +417,7 @@
         "startCommand": "Primer mensaje del usuario en esta conversación: {{$memory.mensaje_inicial}}\nÚltimo mensaje del usuario: {{$message.text}}",
         "messageGrouping": {
           "enabled": true,
-          "windowSeconds": 2
+          "windowSeconds": 10
         },
         "nonHappyPathHandlers": {
           "error": {

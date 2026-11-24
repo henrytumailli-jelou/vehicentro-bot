@@ -9,8 +9,8 @@ workflows:
     channel: WHATSAPP
     default: true
     description: "Da la bienvenida, identifica la marca y la intención del prospecto y lo enruta a Ventas o a un asesor"
-    hash: "sha256:0199ac3a2a2a8c7c657e66ac1e9713692f31337a1d675e07c5f1086c913ad231"
-    lastPulledAt: "2026-11-24T15:56:28.837Z"
+    hash: "sha256:81e6acb05e93b1d1fed74a91d466ade509b40a585e6eff1339372557f71b6e60"
+    lastPulledAt: "2026-11-24T16:00:20.305Z"
     name: "Bienvenida y Enrutamiento"
     skillId: 46693
     workflowId: 64836
@@ -72,8 +72,8 @@ workflows:
     channel: WHATSAPP
     default: false
     description: "Atiende el catálogo de la marca: modelos, precios, fichas, comparación y carrusel; deriva a cotización o a un asesor"
-    hash: "sha256:3cbb5895ceafdc05e5a4e0a41c2f3dfbd6df719be2d3cb93acfc5e8fc4f00a5e"
-    lastPulledAt: "2026-11-24T15:56:28.851Z"
+    hash: "sha256:398c608178e6455e3229c30caeeeeb84c095534b4802c03eb3e13ca4eff02a49"
+    lastPulledAt: "2026-11-24T16:00:20.258Z"
     name: Ventas
     skillId: 46694
     workflowId: 64837

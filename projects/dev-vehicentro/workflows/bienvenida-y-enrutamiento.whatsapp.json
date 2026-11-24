@@ -221,7 +221,7 @@
         },
         "messageGrouping": {
           "enabled": true,
-          "windowSeconds": 2
+          "windowSeconds": 10
         },
         "nonHappyPathHandlers": {
           "error": {
