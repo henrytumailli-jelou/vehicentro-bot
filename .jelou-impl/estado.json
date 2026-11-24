@@ -790,6 +790,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "D-39: agrupar mensajes con 10 s en los agentes de Bienvenida y Ventas (antes 2 s). Push al draft verificado, chequeo 0; falta publicar."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "La persona publicó DEV con D-39 (agrupar mensajes 10 s): id de publicación 01M874M0CA8592CB2Y9WZ7JDD1 (16:01 UTC). Sigue la prueba por WhatsApp."
     }
   ],
   "puntos": {
