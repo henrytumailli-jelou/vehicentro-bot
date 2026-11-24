@@ -123,7 +123,7 @@
           "splitMessages": true,
           "messageHistory": {
             "count": 10,
-            "enabled": true
+            "enabled": false
           }
         },
         "variable": "bienvenidaResult",

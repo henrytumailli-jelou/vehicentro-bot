@@ -261,7 +261,7 @@
           "splitMessages": true,
           "messageHistory": {
             "count": 15,
-            "enabled": true
+            "enabled": false
           }
         },
         "variable": "ventasResult",
