@@ -267,6 +267,13 @@
       "tipo": "defecto",
       "descripcion": "Ronda por WhatsApp 24/11 (13:47 UTC): Bienvenida pasó LYNK & CO, pero el agente de Ventas buscó KEYTON porque su historial (messageHistory, 15) traía mensajes de conversaciones anteriores del chat; la cotización quedó para KEYTON. Apagado el historial en Ventas y Bienvenida (decisión del implementador) — main 27c57d3; verificado en el draft con el tester. La corrección automática de validate quiso reescribir los valores de los botones de consentimiento (acepto/no_acepto/asesor): se descartó.",
       "estado": "corregido en el draft; falta publicar y repetir la ronda"
+    },
+    {
+      "id": "H-13",
+      "fase": 5,
+      "tipo": "defecto (plataforma / configuración del Shop)",
+      "descripcion": "El carrito de Jelou Shop conserva lo que el cliente eligió en una conversación anterior: en la ronda del 24/11 (14:04 UTC) el pedido llegó con VEH-139 y VEH-161. El agente cotizó el modelo correcto (139), pero con dos productos en el pedido podría elegir otro. Revisar con jelou-shop cómo vaciar o no reutilizar el carrito (o tomar el último producto agregado).",
+      "estado": "abierto"
     }
   ],
   "skills": {
@@ -703,6 +710,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "La persona publicó DEV con H-12: id de publicación 01M86XV494TFXW86APMYM0FX27 (14:02 UTC). Sigue repetir la ronda por WhatsApp."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "Segunda ronda por WhatsApp (14:03–14:10 UTC): Lynk & Co correcto (H-12 resuelto), cédula → ciudades → Quito → agencia → lead registrado → cierre F2:Q11 → Derivar. H-13 (carrito del Shop con un producto anterior). V-09 (a) falló sin modelo; corregido en el draft y probado con el tester. Falta publicar."
     }
   ],
   "puntos": {
@@ -1024,8 +1035,8 @@
       "fase": 5,
       "que": "Un segundo intento de cotizar la misma marca no registra otro lead: (a) en la misma conversación (memoria `leads_registrados`) y (b) entre conversaciones (4.5 devuelve el asesor del lead anterior)",
       "prueba": "(a) ronda por WhatsApp: cotizar dos veces la misma marca; (b) pruebas conjuntas con el cliente con id_agencias/id_asesor (con TESTCLARO el BDC no asigna asesor y 4.5 vuelve vacío)",
-      "estado": "pendiente",
-      "resultado": "2026-11-24: el tester no permite (a) (el turno queda abierto tras el paso a Derivar y la memoria no pasa a otra sesión); (b) con TESTCLARO 4.5 vuelve vacío, como en V-01."
+      "estado": "(a) corregido y probado en el draft; (b) pendiente con el cliente",
+      "resultado": "2026-11-24: el tester no permite (a) (el turno queda abierto tras el paso a Derivar y la memoria no pasa a otra sesión); (b) con TESTCLARO 4.5 vuelve vacío, como en V-01. 2026-11-24 14:10 UTC (WhatsApp): «Quiero cotizar link & co» sin modelo saltó la revisión y fue a Derivar. Corregido (main, «¿Cotizar?» solo exige acción y marca) y probado con el tester: responde «Su cotización ya está registrada…»."
     }
   ],
   "equipo": {
