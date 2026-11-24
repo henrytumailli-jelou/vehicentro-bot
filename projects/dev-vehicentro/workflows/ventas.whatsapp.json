@@ -5,6 +5,49 @@
   "workflowDefault": false,
   "nodes": [
     {
+      "id": "_RXaKpVWjVNO-9A5aBN3D",
+      "title": "Elegir ciudad",
+      "configuration": {
+        "messages": [
+          {
+            "id": "fQu32NdPHv6AOgBVhyPtm",
+            "text": "¿En qué ciudad le gustaría ser atendido?",
+            "type": "list",
+            "title": "",
+            "button": "Ver ciudades",
+            "options": [
+              {
+                "id": "opt_ciudad",
+                "type": "postback",
+                "title": "{{$item.nombre}}",
+                "payload": {
+                  "type": "edge",
+                  "memory": {
+                    "ciudad_sel": "{{$item.valor}}"
+                  },
+                  "skillId": "46694",
+                  "targetId": "D7qFosqZiRfT_hk1Zvrtq"
+                },
+                "iterable": "{{$memory.ciudades_pagina}}",
+                "description": ""
+              }
+            ],
+            "settings": {
+              "responseVariable": "ciudad_sel",
+              "isBlockingEnabled": true,
+              "expiredButtonAction": true,
+              "optionNotFoundMessage": "Por favor, elija una opción de la lista."
+            }
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        8082,
+        3957
+      ]
+    },
+    {
       "id": "0jZJL1I25ZdKpz8MUm6Ek",
       "title": "Start",
       "type": "START",
@@ -14,16 +57,192 @@
       ]
     },
     {
+      "id": "0vuYAMvvLLqr0dLtYt-6W",
+      "title": "Armar lead",
+      "configuration": {
+        "title": "Armar lead",
+        "content": "const leerSel = (k) => {\n  let v = '';\n  try { v = $memory.get(k, ''); } catch (e) { try { v = $memory.getJson(k, {}); } catch (e2) { v = ''; } }\n  return v;\n};\nconst selA = leerSel('agencia_sel');\nconst idAg = String(typeof selA === 'object' && selA ? (selA.id || '') : selA);\nconst filasAg = $memory.getJson('agencias_ciudad', []) || [];\nconst ag = filasAg.find((a) => String(a.id) === idAg) || {};\n$memory.set('id_agencia_elegida', idAg);\n$memory.set('agencia_elegida', String(ag.nombre || ''));\n// D-14/D-15: notas con marca, modelos, agencia, ciudad y origen; sin forma de pago ni entrada.\nconst limpio = (s) => String(s || '').replace(/[\"\\\\\\r\\n\\t]/g, ' ').replace(/\\s+/g, ' ').trim();\nlet nombres = '';\ntry { nombres = limpio($user.get('names') || ''); } catch (e) { nombres = ''; }\nconst origen = ['origen_plataforma', 'origen_campana', 'origen_anuncio']\n  .map((k) => limpio($memory.get(k, ''))).filter(Boolean).join(' / ');\nconst notas = [\n  `Marca: ${limpio($memory.get('marca_nombre_ventas', ''))}`,\n  `Modelo: ${limpio($memory.get('modelo_nombre', ''))}`,\n  `Modelos consultados: ${limpio($memory.get('modelos_consultados', ''))}`,\n  `Agencia: ${limpio($memory.get('agencia_elegida', ''))}`,\n  `Ciudad: ${limpio($memory.get('ciudad_elegida', ''))}`,\n  origen ? `Origen: ${origen}` : 'Origen: directo',\n  'Canal: WhatsApp',\n].join('. ').slice(0, 1000);\n$memory.set('lead_nombres', nombres.slice(0, 120));\n$memory.setJson('lead_notas', { value: notas }, 86400);\n$memory.set('lead_ciudad', limpio($memory.get('ciudad_elegida', '')).slice(0, 100));",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        9246,
+        3233
+      ]
+    },
+    {
       "id": "0zen78RVmexCMfwO1CIDQ",
       "title": "Guardar acción ventas",
       "configuration": {
-        "content": "const r = $memory.getJson('ventasResult', {});\nlet accion = String(r.accion || '').toLowerCase();\nif (!['cotizar', 'asesor', 'sin_interes'].includes(accion)) accion = 'asesor';\nif (r.id_marca) $memory.set('id_marca_ventas', String(r.id_marca));\nif (r.marca_nombre) $memory.set('marca_nombre_ventas', String(r.marca_nombre));\n$memory.set('id_modelo', String(r.id_modelo || ''));\n$memory.set('modelo_nombre', String(r.modelo_nombre || ''));\n$memory.set('modelos_consultados', String(r.modelos_consultados || r.modelo_nombre || ''));\n$memory.set('accion_ventas', accion);\n// T009 (cotización) aún no está: cotizar va a un asesor por ahora.\n$memory.set('motivo_derivacion', accion === 'cotizar' ? 'cotizacion' : String(r.motivo || 'asesor'));",
+        "content": "const r = $memory.getJson('ventasResult', {});\nlet accion = String(r.accion || '').toLowerCase();\nif (!['cotizar', 'asesor', 'sin_interes'].includes(accion)) accion = 'asesor';\nif (r.id_marca) $memory.set('id_marca_ventas', String(r.id_marca));\nif (r.marca_nombre) $memory.set('marca_nombre_ventas', String(r.marca_nombre));\n$memory.set('id_modelo', String(r.id_modelo || ''));\n$memory.set('modelo_nombre', String(r.modelo_nombre || ''));\n$memory.set('modelos_consultados', String(r.modelos_consultados || r.modelo_nombre || ''));\n$memory.set('accion_ventas', accion);\n$memory.set('motivo_derivacion', accion === 'cotizar' ? 'cotizacion' : String(r.motivo || 'asesor'));",
         "memoryVersion": "v2"
       },
       "type": "CODE",
       "position": [
         2231,
         37
+      ]
+    },
+    {
+      "id": "2jcDyil_f3mNH7BzKw7dz",
+      "title": "¿Más de una página?",
+      "configuration": {
+        "title": "¿Más de una página?",
+        "conditions": [
+          {
+            "id": "c_mas_paginas",
+            "name": "Varias páginas",
+            "terms": [
+              {
+                "id": "c_mas_paginas_t",
+                "type": "string",
+                "value1": "{{$memory.ciudades_hay_mas}}",
+                "value2": "si",
+                "operator": "equal"
+              }
+            ]
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        7694,
+        2833
+      ]
+    },
+    {
+      "id": "2jr9QL1UeSZE9hB4-OY_5",
+      "title": "Validar cédula",
+      "configuration": {
+        "title": "Validar cédula",
+        "content": "// RN-06: 10 dígitos; 1 reintento y al segundo error, asesor.\nconst ced = String($memory.get('cedula_ingresada', '') || '').replace(/\\D/g, '');\nconst intentos = Number($memory.get('cedula_intentos', '0') || 0) + 1;\n$memory.set('cedula_intentos', String(intentos));\nif (/^\\d{10}$/.test(ced)) {\n  $memory.set('cedula', ced);\n  $memory.set('cedula_ok', 'si');\n} else {\n  $memory.set('cedula_ok', 'no');\n  if (intentos >= 2) {\n    $memory.set('motivo_derivacion', 'cedula_invalida');\n    $memory.set('mensaje_cierre', 'No pudimos validar su cédula. Un asesor continuará con usted por este chat.');\n  }\n}",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        4590,
+        2833
+      ]
+    },
+    {
+      "id": "34vSd3s1yBfcZ6i-UO8o8",
+      "title": "¿Sigue la cotización?",
+      "configuration": {
+        "title": "¿Sigue la cotización?",
+        "conditions": [
+          {
+            "id": "c_nuevo",
+            "name": "Cotización nueva",
+            "terms": [
+              {
+                "id": "c_nuevo_t",
+                "type": "string",
+                "value1": "{{$memory.cot_estado}}",
+                "value2": "nuevo",
+                "operator": "equal"
+              }
+            ]
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        3814,
+        2283
+      ]
+    },
+    {
+      "id": "3dny_XZ7AOumv7nh3sDnD",
+      "title": "Pedir cédula otra vez",
+      "configuration": {
+        "prompt": "La cédula debe tener 10 dígitos. ¿Me la escribe nuevamente?",
+        "variable": "cedula_ingresada"
+      },
+      "type": "INPUT",
+      "position": [
+        5366,
+        3383
+      ]
+    },
+    {
+      "id": "awbtPCiGhTfczI_GyCzxw",
+      "title": "¿Hay ciudades?",
+      "configuration": {
+        "title": "¿Hay ciudades?",
+        "conditions": [
+          {
+            "id": "c_hay_ciudades",
+            "name": "Hay ciudades",
+            "terms": [
+              {
+                "id": "c_hay_ciudades_t",
+                "type": "string",
+                "value1": "{{$memory.hay_ciudades}}",
+                "value2": "si",
+                "operator": "equal"
+              }
+            ]
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        7306,
+        2833
+      ]
+    },
+    {
+      "id": "BH6-2QDmHV5vlMBMW2-0z",
+      "title": "¿Cotizar?",
+      "configuration": {
+        "title": "¿Cotizar?",
+        "conditions": [
+          {
+            "id": "c_cotizar",
+            "name": "Cotizar con marca y modelo",
+            "terms": [
+              {
+                "id": "c_cot_t1",
+                "type": "string",
+                "value1": "{{$memory.accion_ventas}}",
+                "value2": "cotizar",
+                "operator": "equal"
+              },
+              {
+                "id": "c_cot_t2",
+                "type": "string",
+                "value1": "{{$memory.id_marca_ventas}}",
+                "operator": "is_not_empty"
+              },
+              {
+                "id": "c_cot_t3",
+                "type": "string",
+                "value1": "{{$memory.id_modelo}}",
+                "operator": "is_not_empty"
+              }
+            ],
+            "operator": "and"
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        3038,
+        2283
+      ]
+    },
+    {
+      "id": "cSD8-SvrM1PTPlJOYiPwJ",
+      "title": "Siguiente página de ciudades",
+      "configuration": {
+        "title": "Siguiente página de ciudades",
+        "content": "const todas = $memory.getJson('ciudades_todas', []) || [];\nconst paginas = Math.max(1, Math.ceil(todas.length / 9));\nconst pag = (Number($memory.get('ciudades_pag', '0') || 0) + 1) % paginas;\n$memory.set('ciudades_pag', String(pag));\n$memory.setJson('ciudades_pagina', todas.slice(pag * 9, pag * 9 + 9), 86400);",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        8470,
+        2833
       ]
     },
     {
@@ -215,11 +434,265 @@
       ]
     },
     {
+      "id": "D7qFosqZiRfT_hk1Zvrtq",
+      "title": "Agencias de la ciudad",
+      "configuration": {
+        "title": "Agencias de la ciudad",
+        "content": "// HU-06 c4: solo las agencias de la marca en la ciudad elegida (máx. 10 filas de WhatsApp).\nconst corto = (s, n) => (s.length > n ? s.slice(0, n - 1) + '…' : s);\nconst norm = (s) => String(s || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().trim();\nconst leerSel = (k) => {\n  let v = '';\n  try { v = $memory.get(k, ''); } catch (e) { try { v = $memory.getJson(k, {}); } catch (e2) { v = ''; } }\n  return v;\n};\nconst sel = leerSel('ciudad_sel');\nconst ciudadValor = String(typeof sel === 'object' && sel ? (sel.valor || sel.nombre || '') : sel);\n$memory.set('ciudad_elegida', ciudadValor);\nconst ciudad = norm(ciudadValor);\nconst todas = $memory.getJson('agencias_marca', []) || [];\nconst filas = todas.filter((a) => norm(a.ciudad) === ciudad).slice(0, 10).map((a) => ({\n  id: a.id, nombre: a.nombre, titulo: corto(a.nombre, 24), detalle: corto(a.direccion, 72) }));\n$memory.setJson('agencias_ciudad', filas, 86400);\n$memory.set('ciudad_nombre', ($memory.get('ciudad_elegida', '') || '').toLowerCase().replace(/(^|\\s)\\S/g, (c) => c.toUpperCase()));",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        8470,
+        3233
+      ]
+    },
+    {
+      "id": "dbtHz-zwZdQRqnu28CYtc",
+      "title": "Preparar ciudades",
+      "configuration": {
+        "title": "Preparar ciudades",
+        "content": "// RF-006 / HU-06 c3: ciudades de la marca; más de 10 se pagina de 9 en 9 con «Ver más».\nconst corto = (s, n) => (s.length > n ? s.slice(0, n - 1) + '…' : s);\nconst titulo = (s) => s.toLowerCase().replace(/(^|\\s)\\S/g, (c) => c.toUpperCase());\nlet agencias = [];\ntry {\n  const j = $context.getHttpResponse('agenciasResp').json();\n  if (j.tipo === 'ok' && j.data && Array.isArray(j.data.agencias)) agencias = j.data.agencias;\n} catch (e) { agencias = []; }\nconst ciudades = [...new Set(agencias.map((a) => String(a.ciudad || '').trim()).filter(Boolean))].sort()\n  .map((c) => ({ nombre: corto(titulo(c), 24), valor: c }));\nif (!ciudades.length) {\n  $memory.set('hay_ciudades', 'no');\n  $memory.set('motivo_derivacion', 'api_agencias');\n  $memory.set('mensaje_cierre', 'En este momento no puedo consultar las agencias. Un asesor continuará con usted por este chat.');\n} else {\n  $memory.set('hay_ciudades', 'si');\n  $memory.setJson('agencias_marca', agencias.map((a) => ({\n    id: String(a.id), nombre: String(a.nombre || ''), ciudad: String(a.ciudad || ''),\n    direccion: String(a.direccion || ''), horario: String(a.horario || '') })), 86400);\n  $memory.setJson('ciudades_todas', ciudades, 86400);\n  const paginar = ciudades.length > 10;\n  $memory.set('ciudades_pag', '0');\n  $memory.setJson('ciudades_pagina', paginar ? ciudades.slice(0, 9) : ciudades, 86400);\n  $memory.set('ciudades_hay_mas', paginar ? 'si' : 'no');\n}",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        6918,
+        2833
+      ]
+    },
+    {
+      "id": "GU-VmrvQJhdujwmvflFHz",
+      "title": "¿Cédula válida?",
+      "configuration": {
+        "title": "¿Cédula válida?",
+        "conditions": [
+          {
+            "id": "c_ced_ok",
+            "name": "Cédula válida",
+            "terms": [
+              {
+                "id": "c_ced_ok_t",
+                "type": "string",
+                "value1": "{{$memory.cedula_ok}}",
+                "value2": "si",
+                "operator": "equal"
+              }
+            ]
+          },
+          {
+            "id": "c_ced_reintento",
+            "name": "Primer error",
+            "terms": [
+              {
+                "id": "c_ced_reintento_t",
+                "type": "string",
+                "value1": "{{$memory.cedula_intentos}}",
+                "value2": "1",
+                "operator": "equal"
+              }
+            ]
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        4978,
+        2833
+      ]
+    },
+    {
+      "id": "gYtfidmhVuZxxgvGJyr-i",
+      "title": "¿Ya tiene asesor?",
+      "configuration": {
+        "title": "¿Ya tiene asesor?",
+        "conditions": [
+          {
+            "id": "c_con_asesor",
+            "name": "Con asesor",
+            "terms": [
+              {
+                "id": "c_con_asesor_t",
+                "type": "string",
+                "value1": "{{$memory.cot_tiene_asesor}}",
+                "value2": "si",
+                "operator": "equal"
+              }
+            ]
+          }
+        ]
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        6142,
+        2833
+      ]
+    },
+    {
+      "id": "InROrejwmiaUv4WQDGbiG",
+      "title": "Leer resultado del lead",
+      "configuration": {
+        "title": "Leer resultado del lead",
+        "content": "// HU-06 c6-c8, resultado incierto y D-37. Nunca se pide al usuario que lo reintente.\nlet j = null;\ntry { j = $context.getHttpResponse('leadResp').json(); } catch (e) { j = null; }\nconst tipo = j && j.tipo ? String(j.tipo) : 'incierto';\nconst data = (j && j.data) || {};\nconst a = data.asesor || null;\nconst agencia = $memory.get('agencia_elegida', '');\nlet estado = 'derivado';\nlet msg = 'Un asesor continuará con usted por este chat.';\nif (tipo === 'ok') {\n  estado = 'registrado';\n  msg = a && a.nombre\n    ? `Listo. Le atenderá ${a.nombre} de la agencia ${a.agencia || agencia}. En breve continuará con usted por este chat.`\n    : `Listo. Registramos su solicitud de cotización. Un asesor de la agencia ${agencia} continuará con usted por este chat.`;\n} else if (tipo === 'incierto' || tipo === 'indisponible') {\n  estado = 'incierto';\n  msg = 'Estamos confirmando su registro; un asesor continuará con usted por este chat.';\n}\n$memory.set('motivo_derivacion', data.motivo === 'listas_negras' ? 'lead_listas_negras' : (tipo === 'ok' ? 'cotizacion' : 'lead_' + tipo));\n$memory.set('asesor_nombre', a ? String(a.nombre || '') : '');\n$memory.set('asesor_correo', a ? String(a.correo || '') : '');\n$memory.set('id_prospecto', String(data.id_prospecto || ''));\n$memory.set('lead_estado', estado);\n$memory.set('lead_fecha', new Date().toISOString());\n$memory.set('clave_lead', `${String($memory.get('celular', '')).replace(/\\D/g, '')}-${$memory.get('id_marca_ventas', '')}`);\n$memory.set('mensaje_cierre', msg);\nif (tipo === 'ok' || tipo === 'incierto') {\n  const previos = $memory.getJson('leads_registrados', {}) || {};\n  previos[String($memory.get('id_marca_ventas', ''))] = { asesor: a ? a.nombre : '', correo: a ? a.correo : '', agencia: a ? (a.agencia || agencia) : agencia };\n  $memory.setJson('leads_registrados', previos, 86400);\n}",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        10022,
+        3233
+      ]
+    },
+    {
+      "id": "iujSVM7gYCA2MKjscnLXh",
+      "title": "Elegir ciudad (con más)",
+      "configuration": {
+        "messages": [
+          {
+            "id": "TlXN98i8W090fUyCGgaH5",
+            "text": "¿En qué ciudad le gustaría ser atendido?",
+            "type": "list",
+            "title": "",
+            "button": "Ver ciudades",
+            "options": [
+              {
+                "id": "opt_ciudad",
+                "type": "postback",
+                "title": "{{$item.nombre}}",
+                "payload": {
+                  "type": "edge",
+                  "memory": {
+                    "ciudad_sel": "{{$item.valor}}"
+                  },
+                  "skillId": "46694",
+                  "targetId": "D7qFosqZiRfT_hk1Zvrtq"
+                },
+                "iterable": "{{$memory.ciudades_pagina}}",
+                "description": ""
+              },
+              {
+                "id": "opt_mas_ciudades",
+                "type": "postback",
+                "title": "Ver más ciudades",
+                "payload": {
+                  "type": "edge",
+                  "memory": {
+                    "ciudad_sel": "Ver más ciudades"
+                  },
+                  "skillId": "46694",
+                  "targetId": "cSD8-SvrM1PTPlJOYiPwJ"
+                },
+                "description": "Mostrar otras ciudades"
+              }
+            ],
+            "settings": {
+              "responseVariable": "ciudad_sel",
+              "isBlockingEnabled": true,
+              "expiredButtonAction": true,
+              "optionNotFoundMessage": "Por favor, elija una opción de la lista."
+            }
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        8082,
+        2833
+      ]
+    },
+    {
+      "id": "jXpYn1DDtRpObbgvKIY55",
+      "title": "¿Ya tiene asesor en la marca? (4.5)",
+      "configuration": {
+        "url": "https://veh-bdc.fn.jelou.ai/existe-asesor",
+        "body": {
+          "type": "application/json",
+          "content": "{\"id_marca\": \"{{$memory.id_marca_ventas}}\", \"celular\": \"{{$memory.celular}}\", \"cedula\": \"{{$memory.cedula}}\"}",
+          "enabled": true
+        },
+        "title": "¿Ya tiene asesor en la marca? (4.5)",
+        "method": "POST",
+        "output": "asesorCotResp",
+        "headers": [
+          {
+            "id": "h_ct_cot_existe_asesor",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "timeout": 25000,
+          "sslCertificate": true
+        },
+        "authentication": {
+          "type": "bearer",
+          "token": "{{$secret.JELOU_FN_INVOKE_KEY}}",
+          "enabled": true
+        }
+      },
+      "type": "HTTP",
+      "position": [
+        5366,
+        2833
+      ]
+    },
+    {
+      "id": "KiqtwfKxlGOZ08p0Z-d5R",
+      "title": "Pedir cédula",
+      "configuration": {
+        "prompt": "Con gusto preparamos su cotización. ¿Me ayuda con su número de cédula?",
+        "variable": "cedula_ingresada"
+      },
+      "type": "INPUT",
+      "position": [
+        4202,
+        2833
+      ]
+    },
+    {
+      "id": "M6aOwJpOpAvwGbJdL0xW4",
+      "title": "Preparar cotización",
+      "configuration": {
+        "title": "Preparar cotización",
+        "content": "// T009: un lead por marca y conversación (RF-008); el celular lo asegura Bienvenida.\nconst marca = String($memory.get('id_marca_ventas', '') || '').replace(/\\D/g, '');\nconst cel = String($memory.get('celular', '') || '').replace(/\\D/g, '');\nconst celOk = /^09\\d{8}$/.test(cel) || /^5939\\d{8}$/.test(cel);\nconst previos = $memory.getJson('leads_registrados', {}) || {};\n$memory.set('cedula_intentos', '0');\n$memory.set('motivo_derivacion', 'cotizacion');\nlet estado = 'nuevo';\nif (!celOk) {\n  estado = 'cerrar';\n  $memory.set('motivo_derivacion', 'sin_celular');\n  $memory.set('mensaje_cierre', 'Para continuar con su cotización, un asesor continuará con usted por este chat.');\n} else if (previos[marca]) {\n  const p = previos[marca];\n  estado = 'cerrar';\n  $memory.set('asesor_nombre', String(p.asesor || ''));\n  $memory.set('asesor_correo', String(p.correo || ''));\n  $memory.set('agencia_elegida', String(p.agencia || ''));\n  $memory.set('mensaje_cierre', p.asesor\n    ? `Su cotización ya está registrada. Le atenderá ${p.asesor} de la agencia ${p.agencia}. En breve continuará con usted por este chat.`\n    : 'Su cotización ya está registrada. Un asesor continuará con usted por este chat.');\n}\n$memory.set('cot_estado', estado);",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        3426,
+        2283
+      ]
+    },
+    {
+      "id": "mfNDwz6WYZwJ91DlYcHwc",
+      "title": "Cierre de cotización",
+      "configuration": {
+        "messages": [
+          {
+            "id": "iqWzTw_mWQAnRNZQ8NToX",
+            "text": "{{$memory.mensaje_cierre}}",
+            "type": "text"
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        4202,
+        2283
+      ]
+    },
+    {
       "id": "MMVRrOLd62_bxTk0F24-G",
       "title": "Pasar contexto a Derivar",
       "configuration": {
         "variables": {
+          "lead_estado": "{{$memory.lead_estado}}",
+          "id_prospecto": "{{$memory.id_prospecto}}",
           "marca_activa": "{{$memory.id_marca_ventas}}",
+          "asesor_correo": "{{$memory.asesor_correo}}",
+          "asesor_nombre": "{{$memory.asesor_nombre}}",
+          "ciudad_elegida": "{{$memory.ciudad_elegida}}",
+          "agencia_elegida": "{{$memory.agencia_elegida}}",
           "motivo_derivacion": "{{$memory.motivo_derivacion}}",
           "modelos_consultados": "{{$memory.modelos_consultados}}"
         }
@@ -228,6 +701,194 @@
       "position": [
         3038,
         1715
+      ]
+    },
+    {
+      "id": "O3nen0X-H_-w3YTaVdt47",
+      "title": "Leer asesor 4.5",
+      "configuration": {
+        "title": "Leer asesor 4.5",
+        "content": "// D-38: con asesor en la marca no se registra lead (HU-06 criterio 9). Si 4.5 falla, se sigue.\nlet tiene = 'no';\ntry {\n  const j = $context.getHttpResponse('asesorCotResp').json();\n  if (j.tipo === 'ok' && j.data && j.data.nombre) {\n    tiene = 'si';\n    $memory.set('asesor_nombre', String(j.data.nombre || ''));\n    $memory.set('asesor_correo', String(j.data.correo || ''));\n    $memory.set('agencia_elegida', String(j.data.agencia || ''));\n    $memory.set('lead_estado', 'asesor_existente');\n    $memory.set('mensaje_cierre', `Usted ya tiene un asesor asignado en ${$memory.get('marca_nombre_ventas', '') || 'esta marca'}: le atenderá ${j.data.nombre} de la agencia ${j.data.agencia}. En breve continuará con usted por este chat.`);\n  }\n} catch (e) { tiene = 'no'; }\n$memory.set('cot_tiene_asesor', tiene);",
+        "memoryVersion": "v2"
+      },
+      "type": "CODE",
+      "position": [
+        5754,
+        2833
+      ]
+    },
+    {
+      "id": "ouQd_TgK_ahTSiuQvuSAl",
+      "title": "Guardar lead (Datum)",
+      "configuration": {
+        "url": "https://veh-fase1-kopsfv.jelou.cloud/api/collections/leads/records",
+        "body": {
+          "type": "application/json",
+          "content": "{\"id_whatsapp\": \"{{$memory.id_whatsapp}}\", \"clave_lead\": \"{{$memory.clave_lead}}\", \"celular\": \"{{$memory.celular}}\", \"marca\": \"{{$memory.marca_nombre_ventas}}\", \"id_modelo\": \"{{$memory.id_modelo}}\", \"modelos_consultados\": \"{{$memory.modelos_consultados}}\", \"id_agencia\": \"{{$memory.id_agencia_elegida}}\", \"ciudad\": \"{{$memory.lead_ciudad}}\", \"estado\": \"{{$memory.lead_estado}}\", \"asesor_correo\": \"{{$memory.asesor_correo}}\", \"fecha\": \"{{$memory.lead_fecha}}\"}",
+          "enabled": true
+        },
+        "title": "Guardar lead (Datum)",
+        "method": "POST",
+        "output": "leadDatumResp",
+        "headers": [
+          {
+            "id": "h_key_ld",
+            "key": "x-api-key",
+            "value": "{{$secret.DATUM_APIKEY_VEH_FASE1}}",
+            "enabled": true
+          },
+          {
+            "id": "h_ct_ld",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "timeout": 15000,
+          "sslCertificate": true
+        },
+        "isDatumV2": true,
+        "databaseId": "01m7kg6p28j110cck0hy58qjee",
+        "databaseUrl": "https://veh-fase1-kopsfv.jelou.cloud",
+        "databaseName": "veh-fase1",
+        "databaseSlug": "veh-fase1-kopsfv",
+        "datumV2Fields": [
+          {
+            "id": "f_id_whatsapp",
+            "key": "id_whatsapp",
+            "value": "{{$memory.id_whatsapp}}",
+            "enabled": true
+          },
+          {
+            "id": "f_clave_lead",
+            "key": "clave_lead",
+            "value": "{{$memory.clave_lead}}",
+            "enabled": true
+          },
+          {
+            "id": "f_celular",
+            "key": "celular",
+            "value": "{{$memory.celular}}",
+            "enabled": true
+          },
+          {
+            "id": "f_marca",
+            "key": "marca",
+            "value": "{{$memory.marca_nombre_ventas}}",
+            "enabled": true
+          },
+          {
+            "id": "f_id_modelo",
+            "key": "id_modelo",
+            "value": "{{$memory.id_modelo}}",
+            "enabled": true
+          },
+          {
+            "id": "f_modelos_consultados",
+            "key": "modelos_consultados",
+            "value": "{{$memory.modelos_consultados}}",
+            "enabled": true
+          },
+          {
+            "id": "f_id_agencia",
+            "key": "id_agencia",
+            "value": "{{$memory.id_agencia_elegida}}",
+            "enabled": true
+          },
+          {
+            "id": "f_ciudad",
+            "key": "ciudad",
+            "value": "{{$memory.lead_ciudad}}",
+            "enabled": true
+          },
+          {
+            "id": "f_estado",
+            "key": "estado",
+            "value": "{{$memory.lead_estado}}",
+            "enabled": true
+          },
+          {
+            "id": "f_asesor_correo",
+            "key": "asesor_correo",
+            "value": "{{$memory.asesor_correo}}",
+            "enabled": true
+          },
+          {
+            "id": "f_fecha",
+            "key": "fecha",
+            "value": "{{$memory.lead_fecha}}",
+            "enabled": true
+          }
+        ],
+        "authentication": {
+          "type": "no-auth",
+          "enabled": false
+        },
+        "datumV2Operation": "create_record",
+        "datumV2Collection": "leads",
+        "datumV2KnownFields": [
+          {
+            "name": "id_whatsapp",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "clave_lead",
+            "type": "text",
+            "required": true
+          },
+          {
+            "name": "celular",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "marca",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "id_modelo",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "modelos_consultados",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "id_agencia",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "ciudad",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "estado",
+            "type": "select",
+            "required": true
+          },
+          {
+            "name": "asesor_correo",
+            "type": "text",
+            "required": false
+          },
+          {
+            "name": "fecha",
+            "type": "date",
+            "required": false
+          }
+        ]
+      },
+      "type": "HTTP",
+      "position": [
+        10410,
+        3233
       ]
     },
     {
@@ -258,6 +919,123 @@
       "position": [
         3240,
         953
+      ]
+    },
+    {
+      "id": "s9coSHr0DzjA2jl8gmpUw",
+      "title": "Elegir agencia",
+      "configuration": {
+        "messages": [
+          {
+            "id": "1dZsc5x25FfxwtmgrHon2",
+            "text": "Estas son nuestras agencias en {{$memory.ciudad_nombre}}. ¿Cuál prefiere?",
+            "type": "list",
+            "title": "",
+            "button": "Ver agencias",
+            "options": [
+              {
+                "id": "opt_agencia",
+                "type": "postback",
+                "title": "{{$item.titulo}}",
+                "payload": {
+                  "type": "edge",
+                  "memory": {
+                    "agencia_sel": "{{$item.id}}"
+                  },
+                  "skillId": "46694",
+                  "targetId": "0vuYAMvvLLqr0dLtYt-6W"
+                },
+                "iterable": "{{$memory.agencias_ciudad}}",
+                "description": "{{$item.detalle}}"
+              }
+            ],
+            "settings": {
+              "responseVariable": "agencia_sel",
+              "isBlockingEnabled": true,
+              "expiredButtonAction": true,
+              "optionNotFoundMessage": "Por favor, elija una opción de la lista."
+            }
+          }
+        ]
+      },
+      "type": "CHANNEL_MESSAGE",
+      "position": [
+        8858,
+        3233
+      ]
+    },
+    {
+      "id": "uCALQLD3XDlbM6XYmwdVs",
+      "title": "Registrar lead",
+      "configuration": {
+        "url": "https://veh-bdc.fn.jelou.ai/lead",
+        "body": {
+          "type": "application/json",
+          "content": "{\"id_marca\": \"{{$memory.id_marca_ventas}}\", \"celular\": \"{{$memory.celular}}\", \"cedula\": \"{{$memory.cedula}}\", \"nombres\": \"{{$memory.lead_nombres}}\", \"id_modelo\": \"{{$memory.id_modelo}}\", \"id_agencia\": \"{{$memory.id_agencia_elegida}}\", \"ciudad\": \"{{$memory.lead_ciudad}}\", \"notas\": \"{{$memory.lead_notas.value}}\"}",
+          "enabled": true
+        },
+        "title": "Registrar lead",
+        "method": "POST",
+        "output": "leadResp",
+        "headers": [
+          {
+            "id": "h_ct_cot_lead",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "timeout": 25000,
+          "sslCertificate": true
+        },
+        "authentication": {
+          "type": "bearer",
+          "token": "{{$secret.JELOU_FN_INVOKE_KEY}}",
+          "enabled": true
+        }
+      },
+      "type": "HTTP",
+      "position": [
+        9634,
+        3233
+      ]
+    },
+    {
+      "id": "usKI2s9rJHXs_uoENJSie",
+      "title": "Agencias de la marca (4.3)",
+      "configuration": {
+        "url": "https://veh-bdc.fn.jelou.ai/agencias",
+        "body": {
+          "type": "application/json",
+          "content": "{\"id_marca\": \"{{$memory.id_marca_ventas}}\"}",
+          "enabled": true
+        },
+        "title": "Agencias de la marca (4.3)",
+        "method": "POST",
+        "output": "agenciasResp",
+        "headers": [
+          {
+            "id": "h_ct_cot_agencias",
+            "key": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "settings": {
+          "timeout": 25000,
+          "sslCertificate": true
+        },
+        "authentication": {
+          "type": "bearer",
+          "token": "{{$secret.JELOU_FN_INVOKE_KEY}}",
+          "enabled": true
+        }
+      },
+      "type": "HTTP",
+      "position": [
+        6530,
+        2833
       ]
     },
     {
@@ -307,10 +1085,40 @@
   ],
   "edges": [
     {
+      "id": "_-N86hE8UfVXa4R3ZENIt",
+      "sourceId": "KiqtwfKxlGOZ08p0Z-d5R",
+      "targetId": "2jr9QL1UeSZE9hB4-OY_5",
+      "branch": "success"
+    },
+    {
+      "id": "-Jx45j1t99RpLWmKkhq-n",
+      "sourceId": "s9coSHr0DzjA2jl8gmpUw",
+      "targetId": "0vuYAMvvLLqr0dLtYt-6W",
+      "branch": "option:opt_agencia"
+    },
+    {
+      "id": "-nH4pw4L0DrtcQHJdhS_U",
+      "sourceId": "2jcDyil_f3mNH7BzKw7dz",
+      "targetId": "iujSVM7gYCA2MKjscnLXh",
+      "branch": "condition:c_mas_paginas"
+    },
+    {
       "id": "-xGTPVvHJrANl9a0bCqgp",
       "sourceId": "MMVRrOLd62_bxTk0F24-G",
       "targetId": "RBv5-zWKwDc7a-pTuP3hH",
       "branch": "default"
+    },
+    {
+      "id": "2AxzoiegnbfM3CWkKv2H0",
+      "sourceId": "34vSd3s1yBfcZ6i-UO8o8",
+      "targetId": "KiqtwfKxlGOZ08p0Z-d5R",
+      "branch": "condition:c_nuevo"
+    },
+    {
+      "id": "2qWby9oRKIxEnY7ugtH7-",
+      "sourceId": "gYtfidmhVuZxxgvGJyr-i",
+      "targetId": "usKI2s9rJHXs_uoENJSie",
+      "branch": "else"
     },
     {
       "id": "35rM7M105bLT3AKiKYByy",
@@ -319,10 +1127,94 @@
       "branch": "failed"
     },
     {
+      "id": "6sd3-bAulDiiV4kmJOLlc",
+      "sourceId": "uCALQLD3XDlbM6XYmwdVs",
+      "targetId": "InROrejwmiaUv4WQDGbiG",
+      "branch": "success"
+    },
+    {
+      "id": "8zWIMLpbGun3EaWN5wU8Z",
+      "sourceId": "34vSd3s1yBfcZ6i-UO8o8",
+      "targetId": "mfNDwz6WYZwJ91DlYcHwc",
+      "branch": "else"
+    },
+    {
+      "id": "92h0DI9sAIS54nmB57UyX",
+      "sourceId": "usKI2s9rJHXs_uoENJSie",
+      "targetId": "dbtHz-zwZdQRqnu28CYtc",
+      "branch": "failed"
+    },
+    {
+      "id": "9DROQ_C8GPTMQvJvwe-6a",
+      "sourceId": "KiqtwfKxlGOZ08p0Z-d5R",
+      "targetId": "qn_3IG9XZ_QEiLRaZ6Oj4",
+      "branch": "exit"
+    },
+    {
+      "id": "APrlGFV9uhxu3pGSDY7p3",
+      "sourceId": "InROrejwmiaUv4WQDGbiG",
+      "targetId": "ouQd_TgK_ahTSiuQvuSAl",
+      "branch": "success"
+    },
+    {
+      "id": "BAMQITSzclE84MB31qRHZ",
+      "sourceId": "GU-VmrvQJhdujwmvflFHz",
+      "targetId": "3dny_XZ7AOumv7nh3sDnD",
+      "branch": "condition:c_ced_reintento"
+    },
+    {
+      "id": "bhGVPzUXXZLJvjd1NTs_s",
+      "sourceId": "jXpYn1DDtRpObbgvKIY55",
+      "targetId": "O3nen0X-H_-w3YTaVdt47",
+      "branch": "failed"
+    },
+    {
+      "id": "C-4bri43Xn9_y59BM838J",
+      "sourceId": "GU-VmrvQJhdujwmvflFHz",
+      "targetId": "jXpYn1DDtRpObbgvKIY55",
+      "branch": "condition:c_ced_ok"
+    },
+    {
+      "id": "cbSuaZXZMrsBBEuWZOjNq",
+      "sourceId": "YI-DArt-K8ODiFoFT8evY",
+      "targetId": "BH6-2QDmHV5vlMBMW2-0z",
+      "branch": "condition:c_asesor"
+    },
+    {
       "id": "cE2rgj3BjCaEXWKK6B7-Q",
       "sourceId": "d4w-mjoBxpvL7L7wii7kG",
       "targetId": "cVZbg6GCEAINPmb9tnxx1",
       "branch": "failed"
+    },
+    {
+      "id": "CYqRaedgyaubVkIJvaEMO",
+      "sourceId": "3dny_XZ7AOumv7nh3sDnD",
+      "targetId": "qn_3IG9XZ_QEiLRaZ6Oj4",
+      "branch": "exit"
+    },
+    {
+      "id": "DpSFiiyvMtjQcvVRuub5l",
+      "sourceId": "2jcDyil_f3mNH7BzKw7dz",
+      "targetId": "_RXaKpVWjVNO-9A5aBN3D",
+      "branch": "else"
+    },
+    {
+      "id": "DYyQbdI7yh1MfmXYaoILG",
+      "sourceId": "O3nen0X-H_-w3YTaVdt47",
+      "targetId": "gYtfidmhVuZxxgvGJyr-i",
+      "branch": "success"
+    },
+    {
+      "id": "FS6Jvaneko6fn6ZLS2FlT",
+      "sourceId": "awbtPCiGhTfczI_GyCzxw",
+      "targetId": "2jcDyil_f3mNH7BzKw7dz",
+      "branch": "condition:c_hay_ciudades"
+    },
+    {
+      "id": "Gcp5DSA8Hmmg6VYyghrQs",
+      "sourceId": "usKI2s9rJHXs_uoENJSie",
+      "targetId": "dbtHz-zwZdQRqnu28CYtc",
+      "branch": "success"
     },
     {
       "id": "HKFLMPfIyGBPw-dSsECZS",
@@ -331,10 +1223,100 @@
       "branch": "success"
     },
     {
+      "id": "Hp-cti7bTVqNXOzZoDwOL",
+      "sourceId": "cSD8-SvrM1PTPlJOYiPwJ",
+      "targetId": "2jcDyil_f3mNH7BzKw7dz",
+      "branch": "success"
+    },
+    {
+      "id": "hPt9kx2u4oP9y0CMGM3lt",
+      "sourceId": "awbtPCiGhTfczI_GyCzxw",
+      "targetId": "mfNDwz6WYZwJ91DlYcHwc",
+      "branch": "else"
+    },
+    {
+      "id": "iduuNJt98PNrhAS8DlDaV",
+      "sourceId": "KiqtwfKxlGOZ08p0Z-d5R",
+      "targetId": "zeQ_HzY6FMbjYSBsva-H2",
+      "branch": "expire"
+    },
+    {
+      "id": "ImTdSog9ZdEplZkmOZXcR",
+      "sourceId": "dbtHz-zwZdQRqnu28CYtc",
+      "targetId": "awbtPCiGhTfczI_GyCzxw",
+      "branch": "success"
+    },
+    {
+      "id": "JyG7J7oL8TU9kLbFFyo2J",
+      "sourceId": "iujSVM7gYCA2MKjscnLXh",
+      "targetId": "zeQ_HzY6FMbjYSBsva-H2",
+      "branch": "expire"
+    },
+    {
       "id": "kU3d_8I2mr4sJ2qse2S2l",
       "sourceId": "d4w-mjoBxpvL7L7wii7kG",
       "targetId": "cVZbg6GCEAINPmb9tnxx1",
       "branch": "success"
+    },
+    {
+      "id": "L3pjN7F7u0UWo3PJDQNCp",
+      "sourceId": "iujSVM7gYCA2MKjscnLXh",
+      "targetId": "D7qFosqZiRfT_hk1Zvrtq",
+      "branch": "option:opt_ciudad"
+    },
+    {
+      "id": "lGFXKj8LuvSXDFT12R8uh",
+      "sourceId": "ouQd_TgK_ahTSiuQvuSAl",
+      "targetId": "mfNDwz6WYZwJ91DlYcHwc",
+      "branch": "failed"
+    },
+    {
+      "id": "LMbPBy6O92hflZetZBz7w",
+      "sourceId": "3dny_XZ7AOumv7nh3sDnD",
+      "targetId": "zeQ_HzY6FMbjYSBsva-H2",
+      "branch": "expire"
+    },
+    {
+      "id": "mfO8Tn2pb1jZ3-cOS6yQt",
+      "sourceId": "ouQd_TgK_ahTSiuQvuSAl",
+      "targetId": "mfNDwz6WYZwJ91DlYcHwc",
+      "branch": "success"
+    },
+    {
+      "id": "MRharWUwptCU-FXc9udMc",
+      "sourceId": "jXpYn1DDtRpObbgvKIY55",
+      "targetId": "O3nen0X-H_-w3YTaVdt47",
+      "branch": "success"
+    },
+    {
+      "id": "O4kwNJYBO3_-OBO_QgHYm",
+      "sourceId": "M6aOwJpOpAvwGbJdL0xW4",
+      "targetId": "34vSd3s1yBfcZ6i-UO8o8",
+      "branch": "success"
+    },
+    {
+      "id": "odvRWRa33FYeRsQMDWnRw",
+      "sourceId": "GU-VmrvQJhdujwmvflFHz",
+      "targetId": "mfNDwz6WYZwJ91DlYcHwc",
+      "branch": "else"
+    },
+    {
+      "id": "p7_pCMt8nolKsjcDRzbRB",
+      "sourceId": "_RXaKpVWjVNO-9A5aBN3D",
+      "targetId": "zeQ_HzY6FMbjYSBsva-H2",
+      "branch": "expire"
+    },
+    {
+      "id": "Pey4_aFk8NcIr1HTg8Jeq",
+      "sourceId": "0vuYAMvvLLqr0dLtYt-6W",
+      "targetId": "uCALQLD3XDlbM6XYmwdVs",
+      "branch": "success"
+    },
+    {
+      "id": "qJbTM7MIU8cIGiQqU35-C",
+      "sourceId": "s9coSHr0DzjA2jl8gmpUw",
+      "targetId": "zeQ_HzY6FMbjYSBsva-H2",
+      "branch": "expire"
     },
     {
       "id": "Rcg-nCvTTZ_ob62HFAnIv",
@@ -343,10 +1325,22 @@
       "branch": "default"
     },
     {
-      "id": "ro_NhXdZHC10k9M1dh1tN",
-      "sourceId": "YI-DArt-K8ODiFoFT8evY",
-      "targetId": "MMVRrOLd62_bxTk0F24-G",
-      "branch": "condition:c_asesor"
+      "id": "RPyI1URfZmJCpOPOaU-MM",
+      "sourceId": "uCALQLD3XDlbM6XYmwdVs",
+      "targetId": "InROrejwmiaUv4WQDGbiG",
+      "branch": "failed"
+    },
+    {
+      "id": "rXZ756VV2IF6LrzRu4T1i",
+      "sourceId": "2jr9QL1UeSZE9hB4-OY_5",
+      "targetId": "GU-VmrvQJhdujwmvflFHz",
+      "branch": "success"
+    },
+    {
+      "id": "s1zplyGo5-TJf-xVU_hCk",
+      "sourceId": "BH6-2QDmHV5vlMBMW2-0z",
+      "targetId": "M6aOwJpOpAvwGbJdL0xW4",
+      "branch": "condition:c_cotizar"
     },
     {
       "id": "SmaeYu_JJgSlphlDkMhSm",
@@ -359,6 +1353,48 @@
       "sourceId": "YI-DArt-K8ODiFoFT8evY",
       "targetId": "qn_3IG9XZ_QEiLRaZ6Oj4",
       "branch": "else"
+    },
+    {
+      "id": "vsYErrja2gVNR5jHjIq7P",
+      "sourceId": "iujSVM7gYCA2MKjscnLXh",
+      "targetId": "cSD8-SvrM1PTPlJOYiPwJ",
+      "branch": "option:opt_mas_ciudades"
+    },
+    {
+      "id": "xBW1S44aVAoedHSqm7oJo",
+      "sourceId": "_RXaKpVWjVNO-9A5aBN3D",
+      "targetId": "D7qFosqZiRfT_hk1Zvrtq",
+      "branch": "option:opt_ciudad"
+    },
+    {
+      "id": "y5JMOhDpajoK9tgvdFK_L",
+      "sourceId": "3dny_XZ7AOumv7nh3sDnD",
+      "targetId": "2jr9QL1UeSZE9hB4-OY_5",
+      "branch": "success"
+    },
+    {
+      "id": "YiR3m-OWLr_FGlXit05V-",
+      "sourceId": "gYtfidmhVuZxxgvGJyr-i",
+      "targetId": "mfNDwz6WYZwJ91DlYcHwc",
+      "branch": "condition:c_con_asesor"
+    },
+    {
+      "id": "YZjO8Rf5qD_SnXRAXhLKs",
+      "sourceId": "mfNDwz6WYZwJ91DlYcHwc",
+      "targetId": "MMVRrOLd62_bxTk0F24-G",
+      "branch": "default"
+    },
+    {
+      "id": "Z5QjvmMsCSJ_EtALvEzX1",
+      "sourceId": "BH6-2QDmHV5vlMBMW2-0z",
+      "targetId": "MMVRrOLd62_bxTk0F24-G",
+      "branch": "else"
+    },
+    {
+      "id": "Z8vYmDYzFExfsUTgt6QxE",
+      "sourceId": "D7qFosqZiRfT_hk1Zvrtq",
+      "targetId": "s9coSHr0DzjA2jl8gmpUw",
+      "branch": "success"
     },
     {
       "id": "zXWsiLRIyyGBDxplmoE8R",
