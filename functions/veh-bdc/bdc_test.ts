@@ -156,3 +156,111 @@ Deno.test("ficha: texto con JSON se parsea y se recorta", () => {
   assertEquals(r.a, "1");
   assertEquals("b" in r, false);
 });
+
+// Forma real del BDC: JSON con escapes de Markdown y valores repetidos por versión.
+const fichaBdc =
+  String.raw`{"info\_base":{"marca":"SINOTRUK","anio":"No especificado"},"versiones\_detectadas":\["4x2","4x4"\],` +
+  String.raw`"especificaciones":{"motor":{"tipo\_combustible":\["Diésel","Diésel"\],"potencia\_maxima\_hp":\["180","180"\]}}}`;
+
+Deno.test("ficha del BDC: quita escapes de Markdown, parsea y compacta", () => {
+  const r = parsearFicha(fichaBdc) as Record<string, any>;
+  assertEquals(r.info_base.marca, "SINOTRUK");
+  assertEquals("anio" in r.info_base, false);
+  assertEquals(r.versiones_detectadas, ["4x2", "4x4"]);
+  assertEquals(r.especificaciones.motor.tipo_combustible, "Diésel");
+});
+
+Deno.test("caso negativo: sin quitar los escapes la ficha no es JSON", () => {
+  let fallo = false;
+  try {
+    JSON.parse(fichaBdc);
+  } catch {
+    fallo = true;
+  }
+  assert(fallo);
+});
+
+const fila = (id: number, nombre: string, segmento: string, caracteristicas: string, ficha: unknown, precio: number) => ({
+  id_modelo: id, nombre_modelo: nombre, nombre_segmento: segmento, caracteristicas, precio_venta: precio, moneda: "USD",
+  json_ficha_tecnica: JSON.stringify(ficha), imagenes: `https://img/${id}-1.jpg,https://img/${id}-2.jpg`,
+});
+function catalogoFalso() {
+  return bdcFalso({
+    "oauth/token": token,
+    botwa_marcas: { status: 200, body: { status: "success", data: [{ id: 3, nombre: "KEYTON" }, { id: 7, nombre: "LYNK & CO" }, { id: 9, nombre: "SINOTRUK CAMIONETAS" }] } },
+    "botwa_modelos/3": { status: 200, body: { status: "success", data: [fila(82, "FURGONETA M70L EV", "VAN", "", { motor: { almacenamiento_bateria_kwh: "41.86", autonomia_km: "200 Km" } }, 22990)] } },
+    "botwa_modelos/7": { status: 200, body: { status: "success", data: [
+      fila(139, "LYNK & CO 02", "SUV", "SUV 100% Eléctrico: Autonomía: 435 km", { motor: { tipo_bateria: "NCM" } }, 39890),
+      fila(161, "LYNK & CO 08 HALO", "SUV", "SUV Súper Híbrido enchufable, 200 km en modo puramente eléctrico", { motor: { tipo_tren_motriz: "Vehículo híbrido enchufable (PHEV)", octanaje: "92" } }, 45890),
+    ] } },
+    "botwa_modelos/9": { status: 200, body: { status: "success", data: [
+      fila(152, "BOLDEN PICK UP 4X2 MT", "PICK UP", "4x2, Potencia 180 HP", { versiones: ["4x2", "4x4"], motor: { tipo_combustible: "Diésel" }, confort: { aire_acondicionado_automatico: "Sí", elevavidrios_electricos: "Sí" } }, 28990),
+      fila(118, "BOLDEN PICK UP 4X4 MT", "PICK UP", "4x4, Potencia 180 HP", { versiones: ["4x2", "4x4"], motor: { tipo_combustible: "Diésel" } }, 31990),
+    ] } },
+  });
+}
+
+Deno.test("buscar por modelo sin marca: encuentra la marca", async () => {
+  const r = await nuevo(catalogoFalso().f).buscar("quiero el bolden 4x4");
+  const d = r.data as any;
+  assertEquals(d.resultados[0].id_modelo, 118);
+  assertEquals(d.resultados[0].marca, "SINOTRUK CAMIONETAS");
+  assertEquals(d.resultados[0].id_marca, 9);
+  assertEquals(d.resultados[0].sku, "VEH-118");
+  assertEquals("texto" in d.resultados[0], false);
+});
+
+Deno.test("buscar eléctricos: EV primero como exactos; el enchufable como relacionado", async () => {
+  const r = await nuevo(catalogoFalso().f).buscar("busco un carro eléctrico");
+  const d = r.data as any;
+  const exactos = d.resultados.filter((x: any) => x.coincidencia === "exacta").map((x: any) => x.id_modelo).sort((a: number, b: number) => a - b);
+  assertEquals(exactos, [82, 139]);
+  const r161 = d.resultados.find((x: any) => x.id_modelo === 161);
+  assertEquals(r161?.coincidencia, "relacionada");
+  assert(!d.resultados.some((x: any) => x.id_modelo === 118));
+});
+
+Deno.test("buscar 4x4: la 4x4 exacta; la 4x2 no es exacta aunque su ficha nombre 4x4", async () => {
+  const r = await nuevo(catalogoFalso().f).buscar("una camioneta 4x4");
+  const d = r.data as any;
+  assertEquals(d.resultados[0].id_modelo, 118);
+  assertEquals(d.resultados.find((x: any) => x.id_modelo === 152)?.coincidencia, "relacionada");
+});
+
+Deno.test("buscar «lynk 08»: el número del modelo cuenta; solo el 08 es exacto", async () => {
+  const d = (await nuevo(catalogoFalso().f).buscar("lynk 08")).data as any;
+  const exactos = d.resultados.filter((x: any) => x.coincidencia === "exacta").map((x: any) => x.id_modelo);
+  assertEquals(exactos, [161]);
+});
+
+Deno.test("«eléctrico» no trae una diésel por sus elevavidrios eléctricos; MT no es automático", async () => {
+  const d = (await nuevo(catalogoFalso().f).buscar("eléctrico")).data as any;
+  assert(!d.resultados.some((x: any) => x.id_modelo === 152));
+  const bolden = ((await nuevo(catalogoFalso().f).buscar("bolden 4x2")).data as any).resultados[0];
+  assertEquals(bolden.id_modelo, 152);
+  assert(bolden.etiquetas.includes("manual"));
+  assert(!bolden.etiquetas.includes("automático"));
+});
+
+Deno.test("buscar sin términos útiles devuelve todo el catálogo; con marca filtra", async () => {
+  const todo = await nuevo(catalogoFalso().f).buscar("quiero ver vehículos");
+  assertEquals((todo.data as any).resultados.length, 5);
+  const lynk = await nuevo(catalogoFalso().f).buscar("", 7);
+  assertEquals((lynk.data as any).resultados.length, 2);
+});
+
+Deno.test("buscar algo que no existe es vacio, no error", async () => {
+  const r = await nuevo(catalogoFalso().f).buscar("helicóptero");
+  assertEquals(r.tipo, "vacio");
+  assert(r.ok);
+});
+
+Deno.test("buscar con una marca caída es indisponible", async () => {
+  const { f } = bdcFalso({
+    "oauth/token": token,
+    botwa_marcas: { status: 200, body: { status: "success", data: [{ id: 3, nombre: "KEYTON" }] } },
+    "botwa_modelos/3": { status: 500 },
+  });
+  const r = await nuevo(f).buscar("keyton");
+  assertEquals(r.tipo, "indisponible");
+});

@@ -43,6 +43,18 @@ export default app({
       input: z.object({ id_marca: idMarca, busqueda: z.string().optional() }),
       handler: (i, ctx) => bdc(ctx).modelos(i.id_marca, i.busqueda),
     }),
+    buscar: define({
+      description:
+        "Busca vehículos en todas las marcas (o en una si se envía id_marca) por nombre, modelo, segmento o características " +
+        "(eléctrico, híbrido, 4x4, 7 pasajeros, pick up, diésel…). Sin consulta devuelve todo el catálogo. " +
+        "Cada resultado trae marca, id_marca, id_modelo, sku, precio, etiquetas y coincidencia (exacta | relacionada).",
+      input: z.object({
+        consulta: z.string().optional().default(""),
+        // La tool envía "" o "0" cuando no hay marca: se busca en todas.
+        id_marca: z.preprocess((v) => (v === "" || v === "0" || v === 0 || v == null ? undefined : v), idMarca.optional()),
+      }),
+      handler: (i, ctx) => bdc(ctx).buscar(i.consulta, i.id_marca),
+    }),
     agencias: define({
       description: "Agencias de una marca (4.3) y sus ciudades; filtra por ciudad si se envía",
       input: z.object({ id_marca: idMarca, ciudad: z.string().optional() }),
