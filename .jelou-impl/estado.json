@@ -684,6 +684,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "Prueba con el tester del CLI (sesión sintética del canal DEV): T003 confirmado en lo publicado (link en una sola línea). Ventas en el draft: cédula inválida → reintento, válida → 4.5 vacío → 3 ciudades → 3 agencias de Quito → lead registrado en el BDC con TESTCLARO (id de prospecto devuelto) → Datum leads `registrado` → mensaje F2:Q11 → Derivar (D-29). H-11 hallado y corregido (main e7a3677). El carrusel del Shop no se puede ver en el tester (send_message_failed por la sesión sintética). Falta publicar DEV con la corrección y V-09."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "La persona publicó DEV con H-11 corregido: id de publicación 01M86WK7M5RF90507KV3XPB4TZ (13:40 UTC). Sigue la ronda por WhatsApp (listas en pantalla y V-09)."
     }
   ],
   "puntos": {
