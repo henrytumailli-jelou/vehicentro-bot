@@ -219,6 +219,10 @@
           "model": "openai/gpt-4.1-mini",
           "provider": "openai"
         },
+        "messageGrouping": {
+          "enabled": true,
+          "windowSeconds": 2
+        },
         "nonHappyPathHandlers": {
           "error": {
             "mode": "message",
