@@ -252,7 +252,7 @@
       "fase": 5,
       "tipo": "pre-auditoría",
       "descripcion": "«Agente Ventas»: la conexión MCP del Shop (D-30) no trae `appName` (lint AI_TASK_MCP_ENTRY_WRONG_SHAPE de jelou-build-workflows). Funcionó por WhatsApp el 17/11; se completa con `jelou marketplace list --installed-only` antes de la puerta de F5.",
-      "estado": "abierto"
+      "estado": "cerrado 2026-11-24: conexión MCP con appName, appSlug y slug de la instalación; lint en verde"
     },
     {
       "id": "H-11",
@@ -272,8 +272,8 @@
       "id": "H-13",
       "fase": 5,
       "tipo": "defecto (plataforma / configuración del Shop)",
-      "descripcion": "El carrito de Jelou Shop conserva lo que el cliente eligió en una conversación anterior: en la ronda del 24/11 (14:04 UTC) el pedido llegó con VEH-139 y VEH-161. El agente cotizó el modelo correcto (139), pero con dos productos en el pedido podría elegir otro. Revisar con jelou-shop cómo vaciar o no reutilizar el carrito (o tomar el último producto agregado). Mitigación en el bot (24/11): con más de un producto en el aviso del Shop, el agente pregunta cuál cotizar. Sigue abierto revisar el carrito en el Shop (jelou-shop).",
-      "estado": "abierto"
+      "descripcion": "El carrito de Jelou Shop conserva lo que el cliente eligió en una conversación anterior: en la ronda del 24/11 (14:04 UTC) el pedido llegó con VEH-139 y VEH-161. El agente cotizó el modelo correcto (139), pero con dos productos en el pedido podría elegir otro. Revisar con jelou-shop cómo vaciar o no reutilizar el carrito (o tomar el último producto agregado). Mitigación en el bot (24/11): con más de un producto en el aviso del Shop, el agente pregunta cuál cotizar. Sigue abierto revisar el carrito en el Shop (jelou-shop). 2026-11-24: la app Jelou Shop expone clean_cart (Vaciar carrito) en la conexión del agente; el prompt ahora la llama antes del primer carrusel y al recibir el pedido. Tester: se llama (404 sin carrito en el usuario sintético).",
+      "estado": "corregido en el draft; falta publicar y probar por WhatsApp con un carrito que traiga vehículos de antes"
     },
     {
       "id": "H-14",
@@ -733,6 +733,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "La persona publicó DEV con H-14: id de publicación 01M870D0NG5XEJBGTCM5GXGRSG (14:47 UTC). Sigue la prueba corta por WhatsApp de «cotizar» sin modelo."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "H-13: Ventas vacía el carrito del Shop con clean_cart (antes del primer carrusel y al recibir el pedido); H-10 cerrado. Push al draft verificado, chequeo 0, tester OK. Falta publicar."
     }
   ],
   "puntos": {

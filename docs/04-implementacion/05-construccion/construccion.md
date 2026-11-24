@@ -360,6 +360,7 @@ Lo que el tester no muestra: el carrusel del Shop (la tool MCP falla con `send_m
 | 2026-11-24 | H-12: sin historial de conversaciones anteriores en Ventas y Bienvenida | main `27c57d3` | 0 hallazgos (8 workflows) | publicado en DEV por la persona: `01M86XV494TFXW86APMYM0FX27` (14:02 UTC) | T009, T010 | Hallado en la ronda por WhatsApp de las 13:47 UTC (Ventas buscó KEYTON). Tester: Ventas busca la marca que pasa Bienvenida |
 | 2026-11-24 | V-09: segunda cotización sin modelo reconocida | main (ver git log) | 0 hallazgos (8 workflows) | publicado en DEV por la persona: `01M86ZQRVK8GBHMDF9FZJ5P5ZZ` (14:35 UTC) | T010 | Ronda por WhatsApp 14:03 UTC: flujo completo OK con Lynk & Co; H-13 (carrito del Shop) abierto |
 | 2026-11-24 | H-14 y mitigación de H-13 en el prompt de Ventas | main (ver git log) | 0 hallazgos (8 workflows) | publicado en DEV por la persona: `01M870D0NG5XEJBGTCM5GXGRSG` (14:47 UTC) | T010 | Ronda 14:36 UTC: V-09 (a) OK por WhatsApp; tester: «cotizar» sin modelo envía el carrusel |
+| 2026-11-24 | H-13: clean_cart antes del primer carrusel y al recibir el pedido; H-10: conexión MCP completa | main (ver git log) | 0 hallazgos (8 workflows) | draft de DEV; **sin publicar** | T010 | Tester: llama clean_cart y luego el carrusel |
 
 ### Prueba manual del implementador sobre la versión anterior de DEV (2026-11-16, 20:51–20:53 hora de Ecuador)
 Conversación por WhatsApp en el canal DEV (número de prueba del implementador, enmascarado). Ejecución de Bienvenida `GwHgZm1CpjVi0480hpVfG`.
