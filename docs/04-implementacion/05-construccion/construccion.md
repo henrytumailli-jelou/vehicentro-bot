@@ -336,6 +336,14 @@ Usuario sintético con celular y cédula ficticios. Ventas en el draft, arrancad
 | Segunda cotización | No se pudo probar en el tester (V-09); con TESTCLARO 4.5 sigue vacío | sesión `d14c3f4c…` |
 Lo que el tester no muestra: el carrusel del Shop (la tool MCP falla con `send_message_failed` en la sesión sintética) y cómo se dibujan las listas en WhatsApp: van a la ronda manual.
 
+### Rondas por WhatsApp del implementador (DEV, 2026-11-24)
+| Hora (UTC) | Qué se probó | Resultado |
+|---|---|---|
+| 13:47 | Cotización Lynk & Co | Ventas buscó KEYTON por el historial de conversaciones anteriores (H-12) |
+| 14:03 | Cotización completa Lynk & Co 02 → Quito | OK: listas, lead registrado, Datum, cierre. El carrito traía un vehículo anterior (H-13); segunda cotización sin modelo no reconocida (V-09) |
+| 14:36 | Segunda cotización Lynk & Co; SINOTRUK AUTOS → Repuestos; → «cotizar» | V-09 (a) OK; Repuestos deriva (esperado); «cotizar» sin modelo derivó (H-14) |
+| 14:52 | SINOTRUK AUTOS → «cotizar» → U70 FULL → Cuenca | OK: carrito vaciado (clean_cart), carrusel, un producto, lead registrado sin id_agencias/id_asesor (TESTCLARO), Datum, cierre |
+
 ## 12. Pre-auditoría
 (se llena antes de la puerta)
 

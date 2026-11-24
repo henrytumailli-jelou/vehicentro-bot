@@ -266,21 +266,21 @@
       "fase": 5,
       "tipo": "defecto",
       "descripcion": "Ronda por WhatsApp 24/11 (13:47 UTC): Bienvenida pasó LYNK & CO, pero el agente de Ventas buscó KEYTON porque su historial (messageHistory, 15) traía mensajes de conversaciones anteriores del chat; la cotización quedó para KEYTON. Apagado el historial en Ventas y Bienvenida (decisión del implementador) — main 27c57d3; verificado en el draft con el tester. La corrección automática de validate quiso reescribir los valores de los botones de consentimiento (acepto/no_acepto/asesor): se descartó.",
-      "estado": "corregido en el draft; falta publicar y repetir la ronda"
+      "estado": "cerrado 2026-11-24: verificado por WhatsApp (Ventas toma la marca que pasa Bienvenida)"
     },
     {
       "id": "H-13",
       "fase": 5,
       "tipo": "defecto (plataforma / configuración del Shop)",
       "descripcion": "El carrito de Jelou Shop conserva lo que el cliente eligió en una conversación anterior: en la ronda del 24/11 (14:04 UTC) el pedido llegó con VEH-139 y VEH-161. El agente cotizó el modelo correcto (139), pero con dos productos en el pedido podría elegir otro. Revisar con jelou-shop cómo vaciar o no reutilizar el carrito (o tomar el último producto agregado). Mitigación en el bot (24/11): con más de un producto en el aviso del Shop, el agente pregunta cuál cotizar. Sigue abierto revisar el carrito en el Shop (jelou-shop). 2026-11-24: la app Jelou Shop expone clean_cart (Vaciar carrito) en la conexión del agente; el prompt ahora la llama antes del primer carrusel y al recibir el pedido. Tester: se llama (404 sin carrito en el usuario sintético).",
-      "estado": "publicado en DEV (01M870PM2PDS5M3QSFPMS79HBG); falta la prueba por WhatsApp"
+      "estado": "cerrado 2026-11-24: verificado por WhatsApp 14:53 UTC (clean_cart → carrito vacío; pedido con un solo producto)"
     },
     {
       "id": "H-14",
       "fase": 5,
       "tipo": "defecto (prompt)",
       "descripcion": "Ronda 24/11 14:40 UTC: «cotizar» (y «Agencias») sin modelo cerraban el agente de Ventas y el flujo derivaba sin cotizar. Prompt ajustado: sin modelo envía el carrusel y pregunta el modelo. Probado con el tester; falta publicar.",
-      "estado": "corregido y publicado en DEV (01M870D0NG5XEJBGTCM5GXGRSG); falta la prueba por WhatsApp"
+      "estado": "cerrado 2026-11-24: verificado por WhatsApp 14:53 UTC («cotizar» sin modelo → carrusel)"
     }
   ],
   "skills": {
@@ -741,6 +741,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "La persona publicó DEV con H-13 (clean_cart) y H-10: id de publicación 01M870PM2PDS5M3QSFPMS79HBG (14:52 UTC). Sigue la prueba por WhatsApp de H-13 y H-14."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "Cuarta ronda por WhatsApp (14:52–15:00 UTC): SINOTRUK AUTOS → «cotizar» → clean_cart (carrito vacío) → carrusel → pedido de un producto (modelo 108) → cédula → Cuenca → agencia → lead registrado (prospecto devuelto, TESTCLARO, sin id_agencias/id_asesor) → Datum registrado → cierre → Derivar. H-12, H-13 y H-14 cerrados. T010 cerrada; V-09 (b) queda para las pruebas conjuntas con el cliente."
     }
   ],
   "puntos": {
@@ -795,12 +799,15 @@
       {
         "id": "T009",
         "clickup": "1dfg0rkn7cv",
-        "sp": 3
+        "sp": 3,
+        "sp_real": 3
       },
       {
         "id": "T010",
         "clickup": "1dfg0rkn7cw",
-        "sp": 5
+        "sp": 5,
+        "sp_real": 8,
+        "causa": "Defectos de plataforma y de configuración hallados en las pruebas: listas dinámicas (H-11), historial de los agentes (H-12), carrito del Shop (H-13) y prompt sin modelo (H-14)."
       },
       {
         "id": "T011",
@@ -998,6 +1005,13 @@
       "fase": 5,
       "tipo": "comando",
       "detalle": "`jelou workflow validate --fix` (selection_semantic_token_rewrite) reescribe los valores de condiciones y MEMORY de botones a los títulos de las opciones (acepto → Acepto) aunque el flujo ya funciona con los ids; se descartó a mano. En un workflow ya verificado conviene validar sin --fix y revisar appliedFixes.",
+      "pr": null
+    },
+    {
+      "fecha": "2026-11-24",
+      "fase": 5,
+      "tipo": "plantilla",
+      "detalle": "T010: SP real 8 contra 5 estimados (un escalón y medio): las listas dinámicas, el historial de mensajes de los AI_TASK y el carrito persistente del Shop no están en capacidades-jelou.md y solo aparecieron en pruebas reales.",
       "pr": null
     }
   ],
