@@ -70,6 +70,8 @@ workflows:
     workflowId: 75020
   workflows/ventas.whatsapp.json:
     channel: WHATSAPP
+    default: false
+    description: "Atiende el catálogo de la marca: modelos, precios, fichas, comparación y carrusel; deriva a cotización o a un asesor"
     hash: "sha256:7a06ce442bd2adfbf011ce5d3e0ce2205c1c8ea3e1d326840bae704295cb219e"
     lastPulledAt: "2026-11-23T15:07:20.411Z"
     name: Ventas

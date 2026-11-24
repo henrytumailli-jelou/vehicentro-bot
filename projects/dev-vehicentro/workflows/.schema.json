@@ -732,6 +732,14 @@
       "docRef": "node-specs/AI_TASK.md",
       "expectedShape": "\"rawSchema\": { \"<field>\": { \"type\": \"string\", \"description\": \"...\" } }  // read only fields endFunction.rawSchema (or the output_schema block) declares"
     },
+    "ai_logic_reaction_tool_never_offered": {
+      "docRef": "node-specs/AI_TASK.md#reactions",
+      "expectedShape": "// on the AI_TASK that answers the user, not on an AI_LOGIC\n\"connections\": { \"tools\": [{ \"name\": \"send_reaction\", \"external\": false, \"action\": \"pause\", \"description\": \"<when to react>\", \"reaction\": { \"emoji\": \"✅\" } }] }"
+    },
+    "ai_logic_subagents_never_offered": {
+      "docRef": "node-specs/AI_TASK.md#background-sub-agents",
+      "expectedShape": "// on the AI_TASK that answers the user, not on an AI_LOGIC\n\"connections\": { \"subagents\": [{ \"name\": \"<name>\", \"description\": \"<when to delegate>\", \"instructions\": \"<what the sub-agent does>\", \"tools\": [{ \"toolId\": \"<published tool id>\", \"version\": \"<published version>\" }], \"budget\": { \"minutes\": 15 } }] }"
+    },
     "ai_logic_voice_tool_never_offered": {
       "docRef": "node-specs/AI_TASK.md#voice-messages",
       "expectedShape": "// on the AI_TASK that answers the user, not on an AI_LOGIC\n\"connections\": { \"tools\": [{ \"name\": \"send_voice_message\", \"external\": false, \"action\": \"pause\" }] }"
@@ -840,9 +848,33 @@
       "docRef": "node-specs/AI_TASK.md",
       "expectedShape": "\"connections\": { \"mcp\": [{ \"appSlug\": \"<marketplace slug>\", \"name\": \"<app name>\", \"userAppInstallations\": [{ \"id\": \"<installation ulid>\", \"name\": \"<app name>\" }] }] }  // multiple MCPs in one AI_TASK rarely makes sense; consider splitting"
     },
+    "ai_task_reaction_tool_emoji_fallback": {
+      "docRef": "node-specs/AI_TASK.md#reactions",
+      "expectedShape": "\"reaction\": { \"emoji\": \"✅\" }  // exactly one emoji; omit reaction to react with ✅"
+    },
+    "ai_task_reaction_tool_missing_instruction": {
+      "docRef": "node-specs/AI_TASK.md#reactions",
+      "expectedShape": "\"connections\": { \"tools\": [{ \"name\": \"send_reaction\", \"external\": false, \"action\": \"pause\", \"description\": \"React when a tool confirms the record was saved. Reply with text when it fails, data is missing or the user asks something.\", \"reaction\": { \"emoji\": \"✅\" } }] }"
+    },
     "ai_task_scheduling_missing_date_tools": {
       "docRef": "node-specs/AI_TASK.md",
       "expectedShape": "\"connections\": { \"tools\": [{ \"name\": \"get_current_date_time\", \"external\": false, \"operationParameters\": { \"get_current_date_time\": { \"timezone\": { \"mode\": \"value\", \"value\": \"<IANA zone of the business>\" } } } }, { \"name\": \"get_weekday_of_a_date\", \"external\": false }] }  // required when the node connects a scheduling app (Google Calendar, Calendly, ...): an error when the app is recognised exactly (connections.mcp[].appSlug or an installation slug from the marketplace list, or a name that spells the app, e.g. \"Google Calendar\"), a warning when only a word of the name looks like a calendar (\"Booking status API\"); `jelou workflow validate --fix` adds the tools in both cases and pins the zone it finds in the file: a pin another AI_TASK already has (a template or UTC included), else a \"Zona horaria / Time zone / Fuso horário: <IANA>\" line in a prompt (markdown allowed), kept as the author spelled it; with no zone, or two different ones, it pins nothing: pin it yourself (Business time zone in node-specs/AI_TASK.md)"
+    },
+    "ai_task_subagent_duplicate_name": {
+      "docRef": "node-specs/AI_TASK.md#background-sub-agents",
+      "expectedShape": "\"connections\": { \"subagents\": [{ \"name\": \"review_account\", ... }, { \"name\": \"review_payments\", ... }] }  // one name per sub-agent"
+    },
+    "ai_task_subagent_duplicate_tool": {
+      "docRef": "node-specs/AI_TASK.md#background-sub-agents",
+      "expectedShape": "\"tools\": [{ \"toolId\": \"<tool a>\", \"version\": \"<version>\" }, { \"toolId\": \"<tool b>\", \"version\": \"<version>\" }]  // each toolId once per sub-agent"
+    },
+    "ai_task_subagent_invalid_definition": {
+      "docRef": "node-specs/AI_TASK.md#background-sub-agents",
+      "expectedShape": "{ \"name\": \"<name>\", \"description\": \"<when to delegate>\", \"instructions\": \"<what the sub-agent does>\", \"tools\": [{ \"toolId\": \"<published tool id>\", \"version\": \"<published version>\" }], \"budget\": { \"minutes\": 15 } }  // budget.minutes 15, 30 or 60; no model: the service default"
+    },
+    "ai_task_subagents_company_gated": {
+      "docRef": "node-specs/AI_TASK.md#background-sub-agents",
+      "expectedShape": "// only when the user asked for background sub-agents; runs only on companies Jelou enabled\n\"connections\": { \"subagents\": [{ \"name\": \"<name>\", \"description\": \"<when to delegate>\", \"instructions\": \"<what the sub-agent does>\", \"tools\": [{ \"toolId\": \"<published tool id>\", \"version\": \"<published version>\" }], \"budget\": { \"minutes\": 15 } }] }"
     },
     "ai_task_success_to_end_without_outputs": {
       "docRef": "node-specs/AI_TASK.md#exits",

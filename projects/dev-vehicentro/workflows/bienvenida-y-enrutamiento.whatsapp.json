@@ -150,10 +150,6 @@
             {
               "id": "9170",
               "name": "Buscar vehículos Vehicentro",
-              "toolId": 9170,
-              "version": "1.0.0",
-              "external": true,
-              "description": "Busca vehículos en todas las marcas por nombre, modelo o características (eléctrico, híbrido, 4x4, 7 pasajeros, pick up, diésel).",
               "inputs": [
                 {
                   "id": "bvConsulta00000000001",
@@ -164,8 +160,8 @@
                   "position": 0,
                   "required": false,
                   "modelType": "TOOL",
-                  "displayName": "Consulta",
-                  "description": "Lo que el cliente busca, en sus palabras: nombre o modelo (ej: 'bolden 4x4') o características (ej: 'eléctrico', '7 pasajeros')."
+                  "description": "Lo que el cliente busca, en sus palabras: nombre o modelo (ej: 'bolden 4x4') o características (ej: 'eléctrico', '7 pasajeros').",
+                  "displayName": "Consulta"
                 },
                 {
                   "id": "bvIdMarca000000000002",
@@ -176,10 +172,14 @@
                   "position": 1,
                   "required": false,
                   "modelType": "TOOL",
-                  "displayName": "ID marca",
-                  "description": "Opcional. ID numérico de una marca para limitar la búsqueda. Vacío busca en todas."
+                  "description": "Opcional. ID numérico de una marca para limitar la búsqueda. Vacío busca en todas.",
+                  "displayName": "ID marca"
                 }
-              ]
+              ],
+              "toolId": 9170,
+              "version": "1.0.0",
+              "external": true,
+              "description": "Busca vehículos en todas las marcas por nombre, modelo o características (eléctrico, híbrido, 4x4, 7 pasajeros, pick up, diésel)."
             }
           ]
         },
@@ -193,6 +193,10 @@
               "type": "string",
               "description": "ventas, derivar o sin_interes"
             },
+            "consulta": {
+              "type": "string",
+              "description": "lo que el usuario buscó (modelo o características), solo si hizo búsqueda directa"
+            },
             "intencion": {
               "type": "string",
               "description": "comercial, repuestos, talleres, credito, asesor, sin_marca o contingencia"
@@ -200,10 +204,6 @@
             "marca_nombre": {
               "type": "string",
               "description": "nombre oficial de la marca"
-            },
-            "consulta": {
-              "type": "string",
-              "description": "lo que el usuario buscó (modelo o características), solo si hizo búsqueda directa"
             }
           },
           "description": "Termine en cuanto tenga la marca con intención comercial, o la intención sea derivar a un asesor o no tenga interés. Termina justo después de la confirmación; no envíes despedida, el siguiente paso la envía."
@@ -622,11 +622,11 @@
                 "title": "Acepto",
                 "payload": {
                   "type": "edge",
-                  "skillId": "46693",
-                  "targetId": "qvxdY2XL-g5nQhfBjokIU",
                   "memory": {
                     "selection_j5gy8idiuwl8tn2e7hm9g": "Acepto"
-                  }
+                  },
+                  "skillId": "46693",
+                  "targetId": "qvxdY2XL-g5nQhfBjokIU"
                 }
               },
               {
@@ -635,11 +635,11 @@
                 "title": "No acepto",
                 "payload": {
                   "type": "edge",
-                  "skillId": "46693",
-                  "targetId": "q-TTsR6P7I4JSmKdBO7Kj",
                   "memory": {
                     "selection_j5gy8idiuwl8tn2e7hm9g": "No acepto"
-                  }
+                  },
+                  "skillId": "46693",
+                  "targetId": "q-TTsR6P7I4JSmKdBO7Kj"
                 }
               },
               {
@@ -648,11 +648,11 @@
                 "title": "Hablar con asesor",
                 "payload": {
                   "type": "edge",
-                  "skillId": "46693",
-                  "targetId": "CfrDI8DSYJBZpncoiaxD8",
                   "memory": {
                     "selection_j5gy8idiuwl8tn2e7hm9g": "Hablar con asesor"
-                  }
+                  },
+                  "skillId": "46693",
+                  "targetId": "CfrDI8DSYJBZpncoiaxD8"
                 }
               }
             ],
@@ -700,11 +700,6 @@
     {
       "id": "Kh3dAzocoziEmLiNUA96Z",
       "title": "¿Hay marca?",
-      "type": "CONDITIONAL",
-      "position": [
-        2572,
-        750
-      ],
       "configuration": {
         "conditions": [
           {
@@ -721,7 +716,12 @@
             ]
           }
         ]
-      }
+      },
+      "type": "CONDITIONAL",
+      "position": [
+        2572,
+        750
+      ]
     },
     {
       "id": "MMWPo9jatpxGpkIOMTe_I",

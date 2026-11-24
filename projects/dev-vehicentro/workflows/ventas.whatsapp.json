@@ -115,10 +115,6 @@
             {
               "id": "9170",
               "name": "Buscar vehículos Vehicentro",
-              "toolId": 9170,
-              "version": "1.0.0",
-              "external": true,
-              "description": "Busca vehículos en todas las marcas por nombre, modelo o características (eléctrico, híbrido, 4x4, 7 pasajeros, pick up, diésel).",
               "inputs": [
                 {
                   "id": "bvConsulta00000000001",
@@ -129,8 +125,8 @@
                   "position": 0,
                   "required": false,
                   "modelType": "TOOL",
-                  "displayName": "Consulta",
-                  "description": "Lo que el cliente busca, en sus palabras: nombre o modelo (ej: 'bolden 4x4') o características (ej: 'eléctrico', '7 pasajeros')."
+                  "description": "Lo que el cliente busca, en sus palabras: nombre o modelo (ej: 'bolden 4x4') o características (ej: 'eléctrico', '7 pasajeros').",
+                  "displayName": "Consulta"
                 },
                 {
                   "id": "bvIdMarca000000000002",
@@ -141,10 +137,14 @@
                   "position": 1,
                   "required": false,
                   "modelType": "TOOL",
-                  "displayName": "ID marca",
-                  "description": "Opcional. ID numérico de una marca para limitar la búsqueda. Vacío busca en todas."
+                  "description": "Opcional. ID numérico de una marca para limitar la búsqueda. Vacío busca en todas.",
+                  "displayName": "ID marca"
                 }
-              ]
+              ],
+              "toolId": 9170,
+              "version": "1.0.0",
+              "external": true,
+              "description": "Busca vehículos en todas las marcas por nombre, modelo o características (eléctrico, híbrido, 4x4, 7 pasajeros, pick up, diésel)."
             }
           ]
         },
