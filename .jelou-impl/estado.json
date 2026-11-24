@@ -253,6 +253,13 @@
       "tipo": "pre-auditoría",
       "descripcion": "«Agente Ventas»: la conexión MCP del Shop (D-30) no trae `appName` (lint AI_TASK_MCP_ENTRY_WRONG_SHAPE de jelou-build-workflows). Funcionó por WhatsApp el 17/11; se completa con `jelou marketplace list --installed-only` antes de la puerta de F5.",
       "estado": "abierto"
+    },
+    {
+      "id": "H-11",
+      "fase": 5,
+      "tipo": "defecto",
+      "descripcion": "Ventas: las listas dinámicas de ciudades y agencias tenían un id de opción propio; el motor guardaba la elección pero no seguía la arista y cerraba la ejecución. Corregido con el id `dynamic-button` (main e7a3677) y verificado en el draft el 24/11.",
+      "estado": "cerrado (verificado en el draft con el tester 24/11)"
     }
   ],
   "skills": {
@@ -673,6 +680,10 @@
     {
       "fecha": "2026-11-24",
       "evento": "La persona desplegó veh-bdc (deploy_01m86t8j4xe7y9gfb6pgnzgza0, activo; tool de marcas OK) y publicó DEV: id de publicación 01M86TBKVQ7EXAHZHEZCZSYDGN (13:01 UTC; todo el borrador: T003 link + T009/T010). Sigue la ronda manual por WhatsApp."
+    },
+    {
+      "fecha": "2026-11-24",
+      "evento": "Prueba con el tester del CLI (sesión sintética del canal DEV): T003 confirmado en lo publicado (link en una sola línea). Ventas en el draft: cédula inválida → reintento, válida → 4.5 vacío → 3 ciudades → 3 agencias de Quito → lead registrado en el BDC con TESTCLARO (id de prospecto devuelto) → Datum leads `registrado` → mensaje F2:Q11 → Derivar (D-29). H-11 hallado y corregido (main e7a3677). El carrusel del Shop no se puede ver en el tester (send_message_failed por la sesión sintética). Falta publicar DEV con la corrección y V-09."
     }
   ],
   "puntos": {
@@ -917,6 +928,13 @@
       "tipo": "plantilla",
       "detalle": "capacidades-jelou.md no menciona las listas dinámicas (opción `iterable` + `{{$item.*}}`, documentadas en docs.jelou.ai/guides/nodos/lista); node-spec dice que su expansión «no está trazada». Proponer a §1.7.",
       "pr": null
+    },
+    {
+      "fecha": "2026-11-24",
+      "fase": 5,
+      "tipo": "plantilla",
+      "detalle": "Una opción dinámica (iterable) solo enruta si su id es `dynamic-button` (patrón de 59 de 64 listas dinámicas en los proyectos locales); con otro id el motor guarda la elección y termina la ejecución sin error. Ni node-spec, ni la documentación ni capacidades-jelou.md lo dicen; validate y el chequeo del push no lo detectan. Proponer a capacidades §1.7 y a jelou-build-workflows.",
+      "pr": null
     }
   ],
   "por_verificar": [
@@ -974,6 +992,14 @@
       "prueba": "Ronda por WhatsApp en el canal DEV: «ver catálogo» de KEYTON y de LYNK & CO",
       "estado": "parcial: carrusel LYNK & CO y elección de modelo (H-07) confirmados por WhatsApp el 17/11; falta KEYTON (1 tarjeta)",
       "resultado": "2026-11-17: push OK y chequeo 0. En el tester, search_products respondió «No hay una tienda registrada»; el agente usó el respaldo (Consultar modelos) y respondió en texto. Falta publicar DEV y probar por WhatsApp para saber si es el tester o la asociación tienda-canal. | 2026-11-17 14:02–14:03 UTC, WhatsApp DEV: en el canal real search_products SÍ encuentra la tienda (lo del tester era limitación del tester) y devuelve los 5 LYNK & CO, pero solo como datos para el agente (sin imágenes y sin enviar mensaje). No hay carrusel. El agente respondió «Catálogo LYNK & CO enviado» porque el prompt decía que la tool envía el catálogo visual (defecto del prompt, D-30)."
+    },
+    {
+      "id": "V-09",
+      "fase": 5,
+      "que": "Un segundo intento de cotizar la misma marca no registra otro lead: (a) en la misma conversación (memoria `leads_registrados`) y (b) entre conversaciones (4.5 devuelve el asesor del lead anterior)",
+      "prueba": "(a) ronda por WhatsApp: cotizar dos veces la misma marca; (b) pruebas conjuntas con el cliente con id_agencias/id_asesor (con TESTCLARO el BDC no asigna asesor y 4.5 vuelve vacío)",
+      "estado": "pendiente",
+      "resultado": "2026-11-24: el tester no permite (a) (el turno queda abierto tras el paso a Derivar y la memoria no pasa a otra sesión); (b) con TESTCLARO 4.5 vuelve vacío, como en V-01."
     }
   ],
   "equipo": {
@@ -1005,7 +1031,8 @@
   },
   "pruebas": {
     "whatsapp_automatizado": false,
-    "ruta": "manual, una ronda por carril con guion"
+    "ruta": "manual, una ronda por carril con guion",
+    "tester_cli": "jelou test project start --ref draft --workflow 46694 --memory (marca, celular) permite probar Ventas sin recorrer Bienvenida; listas por --option-id"
   },
   "recursos": [
     {

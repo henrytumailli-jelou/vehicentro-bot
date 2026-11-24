@@ -319,6 +319,23 @@ Push del 17/11 (lo corrió la persona; 1 operación, verificado por el servidor,
 | «Muéstreme el catálogo de LYNK & CO» | `search_products` con la marca → carrusel del Shop (HU-05 c4, D-30) | ⚠️ El agente llamó `search_products` con `product="LYNK & CO"`, `top_k=10`, pero el Shop respondió **«No hay una tienda registrada»**. El agente cayó al respaldo (Consultar modelos) y listó los 5 modelos en texto con precio del BDC. **V-08 abierto:** falta saber si es una limitación del tester (sesión sintética sin el canal real, como el `INVALID_USER_ID` del carrusel anterior) o si la tienda no está asociada al canal DEV (la doc dice «catálogo configurado en el canal» y no explica dónde). Se confirma por WhatsApp después de publicar |
 Aviso heredado del push (no bloquea): `ai_fallback_model` en «Agente Ventas» (sin modelo de respaldo). Va a la pre-auditoría.
 
+### T009/T010 — Cotización (tester del CLI, sesiones sintéticas del canal DEV, 2026-11-24)
+Usuario sintético con celular y cédula ficticios. Ventas en el draft, arrancado con la memoria que deja Bienvenida (marca Lynk & Co).
+| Paso | Resultado | Evidencia |
+|---|---|---|
+| Consentimiento (lo publicado) | Una sola línea «Términos y política de datos» con el link (T003) | sesión `079ecd2e…`, turno 1 |
+| Cotizar → pedir cédula | Texto F2:Q5 | ejecución `0cEEmN4iuu_jLxNmzMvRv` |
+| Cédula de 9 dígitos | Pide de nuevo (1 reintento) | ejecución `Q_BuFrqt9SSAcX_6EVgiU` |
+| Cédula válida → 4.5 | `vacio` → sigue a agencias | nodo «¿Ya tiene asesor en la marca? (4.5)» |
+| Ciudades | Lista dinámica: Ambato, Guayaquil, Quito (sin «Ver más») | |
+| Elegir ciudad (1.ª versión) | **H-11:** la elección se guardaba pero la ejecución terminaba | `Q_BuFrqt9SSAcX_6EVgiU` |
+| Elegir ciudad (con `dynamic-button`) | Lista de 3 agencias de Quito, título ≤ 24 | `0cEEmN4iuu_jLxNmzMvRv` |
+| Elegir agencia → lead | 4.4 da el asesor; POST con TESTCLARO → `ok` con id de prospecto | nodo «Registrar lead» |
+| Datum `leads` | Registro creado con estado `registrado`, marca, modelo, agencia y ciudad | nodo «Guardar lead (Datum)» |
+| Cierre | «Listo. Le atenderá [asesor] de la agencia …» → Derivar (mensaje provisional D-29) | |
+| Segunda cotización | No se pudo probar en el tester (V-09); con TESTCLARO 4.5 sigue vacío | sesión `d14c3f4c…` |
+Lo que el tester no muestra: el carrusel del Shop (la tool MCP falla con `send_message_failed` en la sesión sintética) y cómo se dibujan las listas en WhatsApp: van a la ronda manual.
+
 ## 12. Pre-auditoría
 (se llena antes de la puerta)
 
